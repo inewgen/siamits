@@ -10,6 +10,6 @@ if (ENV_MODE == 'dev') {
     return array(
         'siamits-web'   => 'http://www.siamits.com',
         'siamits-admin' => 'http://admins.siamits.com',
-        'siamits-api'   => 'http://apis.siamits.besaba.com/api',
+        'siamits-api'   => 'http://apis.siamits.com/api',
     );
 }
