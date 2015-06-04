@@ -87,7 +87,7 @@ class AdminsAuthController extends \BaseController
         $results = json_decode($results, true);
 
         if (empty($results['data']['record']['id'])) {
-            $message = array_get($results, 'data.message', 'Data not found facebook.');
+            $message = array_get($results, 'data.message', 'Create facebook user error');
             return Redirect::to('/login')->with('error', $message);
         }
 
@@ -183,7 +183,7 @@ class AdminsAuthController extends \BaseController
         $results = json_decode($results, true);
 
         if (empty($results['data']['record']['id'])) {
-            $message = array_get($results, 'data.message', 'Data not found facebook.');
+            $message = array_get($results, 'data.message', 'Create google user error.');
             return Redirect::to('/login')->with('error', $message);
         }
 

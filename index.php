@@ -20,6 +20,7 @@ define('ENV_MODE', $env);
 $server_allow = array(
     '110.170.201.185',
     '110.170.201.178',
+    '171.96.168.94',
 );
 
 if ($env == 'com' && !in_array($_SERVER['REMOTE_ADDR'], $server_allow)) {

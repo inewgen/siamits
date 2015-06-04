@@ -24,7 +24,7 @@ class BaseController extends Controller {
             $user = json_decode($user);
 
             if (!isset($user->data->record)) {
-                return Redirect::to('/login')->with('message', 'Sorry, Please try to login again');
+                return Redirect::to('/login')->with('error', 'Sorry, Please try to login again');
             }
 
             $this->user = $user->data->record;
