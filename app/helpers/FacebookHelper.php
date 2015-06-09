@@ -60,7 +60,7 @@ class FacebookHelper
         $out = fopen($outPath, "w+");
 
         while ($chunk = fread($in, 8192)) {
-            fwrite($out, $chunk, 8192);
+            $fwrite = fwrite($out, $chunk, 8192);
         }
         fclose($in);
         fclose($out);

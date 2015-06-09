@@ -17,6 +17,19 @@ if (!function_exists('alert')) {
     }
 }
 
+if (!function_exists('sdebug')) {
+
+    function sdebug($value, $die = false)
+    {
+        if (isset($_GET['sdebug'])) {
+            echo "<pre>";
+            print_r($value);
+            echo "</pre>";
+            if ($die) die;
+        }
+    }
+}
+
 if (!function_exists('jsn')) {
 
     function jsn($value, $pre = false)

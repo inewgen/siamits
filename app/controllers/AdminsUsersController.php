@@ -4,14 +4,20 @@ class AdminsUsersController extends BaseController
 {
 
     private $scode;
+    private $sauth;
 
-    public function __construct(Scode $scode)
+    public function __construct(Scode $scode, Sauthen $sauth)
     {
         $this->scode = $scode;
+        $this->sauth = $sauth;
     }
 
     public function login()
     {
+        if ($this->sauth->check()) {
+            //return Redirect::to('/profile');
+        }
+
         $theme = Theme::uses('adminlte2')->layout('default2');
         $theme->setTitle('Admin SiamiTs :: Login');
         $theme->setDescription('Login description');
@@ -63,20 +69,28 @@ class AdminsUsersController extends BaseController
             return Redirect::to('login')->with('error', $message);
         }
 
-        $results = array_get($results, 'data.record.0', array());
+        $user = array_get($results, 'data.record.0', array());
 
-        $user = new User;
-        foreach ($results as $key => $value) {
-            $user->$key = $value;
+        if (!isset($user['id'])) {
+            $message = 'Sorry, Can not sign in';
+
+            return Redirect::to('login')->with('error', $message);
         }
 
-        if ($user->status == '0') {
+        if (isset($user['status']) && ($user['status'] == '0')) {
             return Redirect::to('register/verify?email='.$email);
         }
 
         $remember = (Input::has('remember')) ? true : false;
 
-        Auth::loginUsingId($user->id, $remember);
+        $lifetime = ($remember) ? time() + 262800000 : 0;
+        $access_token = rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9);
+        $access_token = $this->scode->pencode($access_token, '@SiamiTS!');
+        $user = serialize($user);
+        $keep = base64_encode($user);
+        setcookie(Config::get('web.siamits-cookie_name'), $keep, $lifetime, null, null, null, true);
+        setcookie('access_token', $access_token, $lifetime, null, null, null, true);
+
         $message = 'You successfully sign in';
 
         return Redirect::to('login')->with('success', $message);
@@ -724,5 +738,16 @@ class AdminsUsersController extends BaseController
 
         $message = 'Reset password success';
         return Redirect::to('forgot/password?email='.$email.'&token='.$token)->with('success', $message);
+    }
+
+    public static function getDomain()
+    {
+        if (isset($_SERVER['HTTP_HOST'])) {
+            preg_match('/[^.]+\.[^.]+$/', $_SERVER['HTTP_HOST'], $matches);
+
+            return '.'.$matches[0];
+        }
+
+        return null;
     }
 }

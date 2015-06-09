@@ -41,8 +41,13 @@ class AdminsAuthController extends \BaseController
             }
             return;
         }
+     
+        if (ENV_MODE == 'com') {
+            $oauth = new Hybrid_Auth(app_path() . '/config/fb_auth.php');
+        } else {
+            $oauth = new Hybrid_Auth(app_path() . '/config/local/fb_auth.php');
+        }
 
-        $oauth = new Hybrid_Auth(app_path() . '/config/fb_auth.php');
         $provider = $oauth->authenticate('Facebook');
         $profile = $provider->getUserProfile();
 
@@ -92,15 +97,10 @@ class AdminsAuthController extends \BaseController
         }
 
         $images_old = array_get($results, 'data.images_old', array());
-        $results = array_get($results, 'data.record', array());
-
-        $user = new User;
-        foreach ($results as $key => $value) {
-            $user->$key = $value;
-        }
+        $user = array_get($results, 'data.record', array());
 
         //$this->access_token_fb = $this->fb->getToken();
-        $user_id = array_get($results, 'id', 0);
+        $user_id = array_get($user, 'id', 0);
 
         // Delete old images
         foreach ($images_old as $key => $value) {
@@ -116,12 +116,20 @@ class AdminsAuthController extends \BaseController
         $targetFile = 'public/uploads/' . $user_id . '/' . $code . '.' . $extension;
 
         if (!file_exists($targetFolder)) {
-            mkdir($targetFolder, 0777);
+            mkdir($targetFolder, 0755);
         }
 
         $photo = $this->fb->saveImage($photo_facebook, $targetFile);
-        //alert($user);die();;
-        Auth::loginUsingId($user->id);
+        
+        //Auth::loginUsingId($user->id);
+        $remember = false;
+        $lifetime = ($remember) ? time() + 262800000 : 0;
+        $access_token = rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9);
+        $access_token = $this->scode->pencode($access_token, '@SiamiTS!');
+        $user = serialize($user);
+        $keep = base64_encode($user);
+        setcookie(Config::get('web.siamits-cookie_name'), $keep, $lifetime, null, null, null, true);
+        setcookie('access_token', $access_token, $lifetime, null, null, null, true);
 
         return Redirect::to('/login')->with('message', 'You are login with facebook already');
     }
@@ -134,8 +142,14 @@ class AdminsAuthController extends \BaseController
             Hybrid_Endpoint::process();
 
         }
+        
         try {
-            $oauth = new Hybrid_Auth(app_path() . '/config/google_auth.php');
+            if (ENV_MODE == 'com') {
+                $oauth = new Hybrid_Auth(app_path() . '/config/google_auth.php');
+            } else {
+                $oauth = new Hybrid_Auth(app_path() . '/config/local/google_auth.php');
+            }
+
             $provider = $oauth->authenticate('Google');
             $profile = $provider->getUserProfile();
         } catch (exception $e) {
@@ -188,15 +202,10 @@ class AdminsAuthController extends \BaseController
         }
 
         $images_old = array_get($results, 'data.images_old', array());
-        $results = array_get($results, 'data.record', array());
-
-        $user = new User;
-        foreach ($results as $key => $value) {
-            $user->$key = $value;
-        }
+        $user = array_get($results, 'data.record', array());
 
         //$this->access_token_fb = $this->fb->getToken();
-        $user_id = array_get($results, 'id', 0);
+        $user_id = array_get($user, 'id', 0);
 
         // Delete old images
         foreach ($images_old as $key => $value) {
@@ -212,27 +221,55 @@ class AdminsAuthController extends \BaseController
         $targetFile = 'public/uploads/' . $user_id . '/' . $code . '.' . $extension;
 
         if (!file_exists($targetFolder)) {
-            mkdir($targetFolder, 0777);
+            mkdir($targetFolder, 0755);
         }
 
         $photo = $this->fb->saveImage($photo_google, $targetFile);
-        //alert($user);die();
-        Auth::loginUsingId($user->id);
+        
+        //Auth::loginUsingId($user->id);
+        $remember = false;
+        $lifetime = ($remember) ? time() + 262800000 : 0;
+        $access_token = rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9);
+        $access_token = $this->scode->pencode($access_token, '@SiamiTS!');
+        $user = serialize($user);
+        $keep = base64_encode($user);
+        setcookie(Config::get('web.siamits-cookie_name'), $keep, $lifetime, null, null, null, true);
+        setcookie('access_token', $access_token, $lifetime, null, null, null, true);
         
         return Redirect::to('/login')->with('message', 'You are login with google already');
     }
 
     public function getLoggedOut()
     {
-        Auth::logout();
+        //Auth::logout();
+        $domain = static::getDomain(); //alert($domain);die();
+        $domain = null;
+        $lifetime = time() - 3600;
+        $keep  = '';
+        setcookie(Config::get('web.siamits-cookie_name'), $keep, $lifetime, '/', $domain);
+        setcookie('access_token', $keep, $lifetime, '/', $domain);
+
+        // clear session all
+        Session::flush();
+
         // $hauth = new Hybrid_Auth(app_path() . '/config/twitterAuth.php');
         // $hauth = new Hybrid_Auth(app_path() . '/config/fb_auth.php');
         //You can use any of the one provider to get the variable, I am using google
         //this is important to do, as it clears out the cookie
-        $hauth = new Hybrid_auth(app_path() . '/config/google_auth.php');
+        $hauth = new Hybrid_Auth(app_path() . '/config/google_auth.php');
         $hauth->logoutAllProviders();
         return Redirect::to('login');
+    }
 
+    public static function getDomain()
+    {
+        if (isset($_SERVER['HTTP_HOST'])) {
+            preg_match('/[^.]+\.[^.]+$/', $_SERVER['HTTP_HOST'], $matches);
+
+            return '.'.$matches[0];
+        }
+
+        return null;
     }
 
 }

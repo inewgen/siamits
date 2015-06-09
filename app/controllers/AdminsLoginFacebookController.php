@@ -101,7 +101,7 @@ class AdminsLoginFacebookController extends \BaseController
 
         $photo = $this->fb->saveImage($photo_facebook, $targetFile);
     //alert($user);die();
-        Auth::login($user);
+         Auth::loginUsingId($user->id);
 
         return Redirect::to('/login')->with('message', 'You are login with facebook already');
     }

@@ -2,7 +2,7 @@
 
 class BaseController extends Controller {
 
-	protected $user;
+    protected $user;
 
     /**
      * Setup the layout used by the controller.
@@ -17,17 +17,22 @@ class BaseController extends Controller {
 
         // Get user
         $this->user = array();
-        if (Auth::check()) {
-            $id = Auth::id();
+        if ($id = self::check()) {
             $client = new Client(Config::get('url.siamits-api'));
             $user = $client->get('users/' . $id);
             $user = json_decode($user);
 
+            //sdebug($user, true);
+
             if (!isset($user->data->record)) {
-                return Redirect::to('/login')->with('error', 'Sorry, Please try to login again');
+                return Redirect::to('/login')->with('error', 'Sorry, Please try to login again ('.$id.')');
             }
 
             $this->user = $user->data->record;
+
+            App::singleton('User', function ($app) {
+                return $this->user;
+            });
 
             // Admin
             if (Request::is('members*')) {
@@ -39,6 +44,26 @@ class BaseController extends Controller {
             // The Default Language
             date_default_timezone_set('Asia/Bangkok');
         }
+    }
+
+    protected function check()
+    {
+        if (isset($_COOKIE[Config::get('web.siamits-cookie_name')]) && isset($_COOKIE['access_token'])) {
+
+            try {
+                $user = unserialize(base64_decode($_COOKIE[Config::get('web.siamits-cookie_name')]));
+                if (isset($user['id']) && is_numeric($user['id']) && $user['id'] > 0) {
+                    //self::$user_id = $user['id'];
+
+                    return $user['id'];
+                }
+            } catch (Exception $e) {
+                return false;
+            }
+
+        }
+
+        return false;
     }
 
 }

@@ -2,6 +2,17 @@
 
 class Scode
 {
+    public function getadomain($a=null)
+    {return true;
+        if (isset($_SERVER['HTTP_HOST'])) {
+            preg_match('/[^.]+\.[^.]+$/', $_SERVER['HTTP_HOST'], $matches);
+
+            return '.'.$matches[0];
+        }
+
+        return null;
+    }
+
     public function encode($string, $key)
     {
         $key = sha1($key);

@@ -6,6 +6,15 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AdminsAuthController' => $baseDir . '/app/controllers/AdminsAuthController.php',
+    'AdminsBannersController' => $baseDir . '/app/controllers/AdminsBannersController.php',
+    'AdminsDashboardController' => $baseDir . '/app/controllers/AdminsDashboardController.php',
+    'AdminsImagesController' => $baseDir . '/app/controllers/AdminsImagesController.php',
+    'AdminsLoginFacebookController' => $baseDir . '/app/controllers/AdminsLoginFacebookController.php',
+    'AdminsMailController' => $baseDir . '/app/controllers/AdminsMailController.php',
+    'AdminsMembersController' => $baseDir . '/app/controllers/AdminsMembersController.php',
+    'AdminsNewsController' => $baseDir . '/app/controllers/AdminsNewsController.php',
+    'AdminsSocialsController' => $baseDir . '/app/controllers/AdminsSocialsController.php',
     'AdminsUsersController' => $baseDir . '/app/controllers/AdminsUsersController.php',
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',
     'BaseFacebook' => $vendorDir . '/hybridauth/hybridauth/hybridauth/Hybrid/thirdparty/Facebook/base_facebook.php',
