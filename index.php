@@ -1,7 +1,7 @@
 <?php
 
 // Environtment
-$envMapping = [
+$envMapping = array(
     'apis.siamits.com'   => 'com',
     'siamits.besaba.com' => 'com',
     'www.siamits.com'    => 'com',
@@ -9,7 +9,7 @@ $envMapping = [
     'apis.siamits.dev'   => 'dev',
     'admins.siamits.dev' => 'dev',
     'www.siamits.dev'    => 'dev',
-];
+);
 
 $env = isset($_SERVER['HTTP_HOST']) && isset($envMapping[$_SERVER['HTTP_HOST']])
         ? $envMapping[$_SERVER['HTTP_HOST']]
@@ -28,8 +28,8 @@ $server_allow = array(
 );
 
 if ($env == 'com' && !in_array($_SERVER['REMOTE_ADDR'], $server_allow)) {
-    require __DIR__ . '/comingsoon.php';
-    die();
+    //require __DIR__ . '/comingsoon.php';
+    //die();
 }
 
 /**

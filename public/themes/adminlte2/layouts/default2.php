@@ -2,6 +2,9 @@
 <html>
     <head>
         <title><?php echo Theme::get('title'); ?></title>
+
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    
         <meta charset="utf-8">
         <meta name="keywords" content="<?php echo Theme::get('keywords'); ?>">
         <meta name="description" content="<?php echo Theme::get('description'); ?>">

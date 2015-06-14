@@ -1,5 +1,5 @@
 <?php
-
+// SiamiTs.com
 return array(
     "base_url" => "http://www.siamits.com/fbauth/auth",
     "providers" => array(
@@ -13,3 +13,18 @@ return array(
         ),
     ),
 );
+
+// SiamiTs.dev
+// return array(
+//     "base_url" => "http://www.siamits.com/fbauth/auth",
+//     "providers" => array(
+//         "Facebook" => array(
+//             "enabled" => true,
+//             "keys" => array(
+//                 "id" => "408507979333927",
+//                 "secret" => "023bc5e66110a31f39aab2b7503a79b3",
+//             ),
+//             "scope" => "public_profile,email",
+//         ),
+//     ),
+// );

@@ -1,30 +1,30 @@
 <?php
 
-// Gmail
-return array(
-    'driver'     => 'smtp',
-    'host'       => 'smtp.gmail.com',
-    'port'       => 465,
-    'from'       => array('address' => 'care.siamits@gmail.com', 'name' => 'SiamiTs.com'),
-    'encryption' => 'ssl',
-    'username'   => 'care.siamits@gmail.com',
-    'password'   => 'Scs@072272571',
-    'sendmail'   => '/usr/sbin/sendmail -bs',
-    'pretend'    => false,
-);
-
-// // Hostinger
+// // Gmail
 // return array(
 //     'driver'     => 'smtp',
-//     'host'       => 'mx1.hostinger.in.th',
-//     'port'       => 2525,
-//     'from'       => array('address' => 'no-reply@siamits.com', 'name' => 'SiamiTs.com'),
-//     'encryption' => 'tls',
-//     'username'   => 'no-reply@siamits.com',
+//     'host'       => 'smtp.gmail.com',
+//     'port'       => 465,
+//     'from'       => array('address' => 'care.siamits@gmail.com', 'name' => 'SiamiTs.com'),
+//     'encryption' => 'ssl',
+//     'username'   => 'care.siamits@gmail.com',
 //     'password'   => 'Scs@072272571',
 //     'sendmail'   => '/usr/sbin/sendmail -bs',
 //     'pretend'    => false,
 // );
+
+// Hostinger
+return array(
+    'driver'     => 'smtp',
+    'host'       => 'mx1.hostinger.in.th',
+    'port'       => 2525,
+    'from'       => array('address' => 'no-reply@siamits.com', 'name' => 'SiamiTs.com'),
+    'encryption' => 'tls',
+    'username'   => 'no-reply@siamits.com',
+    'password'   => 'Scs@072272571',
+    'sendmail'   => '/usr/sbin/sendmail -bs',
+    'pretend'    => false,
+);
 
 // // Mailgun #1
 // return array(

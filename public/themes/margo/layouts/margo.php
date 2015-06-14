@@ -8,6 +8,10 @@
     <!-- Basic -->
     <title><?php echo Theme::get('title'); ?></title>
 
+    <!-- <link rel="icon" type="image/png" sizes="32x32" href="//www.siamits.com/favicons/favicon-32x32.png?v=1">
+    <link rel="icon" type="image/png" sizes="16x16" href="//www.siamits.com/favicons/favicon-16x16.png?v=1"> -->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
     <!-- Define Charset -->
     <meta charset="utf-8">
 
