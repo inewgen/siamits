@@ -44,7 +44,7 @@ class AuthController extends \BaseController
             return;
         }
 
-        if ($_SERVER['MY_LARAVEL_ENV'] == 'com') {
+        if ($_SERVER['MY_LARAVEL_ENV'] == 'production') {
             $oauth = new Hybrid_Auth(app_path() . '/config/fb_auth.php');
         } else {
             $oauth = new Hybrid_Auth(app_path() . '/config/local/fb_auth.php');
@@ -176,7 +176,7 @@ class AuthController extends \BaseController
         }
         
         try {
-            if ($_SERVER['MY_LARAVEL_ENV'] == 'com') {
+            if ($_SERVER['MY_LARAVEL_ENV'] == 'production') {
                 $oauth = new Hybrid_Auth(app_path() . '/config/google_auth.php');
             } else {
                 $oauth = new Hybrid_Auth(app_path() . '/config/local/google_auth.php');
