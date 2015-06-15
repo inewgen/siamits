@@ -68,7 +68,7 @@ class AuthController extends \BaseController
         $images[] = array(
             'code' => $code,
             'name' => $name,
-            'extension' => $extension,
+            'extension' => strtolower($extension),
         );
 
         $parameters = array(
@@ -109,13 +109,13 @@ class AuthController extends \BaseController
             $code_old = array_get($value, 'code', 0);
             $extension_old = array_get($value, 'extension', 'jpg');
 
-            $ext = $extension_old;
+            $ext = strtolower($extension_old);
             $source_folder = '../res/public/uploads/'. $user_id ;
             $filelist = array();
             if ($handle = opendir($source_folder)) {
                 while ($entry = readdir($handle)) {
                     if (strpos($entry, $code_old) === 0) {
-                        $image_path = '../res/public/uploads/' . $user_id . '/' . $entry;
+                        $image_path = '../res/public/uploads/' . $user_id . '/' . strtolower($entry);
                         $image_delete = $this->images->deleteFile($image_path);
                         $filelist[] = $entry;
 
@@ -131,7 +131,7 @@ class AuthController extends \BaseController
 
         // Upload images
         $targetFolder = '../res/public/uploads/' . $user_id;
-        $targetFile = '../res/public/uploads/' . $user_id . '/' . $code . '.' . $extension;
+        $targetFile = '../res/public/uploads/' . $user_id . '/' . $code . '.' . strtolower($extension);
 
         if (!file_exists($targetFolder)) {
             $makeFolder = $this->images->makeFolder($targetFolder);
@@ -203,7 +203,7 @@ class AuthController extends \BaseController
         $images[] = array(
             'code' => $code,
             'name' => $name,
-            'extension' => $extension,
+            'extension' => strtolower($extension),
         );
 
         $parameters = array(
@@ -244,13 +244,13 @@ class AuthController extends \BaseController
             $code_old = array_get($value, 'code', 0);
             $extension_old = array_get($value, 'extension', 'jpg');
 
-            $ext = $extension_old;
+            $ext = strtolower($extension_old);
             $source_folder = '../res/public/uploads/'. $user_id ;
             $filelist = array();
             if ($handle = opendir($source_folder)) {
                 while ($entry = readdir($handle)) {
                     if (strpos($entry, $code_old) === 0) {
-                        $image_path = '../res/public/uploads/' . $user_id . '/' . $entry;
+                        $image_path = '../res/public/uploads/' . $user_id . '/' . strtolower($entry);
                         $image_delete = $this->images->deleteFile($image_path);
                         $filelist[] = $entry;
 

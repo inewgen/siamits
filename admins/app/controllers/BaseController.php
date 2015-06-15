@@ -36,11 +36,10 @@ class BaseController extends Controller
             });
 
             // Admin
-            if (Request::is('members*')) {
-                if (!isset($this->user->roles[0]->id) || ($this->user->roles[0]->id != '1')) {
-                    return Redirect::to('');
-                }
+            if (!isset($this->user->roles[0]->id) || ($this->user->roles[0]->id != '1')) {
+                return Redirect::to('');
             }
+            
 
             // The Default Language
             date_default_timezone_set('Asia/Bangkok');

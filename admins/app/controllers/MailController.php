@@ -9,7 +9,7 @@ class MailController extends BaseController
         // $from = 'postmaster@siamits.com';
 
         $subject = 'Welcome New Members to SiamiTs.com!';
-        $from = 'care.siamits@gmail.com';
+        $from = 'no-reply@siamits.com';
         $to   = 'suraches2010@gmail.com';
         $name = 'Suraches See';
         $detail = 'คุณได้ทำการสมัครสมาชิกกับเว็บไซต์ Siamits.com แล้วครับ คุณต้องทำการยืนยันการสมัครสมาชิกผ่านอีเมล คุณจึงจะสามารถใช้บริการจากทางเว็บไซต์ได้ครับ ยืนยันการสมัคร ';
@@ -27,7 +27,7 @@ class MailController extends BaseController
             'subject' => $subject,
         );
 
-        $sendmail = Mail::send('emails.resiter', $data, function ($message) use ($user) {
+        $sendmail = Mail::send('emails.register', $data, function ($message) use ($user) {
             $message->from($user['from'], 'SiamiTs.com');
             $message->to($user['email'], $user['name'])->subject($user['subject']);
         });

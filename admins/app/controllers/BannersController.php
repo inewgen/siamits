@@ -2,6 +2,15 @@
 
 class BannersController extends BaseController
 {
+    private $scode;
+    private $images;
+
+    public function __construct(Scode $scode, Images $images)
+    {
+        $this->scode = $scode;
+        $this->images = $images;
+    }
+
     /**
      * Show the profile for the given user.
      *
@@ -10,52 +19,78 @@ class BannersController extends BaseController
      */
     public function getIndex()
     {
+        $data = Input::all();
+
         $theme = Theme::uses('default')->layout('adminlte2');
-        $theme->setTitle('Admin SiamiTs :: Banners');
-        $theme->setDescription('Banners description');
+        $theme->setTitle('Admin SiamiTs :: Members');
+        $theme->setDescription('Members description');
+        $theme->share('user', $this->user);
+
+        $page    = array_get($data, 'page', '1');
+        $perpage = array_get($data, 'perpage', '10');
+        $order   = array_get($data, 'order', 'id');
+        $sort    = array_get($data, 'sort', 'desc');
 
         $parameters = array(
-            'member_id' => '1',
-            'perpage'   => '100',
-            'order'     => 'position',
-            'sort'      => 'asc'
+            'page'    => $page,
+            'perpage' => $perpage,
+            'order'   => $order,
+            'sort'    => $sort,
         );
+
+        if ($s = array_get($data, 's', false)) {
+            $parameters['s'] = $s;
+        }
 
         $client = new Client(Config::get('url.siamits-api'));
         $results = $client->get('banners', $parameters);
         $results = json_decode($results, true);
 
-        if ($data_record = array_get($results, 'data.record', array())) {
-            $i = 1;
-            foreach ($data_record as $value) {
-                $id = array_get($value, 'id');
+        if ($status_code = array_get($results, 'status_code', false) != '0') {
+            $message = array_get($results, 'status_txt', 'Data not found');
 
-                // Update position
-                $parameters2 = array(
-                    'member_id' => '1',
-                    'position'  => $i,
-                );
-
-                $results2 = $client->put('banners/'.$id, $parameters2);
-                $results2 = json_decode($results2, true);
-
-                $i++;
+            if ($status_code != '1004') {
+                return Redirect::to('banners')->with('error', $message);
             }
         }
 
         if (isset($_GET['sdebug'])) {
-            alert($entries);
+            alert($results);
             die();
         }
 
+        $entries = array_get($results, 'data.record', array());
+
+        $table_title = array(
+            'id'           => array('ID ', 1),
+            'position'     => array('Position', 1),
+            'title'        => array('Title', 1),
+            'subtitle'     => array('Subtitle', 1),
+            // 'button'       => array('Button', 1),
+            // 'button_title' => array('Button_title', 1),
+            // 'button_url'   => array('Button_url', 1),
+            'type'         => array('Type', 1),
+            'images'       => array('Image', 0),
+            'status'       => array('Status', 1),
+            'manage'       => array('Manage', 0),
+        ); 
+
         $view = array(
-            'banners' => $results,
+            'num_rows'    => count($entries),
+            'data'        => $entries,
+            'param'       => $parameters,
+            'table_title' => $table_title,
         );
 
-        $script = $theme->scopeWithLayout('banners.jscript_index', $view)->content();
+        //Pagination
+        if ($pagination = self::getDataArray($results, 'data.pagination')) {
+            $view['pagination'] = self::getPaginationsMake($pagination, $entries);
+        }
+
+        $script = $theme->scopeWithLayout('banners.jscript_list', $view)->content();
         $theme->asset()->container('inline_script')->usePath()->writeContent('custom-inline-script', $script);
 
-        return $theme->scopeWithLayout('banners.index', $view)->render();
+        return $theme->scopeWithLayout('banners.list', $view)->render();
     }
 
     public function getAdd()
@@ -63,9 +98,10 @@ class BannersController extends BaseController
         $theme = Theme::uses('default')->layout('adminlte2');
         $theme->setTitle('Admin SiamiTs :: Add Banners');
         $theme->setDescription('Add Banners description');
+        $theme->share('user', $this->user);
 
         $parameters = array(
-            'member_id' => '1',
+            'user_id' => '1',
             'perpage'   => '100',
             'order'     => 'id',
             'sort'      => 'desc'
@@ -93,9 +129,8 @@ class BannersController extends BaseController
 
         // Validator request
         $rules = array(
-            'image'     => 'required',
-            'id_max'    => 'required',
-            'member_id' => 'required',
+            'images'  => 'required',
+            'user_id' => 'required',
         );
 
         $validator = Validator::make($data, $rules);
@@ -104,61 +139,34 @@ class BannersController extends BaseController
                 'message' => $validator->messages()->first(),
             );
 
-            return Redirect::to('banners')->withErrors($message);
+            return Redirect::to('banners/add')->with('error', $message);
         }
 
-        // Upload image
-        $cate            = 'banners';
-        $member_id       = array_get($data, 'member_id', 0);
-        $image           = array_get($data, 'image', null);
+        // Add banner
+        $parameters = array(
+            'user_id'    => array_get($data, 'user_id', ''),
+            'title'      => array_get($data, 'title', ''),
+            'subtitle'   => array_get($data, 'subtitle', ''),
+            'button'     => array_get($data, 'button', ''),
+            'button_url' => array_get($data, 'button_url', ''),
+            'images'     => array_get($data, 'images', ''),
+            'position'   => array_get($data, 'positon', '0'),
+            'type'       => array_get($data, 'user_id', '1'),
+            'status'     => array_get($data, 'user_id', '1'),
+        );
 
-        $destinationPath = 'public/uploads/'.$member_id.'/'.$cate; // upload path
-        $random          = rand(0, 9);
-        $datetime        = date("YmdHis");
-        $image_code      = $member_id.$cate.$datetime.$random;
-        $image_code      = base64_encode($image_code);
-        $extension       = $image->getClientOriginalExtension(); // getting image extension
-        $fileName        = $image_code . '.' . $extension; // renameing image
-        $upload_image    = $image->move($destinationPath, $fileName); // uploading file to given path
+        $client = new Client(Config::get('url.siamits-api'));
+        $results = $client->post('banners', $parameters);
+        $results = json_decode($results, true);
 
-        if (!isset($upload_image)) {
-            $message = array(
-                'message' => 'Can not upload image',
-            );
+        if (array_get($results, 'status_code', false) != '0') {
+            $message = array_get($results, 'status_txt', 'Can not created banners');
 
-            return Redirect::to('banners')->withErrors($message);
-        } else {
-            // Add banner
-            $parameters = array(
-                'member_id'    => $data['member_id'],
-                'title'        => (isset($data['title'])?$data['title']:''),
-                'subtitle'     => (isset($data['subtitle'])?$data['subtitle']:''),
-                'button'       => (isset($data['button'])?$data['button']:'1'),
-                'button_title' => (isset($data['button_title'])?$data['button_title']:''),
-                'button_url'   => (isset($data['button_url'])?$data['button_url']:''),
-                'image'        => $fileName,
-                'position'     => (isset($data['position'])?$data['position']:'0'),
-                'type'         => (isset($data['type'])?$data['type']:'1'),
-                'status'       => (isset($data['status'])?$data['status']:'1')
-            );
-
-            $client = new Client(Config::get('url.siamits-api'));
-            $results = $client->post('banners', $parameters);
-            $results = json_decode($results, true);
-
-            if (array_get($results, 'status_code', false) != '0') {
-                $message = array(
-                    'message' => array_get($results, 'status_txt', 'Can not created banners'),
-                );
-
-                return Redirect::to('banners')->withErrors($message);
-            }
-
-            $message = array(
-                'message' => 'You successfully created',
-            );
-            return Redirect::to('banners')->withSuccess($message);
+            return Redirect::to('banners/add')->with('error', $message);
         }
+
+        $message = 'You successfully created';
+        return Redirect::to('banners')->with('success', $message);
     }
 
     public function getEdit($id)
@@ -169,9 +177,10 @@ class BannersController extends BaseController
         $theme = Theme::uses('default')->layout('adminlte2');
         $theme->setTitle('Admin SiamiTs :: Edit Banners');
         $theme->setDescription('Edit Banners description');
+        $theme->share('user', $this->user);
 
         $parameters = array(
-            'member_id' => '1'
+            'user_id' => '1'
         );
 
         $client = new Client(Config::get('url.siamits-api'));
@@ -203,19 +212,18 @@ class BannersController extends BaseController
     public function postEdit()
     {
         $data = Input::all();
-        $data['member_id'] = '1';
+        $data['user_id'] = '1';
 
         $rules = array(
             'action' => 'required',
         );
 
+        $referer = array_get($data, 'referer', 'members');
         $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
-            $message = array(
-                'message' => $validator->messages()->first(),
-            );
+            $message = $validator->messages()->first();
 
-            return Redirect::to('banners')->withErrors($message);
+            return Redirect::to($referer)->with('error', $message);
         }
 
         $action = array_get($data, 'action', null);
@@ -225,36 +233,34 @@ class BannersController extends BaseController
             // Validator request
             $rules = array(
                 'id'        => 'required',
-                'member_id' => 'required',
+                'user_id' => 'required',
             );
 
             $validator = Validator::make($data, $rules);
             if ($validator->fails()) {
-                $message = array(
-                    'message' => $validator->messages()->first(),
-                );
+                $message = $validator->messages()->first();
 
-                return Redirect::to('banners')->withErrors($message);
+                return Redirect::to($referer)->with('error', $message);
             }
 
             $id        = array_get($data, 'id', 0);
-            $member_id = array_get($data, 'member_id', 0);
+            $user_id = array_get($data, 'user_id', 0);
 
             $delete_file  = true;
             if ($fileName = array_get($data, 'image_name', false)) {
-                $cate     = 'banners';
-                $path     = 'public/uploads/'.$member_id.'/'.$cate; // upload path
+                $path     = '../res/public/uploads/'.$user_id; // upload path
                 $old_file = $path.'/'.$fileName;
 
                 // Delete old image
-                $delete_file = File::delete($old_file);
+                //$delete_file = File::delete($old_file);
+                $delete_file = $this->images->deleteFileAll($path, $name);
             }
 
             if ($delete_file) {
                 // Delete banners
                 $parameters = array(
                     'id'        => $id,
-                    'member_id' => $member_id,
+                    'user_id' => $user_id,
                 );
 
                 $client = new Client(Config::get('url.siamits-api'));
@@ -279,7 +285,7 @@ class BannersController extends BaseController
             // Validator request
             $rules = array(
                 'id_sel'    => 'required',
-                'member_id' => 'required',
+                'user_id' => 'required',
             );
 
             $validator = Validator::make($data, $rules);
@@ -291,14 +297,14 @@ class BannersController extends BaseController
                 return Redirect::to('banners')->withErrors($message);
             }
 
-            $member_id = array_get($data, 'member_id', 0);
+            $user_id = array_get($data, 'user_id', 0);
 
             if ($id_sel = array_get($data, 'id_sel', false)) {
                 $i = 1;
                 foreach ($id_sel as $value) {
                     $id = $value;
                     $parameters2 = array(
-                        'member_id' => $member_id,
+                        'user_id' => $user_id,
                         'position'  => $i,
                     );
 
@@ -348,9 +354,9 @@ class BannersController extends BaseController
             $fileName = array_get($data, 'image_old', false);
             if (array_get($data, 'image', false)) {
                 $cate            = 'banners';
-                $member_id       = array_get($data, 'member_id', 0);
+                $user_id       = array_get($data, 'user_id', 0);
                 $image           = array_get($data, 'image', null);
-                $destinationPath = 'public/uploads/'.$member_id.'/'.$cate; // upload path
+                $destinationPath = 'public/uploads/'.$user_id.'/'.$cate; // upload path
                 $old_file = $destinationPath.'/'.$fileName;
 
                 // Delete old image
@@ -359,7 +365,7 @@ class BannersController extends BaseController
                 // Upload image
                 $random          = rand(0, 9);
                 $datetime        = date("YmdHis");
-                $image_code      = $member_id.$cate.$datetime.$random;
+                $image_code      = $user_id.$cate.$datetime.$random;
                 $image_code      = base64_encode($image_code);
                 $extension       = $image->getClientOriginalExtension(); // getting image extension
                 $fileName        = $image_code . '.' . $extension; // renameing image
@@ -375,7 +381,7 @@ class BannersController extends BaseController
             }
        
             $parameters = array(
-                'member_id'    => $data['member_id'],
+                'user_id'    => $data['user_id'],
                 'title'        => (isset($data['title'])?$data['title']:''),
                 'subtitle'     => (isset($data['subtitle'])?$data['subtitle']:''),
                 'button'       => (isset($data['button'])?$data['button']:'0'),
@@ -405,5 +411,18 @@ class BannersController extends BaseController
         }
 
         return Redirect::to('banners')->withSuccess($message);
+    }
+
+    private function getPaginationsMake($pagination, $record)
+    {
+        $total = array_get($pagination, 'total', 0);
+        $limit = array_get($pagination, 'perpage', 0);
+        $paginations = Paginator::make($record, $total, $limit);
+        return isset($paginations) ? $paginations : '';
+    }
+
+    private function getDataArray($data, $key)
+    {
+        return array_get($data, $key, false);
     }
 }

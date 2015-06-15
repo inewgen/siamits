@@ -2,12 +2,13 @@
 
 class ImagesController extends BaseController
 {
-
     private $scode;
+    private $images;
 
-    public function __construct(Scode $scode)
+    public function __construct(Scode $scode, Images $images)
     {
         $this->scode = $scode;
+        $this->images = $images;
     }
 
     public function uploads()
@@ -31,10 +32,10 @@ class ImagesController extends BaseController
 
         // Define a destination
         $user_id = isset($data['user_id']) ? $data['user_id'] : '';
-        $targetFolder = 'public/uploads/' . $user_id ; // Relative to the root
         $verifyToken = md5(Config::get('web.siamits-keys') . $data['timestamp']);
+        $targetFolder = '../res/public/uploads/' . $user_id ; // Relative to the root
 
-        if (!empty($_FILES) && $data['token'] == $verifyToken) {
+        if (!empty($_FILES) && ($data['token'] == $verifyToken)) {
             $image_code = $this->scode->imageCode();
 
             $tempFile = $_FILES['Filedata']['tmp_name'];
@@ -49,7 +50,7 @@ class ImagesController extends BaseController
             $fileParts   = pathinfo($_FILES['Filedata']['name']);
             $fileNameOld = $_FILES['Filedata']['name'];
 
-            $fileExtension = $fileParts['extension'];
+            $fileExtension = strtolower($fileParts['extension']);
             $fileName      = $image_code . '.' . $fileExtension; // renameing image
             $targetFile    = rtrim($targetPath, '/') . '/' . $fileName;
 
@@ -81,7 +82,14 @@ class ImagesController extends BaseController
                         );
                         return $client->createResponse($response, 2001);
                     } else {
-                        $url_img = Config::get('url.siamits-admin').'/'.$targetFolder.'/'.$image_code.'.'.$fileExtension;
+                        $url_img = getImageLink('image', $user_id, $image_code, $fileExtension, 200, 200);
+                        
+                        if ($section = array_get($data, 'section', false)) {
+                            if ($section == 'banners') {
+                                $url_img = getImageLink('image', $user_id, $image_code, $fileExtension, 1440, 500);
+                            }
+                        }
+
                         $id = array_get($results, 'id', '');
 
                         $jsons_return = array(
@@ -97,6 +105,7 @@ class ImagesController extends BaseController
                         );
                         return $client->createResponse($response, 0);
                     }
+
                 } else {
                     $response = array(
                         'data' => 'Can not upload file',
@@ -140,17 +149,36 @@ class ImagesController extends BaseController
 
         $id        = array_get($data, 'id', 0);
         $code      = array_get($data, 'code', 0);
-        $extension = array_get($data, 'extension', 0);
+        $extension = strtolower(array_get($data, 'extension', 0));
         $user_id   = array_get($data, 'user_id', 0);
-        $path      = 'public/uploads/' . $user_id; // upload path
+        $path      = '../res/public/uploads/' . $user_id; // upload path
         $file_path = $path . '/' . $code .'.'. $extension;
 
         if (!file_exists($file_path)) {
             return $client->createResponse($data, 1004);
         }
 
-        // Delete image
-        $delete_file = File::delete($file_path);
+        // Delete old images
+        $code_old = $code;
+        $ext = strtolower($extension);
+        $source_folder = '../res/public/uploads/'. $user_id ;
+        
+        $filelist = array();
+        if ($handle = opendir($source_folder)) {
+            while ($entry = readdir($handle)) {
+                if (strpos($entry, $code_old) === 0) {
+                    $image_path = '../res/public/uploads/' . $user_id . '/' . $entry;
+                    $image_delete = $this->images->deleteFile($image_path);
+                    $filelist[] = $entry;
+
+                    if (!$image_delete) {
+                        $message = array_get($results, 'data.message', 'Delete old image user error.');
+                        return Redirect::to('/login')->with('error', $message);
+                    }
+                }
+            }
+            closedir($handle);
+        }
   
         $parameters = array();
         $results    = $client->delete('images/'.$id, $parameters);

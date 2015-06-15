@@ -293,7 +293,7 @@ class MembersController extends BaseController
             $id = array_get($data, 'id', 0);
 
             // Delete images folder
-            $image_path = 'public/uploads/' . $id ;
+            $image_path = '../res/public/uploads/' . $id ;
 
             $image_delete = true;
             if (file_exists($image_path)) {

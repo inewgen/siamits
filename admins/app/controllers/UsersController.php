@@ -65,20 +65,29 @@ class UsersController extends BaseController
             return Redirect::to('login')->with('error', $message);
         }
 
-        $results = array_get($results, 'data.record.0', array());
+        $user = array_get($results, 'data.record.0', array());
+        $user_status = array_get($user, 'status', '');
 
-        $user = new User;
-        foreach ($results as $key => $value) {
-            $user->$key = $value;
-        }
-
-        if ($user->status == '0') {
+        if ($user_status == '0') {
             return Redirect::to('register/verify?email='.$email);
         }
 
         $remember = (Input::has('remember')) ? true : false;
 
-        Auth::login($user, $remember);
+        //Auth::login($user, $remember);
+        $lifetime = ($remember) ? time() + 262800000 : 0;
+        $access_token = rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9);
+        $access_token = $this->scode->pencode($access_token, '@SiamiTS!');
+        $user = serialize($user);
+        $keep = base64_encode($user);
+        $user_cookie = setcookie(Config::get('web.siamits-cookie_name'), $keep, $lifetime, null, null, null, true);
+        $access_cookie = setcookie('access_token', $access_token, $lifetime, null, null, null, true);
+        
+        if (!$user_cookie || !$access_cookie) {
+            $message = 'Create cookie user error.';
+            return Redirect::to('/login')->with('error', $message);
+        }
+
         $message = 'You successfully sign in';
 
         return Redirect::to('login')->with('success', $message);
@@ -176,7 +185,7 @@ class UsersController extends BaseController
         // Send email
         $active     = array_get($results, 'active', '');
         $subject    = 'Welcome New Members to SiamiTs.com!';
-        $from       = 'care.siamits@gmail.com';
+        $from       = 'no-reply@siamits.com';
         $to         = $email;
         $name       = $name;
         $verify_url = URL::to('register/verify').'?email='.$email.'&token='.$active;
@@ -507,6 +516,78 @@ class UsersController extends BaseController
         return $theme->scopeWithLayout('home.verify', $view)->render();
     }
 
+    public function sendMailVerify()
+    {
+        $data = Input::all();
+
+        // Validator request
+        $rules = array(
+            'email'      => 'required|email',
+        );
+
+        $validator = Validator::make($data, $rules);
+        if ($validator->fails()) {
+            $message = $validator->messages()->first();
+
+            return Redirect::to('register')->with('error', $message);
+        }
+
+        $email    = array_get($data, 'email', '');
+
+        $parameters = array(
+            'email'    => $email,
+        );
+
+        $client = new Client(Config::get('url.siamits-api'));
+        $results = $client->get('users', $parameters);
+        $results = json_decode($results, true);
+
+        if ($status_code = array_get($results, 'status_code', false) != '0') {
+            $message = array_get($results, 'status_txt', 'Not found user');
+
+            return Redirect::to('register/verify?email='.$email)->with('error', $message);
+        }
+
+        $results = array_get($results, 'data.record.0', array());
+        $active     = array_get($results, 'active', '');
+
+        if (empty($results)) {
+            $message = 'Not found user';
+
+            return Redirect::to('register/verify?email='.$email)->with('error', $message);
+        }
+
+        // Send email
+        $subject    = 'Welcome New Members to SiamiTs.com!';
+        $from       = 'no-reply@siamits.com';
+        $to         = $email;
+        $name       = array_get($results, 'name', '');
+        $verify_url = URL::to('register/verify').'?email='.$email.'&token='.$active;
+        $detail     = 'คุณได้ทำการสมัครสมาชิกกับเว็บไซต์ Siamits.com แล้วครับ ';
+        $detail    .= 'คุณต้องทำการยืนยันการสมัครสมาชิกผ่านอีเมล คุณจึงจะสามารถใช้บริการจากทางเว็บไซต์ได้ครับ ยืนยันการสมัคร ';
+        $detail    .= '<a href="'.$verify_url.'" style="color:#0099cc" target="_blank">คลิกที่นี่</a>';
+
+        $data = array(
+            'detail' => $detail,
+            'name' => $name,
+        );
+
+        $user = array(
+            'email' => $to,
+            'name' => $name,
+            'from' => $from,
+            'subject' => $subject,
+        );
+
+        $sendmail = Mail::send('emails.register', $data, function ($message) use ($user) {
+            $message->from($user['from'], 'SiamiTs.com');
+            $message->to($user['email'], $user['name'])->subject($user['subject']);
+        });
+
+        $message = 'We send email to '.$email.' again !';
+        return Redirect::to('register/verify?email='.$email)->with('success', $message);
+    }
+
     public function forgot()
     {
         if (isset($this->user->id)) {
@@ -587,7 +668,7 @@ class UsersController extends BaseController
 
         // Send email
         $subject    = 'Reset password for SiamiTs.com member!';
-        $from       = 'care.siamits@gmail.com';
+        $from       = 'no-reply@siamits.com';
         $to         = $email;
         $verify_url = URL::to('forgot/password').'?email='.$email.'&token='.$active;
         $detail     = 'คุณได้ทำการตั้งค่ารหัสผ่านใหม่กับเว็บไซต์ Siamits.com ';
@@ -640,7 +721,7 @@ class UsersController extends BaseController
         }
 
         $active = array_get($results, 'data.record.0.active', '0');
-        if (!Session::has('message')) {
+        if (!Session::has('success')) {
             if ($active != $token) {
                 $message = 'Sorry, Invalid Token';
 

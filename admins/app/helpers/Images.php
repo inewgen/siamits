@@ -26,4 +26,25 @@ class Images
     {
         return File::delete($path);
     }
+
+    public function deleteFileAll($path, $name)
+    {
+        $filelist = array();
+        if ($handle = opendir($path)) {
+            while ($entry = readdir($handle)) {
+                if (strpos($entry, $name) === 0) {
+                    $image_path = $path. '/' . $entry;
+                    $image_delete = $this->deleteFile($image_path);
+                    $filelist[] = $entry;
+
+                    if (!$image_delete) {
+                        return false;
+                    }
+                }
+            }
+            closedir($handle);
+        }
+
+        return $filelist;
+    }
 }
