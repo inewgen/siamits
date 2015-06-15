@@ -10,7 +10,7 @@
                     <ul class="contact-details">
                         <li><a href="<?php echo URL::to('contact');?>" target="_blank"><i class="fa fa-map-marker"></i> Rachadapisek Rd, Bangkok, Thailand</a>
                         </li>
-                        <li><a href="mailto:care.siamits@gmail.com"><i class="fa fa-envelope-o"></i> care.siamits@gmail.com</a>
+                        <li><a href="mailto:suport@siamits.com"><i class="fa fa-envelope-o"></i> suport@siamits.com</a>
                         </li>
                         <li><a href="<?php echo URL::to('contact');?>"><i class="fa fa-phone"></i> +662 644 2390</a>
                         </li>

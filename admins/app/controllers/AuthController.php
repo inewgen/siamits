@@ -2,13 +2,11 @@
 
 class AuthController extends \BaseController
 {
-    private $fb;
     private $scode;
     private $images;
 
-    public function __construct(FacebookHelper $fb, Scode $scode, Images $images)
+    public function __construct(Scode $scode, Images $images)
     {
-        $this->fb = $fb;
         $this->scode = $scode;
         $this->images = $images;
     }

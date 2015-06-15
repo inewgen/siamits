@@ -81,7 +81,7 @@ Theme::asset()->container('footer')->add('uploadify', 'public/themes/adminlte2/p
             } 
         });
 
-        $("#frm_add_banners").validate({
+        $("#frm_main").validate({
             ignore: [],
             errorElement: 'span',
             errorClass: 'text-red',

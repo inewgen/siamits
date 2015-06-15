@@ -252,13 +252,13 @@ class BannersController extends ApiController
         // Validator request
         $rules = array(
             'id' => 'required|integer|min:1',
-            'user_id' => 'required|integer|min:1',
+            // 'user_id' => 'required|integer|min:1',
             'title' => 'min:1|max:255',
             'subtitle' => 'min:1|max:255',
             'button' => 'integer|in:0,1',
             'button_title' => 'min:1|max:50',
             'button_url' => 'min:1|max:150',
-            'image' => 'min:1|max:255',
+            'images' => 'min:1|max:255',
             'position' => 'integer',
             'type' => 'integer|min:1',
             'status' => 'integer|in:0,1',
@@ -284,25 +284,57 @@ class BannersController extends ApiController
         isset($data['status']) ? $banner['status'] = $data['status'] : '';
         $banner['updated_at'] = date("Y-m-d H:i:s");
 
-        $parameters = array(
-            'id' => $data['id'],
-            'user_id' => $data['user_id'],
-            'data' => $banner,
-        );
+        if ($images = array_get($data, 'images', false)) {
+            if ($images_old = array_get($data, 'images_old', false)) {
+                if ($img_id = array_get($images_old, 'id', false)) {
+                    // Delete imageables
+                    $filters = array(
+                        'images_id' => $img_id,
+                        'imageable_id' => $id,
+                        'imageable_type' => 'banners',
+                    );
 
-        $results = $this->bannersRepository->update($parameters);
+                    $query_ia = Imageables::filters($filters);
+                    if ($query_ia) {
+                        $query_ia->delete();
+                    }
 
-        if (!$results) {
+                    // Delete image
+                    $filters = array(
+                        'id' => $img_id,
+                    );
+
+                    $query_i = Images::filters($filters);
+                    if ($query_i) {
+                        $query_i->delete();
+                    }
+                }
+            }
+
+            // Insert images
+            foreach ($images as $key => $value) {
+                $image = self::insertImageable($value, $id, 'banners');
+
+                if (!$image) {
+                    return API::createResponse('Error, Insert image', 1001);
+                }
+            }
+        }
+
+        $query = Banners::where('id', '=', $id)
+            ->update($banner);
+
+        if (!$query) {
             $response = array();
 
             return API::createResponse($response, 1004);
         }
 
         $response = array(
-            'record' => $results,
+            'record' => $data,
         );
 
-        return API::createResponse($data, 0);
+        return API::createResponse($response, 0);
     }
 
     public function destroy($id = null)
@@ -324,20 +356,41 @@ class BannersController extends ApiController
             return API::createResponse($response, 1003);
         }
 
-        $parameters = array(
-            'id' => $data['id'],
-        );
+        $query = Banners::find($id);
+        $query->delete();
 
-        $results = $this->bannersRepository->destroy($parameters);
-
-        if (!$results) {
+        if (!$query) {
             $response = array();
 
-            return API::createResponse($response, 1001);
+            return API::createResponse($response, 1004);
+        }
+
+        if ($images_id = array_get($data, 'images_id', false)) {
+            // Delete imageables
+            $filters = array(
+                'images_id' => $images_id,
+                'imageable_id' => $id,
+                'imageable_type' => 'banners',
+            );
+
+            $query_ia = Imageables::filters($filters);
+            if ($query_ia) {
+                $query_ia->delete();
+            }
+
+            // Delete image
+            $filters = array(
+                'id' => $images_id,
+            );
+
+            $query_i = Images::filters($filters);
+            if ($query_i) {
+                $query_i->delete();
+            }
         }
 
         $response = array(
-            'record' => $results,
+            'data' => $data,
         );
 
         return API::createResponse($response, 0);

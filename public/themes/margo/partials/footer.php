@@ -142,7 +142,7 @@
                     <p>เว็บไซต์รวบรวมความรู้ ข่าวสาร ความบันเทิง ทางด้านไอที และอื่น ๆ</p>
                     <ul>
                         <li><span>Phone Number:</span> +662 644 2390</li>
-                        <li><span>Email:</span> care.siamits@gmail.com</li>
+                        <li><span>Email:</span> suport@siamits.com</li>
                         <li><span>Website:</span> www.siamits.com</li>
                     </ul>
                 </div>

@@ -122,7 +122,7 @@
                     <?php       elseif ($key2 == 'manage'): ?>
                                         <td>
                                             <a title="Edit" href="<?php echo URL::to('banners');?>/<?php echo array_get($value, 'id', '');?>"><span class="glyphicon glyphicon-pencil"></span></a>
-                                            <a class="del_rows" data-id="<?php echo array_get($value, 'id', '');?>" title="Delete" href="javascript:void(0)"><span class="glyphicon glyphicon-remove-sign danger"></span></a>
+                                            <a class="del_rows" data-id="<?php echo array_get($value, 'id', '');?>" data-iid="<?php echo array_get($value, 'images.0.id', '');?>" data-code="<?php echo array_get($value, 'images.0.code', '');?>" data-uid="<?php echo array_get($value, 'images.0.user_id', '');?>" title="Delete" href="javascript:void(0)"><span class="glyphicon glyphicon-remove-sign danger"></span></a>
                                         </td>
                     <?php       else: ?>
                                         <td><?php echo array_get($value ,$key2, '');?></td>
@@ -178,6 +178,9 @@
                         <form id="frm_main2" role="form" method="post" action="<?php echo URL::to('banners');?>" enctype="multipart/form-data">
                             <input name="action" id="action" value="" type="hidden">
                             <input name="id" id="id" value="" type="hidden">
+                            <input name="user_id" id="user_id" value="" type="hidden">
+                            <input name="images_id" id="images_id" value="" type="hidden">
+                            <input name="code" id="code" value="" type="hidden">
                             <input name="referer" id="referer" value="<?php echo $_SERVER['REQUEST_URI'];?>" type="hidden">
                         </form>
 

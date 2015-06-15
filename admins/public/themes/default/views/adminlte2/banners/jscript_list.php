@@ -13,11 +13,17 @@ Theme::asset()->container('footer')->add('bootbox', 'public/themes/adminlte2/plu
   $(function () {
 
     $('.del_rows').click(function() {
-        var id = $(this).data('id');
+        var id   = $(this).data('id');
+        var code = $(this).data('code');
+        var user_id = $(this).data('uid');
+        var images_id = $(this).data('images_id');
 
         bootbox.confirm("Are you sure to delete?", function(result) {
             if(result){
                 $('#id').val(id);
+                $('#code').val(code);
+                $('#user_id').val(user_id);
+                $('#images_id').val(images_id);
                 $('#action').val('delete');
                 $('#frm_main2').attr('method', 'post');
                 $('#frm_main2').submit();

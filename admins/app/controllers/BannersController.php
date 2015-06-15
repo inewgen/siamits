@@ -73,7 +73,7 @@ class BannersController extends BaseController
             'images'       => array('Image', 0),
             'status'       => array('Status', 1),
             'manage'       => array('Manage', 0),
-        ); 
+        );
 
         $view = array(
             'num_rows'    => count($entries),
@@ -135,9 +135,7 @@ class BannersController extends BaseController
 
         $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
-            $message = array(
-                'message' => $validator->messages()->first(),
-            );
+            $message = $validator->messages()->first();
 
             return Redirect::to('banners/add')->with('error', $message);
         }
@@ -188,11 +186,9 @@ class BannersController extends BaseController
         $results = json_decode($results, true);
 
         if (array_get($results, 'status_code', false) != '0') {
-            $message = array(
-                'message' => array_get($results, 'status_txt', 'Can not created banners'),
-            );
+            $message = array_get($results, 'status_txt', 'Can not created banners');
 
-            return Redirect::to('banners')->withErrors($message);
+            return Redirect::to('banners')->with('error', $message);
         }
 
         $banners = array_get($results, 'data.record', array());
@@ -212,7 +208,6 @@ class BannersController extends BaseController
     public function postEdit()
     {
         $data = Input::all();
-        $data['user_id'] = '1';
 
         $rules = array(
             'action' => 'required',
@@ -233,7 +228,7 @@ class BannersController extends BaseController
             // Validator request
             $rules = array(
                 'id'        => 'required',
-                'user_id' => 'required',
+                // 'user_id' => 'required',
             );
 
             $validator = Validator::make($data, $rules);
@@ -243,16 +238,15 @@ class BannersController extends BaseController
                 return Redirect::to($referer)->with('error', $message);
             }
 
-            $id        = array_get($data, 'id', 0);
-            $user_id = array_get($data, 'user_id', 0);
+            $id        = array_get($data, 'id', '');
+            $images_id = array_get($data, 'user_id', '');
+            $user_id = array_get($data, 'images_id', '');
 
             $delete_file  = true;
-            if ($fileName = array_get($data, 'image_name', false)) {
+            if ($fileName = array_get($data, 'code', false)) {
                 $path     = '../res/public/uploads/'.$user_id; // upload path
-                $old_file = $path.'/'.$fileName;
 
                 // Delete old image
-                //$delete_file = File::delete($old_file);
                 $delete_file = $this->images->deleteFileAll($path, $name);
             }
 
@@ -260,7 +254,7 @@ class BannersController extends BaseController
                 // Delete banners
                 $parameters = array(
                     'id'        => $id,
-                    'user_id' => $user_id,
+                    'images_id' => $images_id,
                 );
 
                 $client = new Client(Config::get('url.siamits-api'));
@@ -268,17 +262,13 @@ class BannersController extends BaseController
                 $results = json_decode($results, true);
 
                 if (array_get($results, 'status_code', false) != '0') {
-                    $message = array(
-                        'message' => array_get($results, 'status_txt', 'Can not delete banners'),
-                    );
+                    $message = array_get($results, 'status_txt', 'Can not delete banners');
 
-                    return Redirect::to('banners')->withErrors($message);
+                    return Redirect::to('banners')->with('error', $message);
                 }
             }
 
-            $message = array(
-                'message' => 'You successfully delete',
-            );
+            $message = 'You successfully delete';
 
         // Order
         } else if ($action == 'order') {
@@ -290,11 +280,9 @@ class BannersController extends BaseController
 
             $validator = Validator::make($data, $rules);
             if ($validator->fails()) {
-                $message = array(
-                    'message' => $validator->messages()->first(),
-                );
+                $message = $validator->messages()->first();
 
-                return Redirect::to('banners')->withErrors($message);
+                return Redirect::to('banners')->with('error', $message);
             }
 
             $user_id = array_get($data, 'user_id', 0);
@@ -317,26 +305,21 @@ class BannersController extends BaseController
             }
 
             if (array_get($results, 'status_code', false) != '0') {
-                $message = array(
-                    'message' => array_get($results, 'status_txt', 'Can not order banners'),
-                );
+                $message = array_get($results, 'status_txt', 'Can not order banners');
 
-                return Redirect::to('banners')->withErrors($message);
+                return Redirect::to('banners')->with('error', $message);
             }
 
-            $message = array(
-                'message' => 'You successfully order',
-            );
+            $message = 'You successfully order';
 
         // Edit
         } else {
             // Validator request
             $rules = array();
-            if (!isset($data['image_old'])) {
+            if (!isset($data['images_old'])) {
                 $rules = array(
                     'id'     => 'required',
-                    'id_max' => 'required',
-                    'image'  => 'required',
+                    'images'  => 'required',
                 );
             }
 
@@ -344,50 +327,30 @@ class BannersController extends BaseController
 
             $validator = Validator::make($data, $rules);
             if ($validator->fails()) {
-                $message = array(
-                    'message' => $validator->messages()->first(),
-                );
+                $message = $validator->messages()->first();
 
-                return Redirect::to('banners')->withErrors($message);
+                return Redirect::to('banners')->with('error', $message);
             }
 
-            $fileName = array_get($data, 'image_old', false);
-            if (array_get($data, 'image', false)) {
-                $cate            = 'banners';
-                $user_id       = array_get($data, 'user_id', 0);
-                $image           = array_get($data, 'image', null);
-                $destinationPath = 'public/uploads/'.$user_id.'/'.$cate; // upload path
-                $old_file = $destinationPath.'/'.$fileName;
+            $delete_file  = true;
+            if (!empty(array_get($data, 'images', ''))) {
+                if ($name = array_get($data, 'images_old.code', false)) {
+                    $path = '../res/public/uploads/'.array_get($data, 'images_old.user_id', ''); // upload path
 
-                // Delete old image
-                $delete_file = File::delete($old_file);
-
-                // Upload image
-                $random          = rand(0, 9);
-                $datetime        = date("YmdHis");
-                $image_code      = $user_id.$cate.$datetime.$random;
-                $image_code      = base64_encode($image_code);
-                $extension       = $image->getClientOriginalExtension(); // getting image extension
-                $fileName        = $image_code . '.' . $extension; // renameing image
-                $upload_image    = $image->move($destinationPath, $fileName); // uploading file to given path
-                
-                if (!isset($upload_image)) {
-                    $message = array(
-                        'message' => 'Can not upload image',
-                    );
-
-                    return Redirect::to('banners')->withErrors($message);
+                    // Delete old image
+                    $delete_file = $this->images->deleteFileAll($path, $name);
                 }
             }
        
             $parameters = array(
-                'user_id'    => $data['user_id'],
+                // 'user_id'      => $data['user_id'],
                 'title'        => (isset($data['title'])?$data['title']:''),
                 'subtitle'     => (isset($data['subtitle'])?$data['subtitle']:''),
                 'button'       => (isset($data['button'])?$data['button']:'0'),
                 'button_title' => (isset($data['button_title'])?$data['button_title']:''),
                 'button_url'   => (isset($data['button_url'])?$data['button_url']:''),
-                'image'        => $fileName,
+                'images'       => array_get($data, 'images', ''),
+                'images_old'   => array_get($data, 'images_old', ''),
                 'position'     => (isset($data['position'])?$data['position']:'0'),
                 'type'         => (isset($data['type'])?$data['type']:'1'),
                 'status'       => (isset($data['status'])?$data['status']:'0')
@@ -398,19 +361,15 @@ class BannersController extends BaseController
             $results = json_decode($results, true);
 
             if (array_get($results, 'status_code', false) != '0') {
-                $message = array(
-                    'message' => array_get($results, 'status_txt', 'Can not edit banners'),
-                );
+                $message = array_get($results, 'status_txt', 'Can not edit banners');
 
-                return Redirect::to('banners')->withErrors($message);
+                return Redirect::to('banners')->with('error', $message);
             }
 
-            $message = array(
-                'message' => 'You successfully edit',
-            );
+            $message = 'You successfully edit';
         }
 
-        return Redirect::to('banners')->withSuccess($message);
+        return Redirect::to('banners')->with('success', $message);
     }
 
     private function getPaginationsMake($pagination, $record)

@@ -52,7 +52,7 @@
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form id="frm_add_banners" role="form" method="post" action="<?php echo URL::to('banners');?>" enctype="multipart/form-data">
+                    <form id="frm_main" role="form" method="post" action="<?php echo URL::to('banners');?>" enctype="multipart/form-data">
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="">Title</label>
@@ -75,14 +75,7 @@
                                 <label for="">Button url</label>
                                 <input type="text" placeholder="" name="button_url" class="form-control" value="<?php echo $banners['button_url'];?>">
                             </div>
-                            <div class="form-group">
-                                <label for="exampleInputFile">Image Banner</label>
-                                <br>
-                                <img src="<?php echo getImageLink('image', $banners['user_id'], $banners['images'][0]['code'], $banners['images'][0]['extension'], 1440, 500, $banners['images'][0]['name']);?>" width="200px">
-                                <p></p>
-                                <input type="file" name="image" id="image"> 
-                                <p class="help-block">Dimensions 1440 × 500 only</p>
-                            </div>
+                
                             <div class="form-group">
                                 <label for="">Position</label>
                                 <input type="text" placeholder="" name="position" class="form-control" value="<?php echo $banners['position'];?>">
@@ -99,6 +92,20 @@
                                     <input type="checkbox" name="status" value="1" <?php if($banners['status'] == '1'):?>checked="checked"<?php endif;?>> <strong>Check me banner status on</strong>
                                 </label>
                             </div>
+                            <div class="form-group">
+                                <label for="exampleInputFile">Image Banner</label>
+                                <!-- <input type="file" name="image" id="image"> --> 
+                                <input placeholder="" class="form-control" id="file_upload" name="file_upload" type="file" multiple="true">
+                                <p class="help-block">Dimensions 1440 × 500 only</p>
+                                <!-- <input type="hidden" name="images" id="images" value=""> -->
+                                <div id="show_image_upload" style="hight:150">
+                                    <img src="<?php echo getImageLink('image', array_get($banners, 'user_id', '1'), array_get($banners, 'images.0.code', '1'), array_get($banners, 'images.0.extension', 'jpg'), 1440, 500, array_get($banners, 'images.0.name', 'siamit.jpg'));?>" width="100%">
+                                </div>
+                                
+                                <input name="images_old[user_id]" value="<?php echo array_get($banners, 'images.0.user_id', '');?>" type="hidden">
+                                <input name="images_old[id]" value="<?php echo array_get($banners, 'images.0.id', '');?>" type="hidden">
+                                <input name="images_old[code]" value="<?php echo array_get($banners, 'images.0.code', '');?>" type="hidden">
+                            </div>
                         </div>
                         <!-- /.box-body -->
 
@@ -108,10 +115,9 @@
                         </div>
 
                         <input type="hidden" name="action" value="edit">
-                        <input type="hidden" name="image_old" value="<?php echo $banners['images'][0]['code'];?>">
-                        <input type="hidden" name="id" value="<?php echo $banners['id'];?>">
-                        <input type="hidden" name="member_id" value="1">
-                        <input type="hidden" name="id_max" value="<?php echo $id_max;?>">
+                        <input type="hidden" name="image_old" value="<?php echo array_get($banners, 'images.0.code', '');?>">
+                        <input type="hidden" name="id" value="<?php echo array_get($banners, 'id', '');?>">
+
                     </form>
                 </div>
                 <!-- /.box -->

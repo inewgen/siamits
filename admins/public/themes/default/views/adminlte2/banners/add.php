@@ -52,7 +52,7 @@
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form id="frm_add_banners" role="form" method="post" action="<?php echo URL::to('banners/add');?>" enctype="multipart/form-data">
+                    <form id="frm_main" role="form" method="post" action="<?php echo URL::to('banners/add');?>" enctype="multipart/form-data">
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="">Title</label>
@@ -97,7 +97,7 @@
                                 <input placeholder="" class="form-control" id="file_upload" name="file_upload" type="file" multiple="true">
                                 <p class="help-block">Dimensions 1440 × 500 only</p>
                                 <!-- <input type="hidden" name="images" id="images" value=""> -->
-                                <div id="show_image_upload" style="hight:150">
+                                <div id="show_image_upload" style="hight:150"></div>
                             </div>
                         </div>
                         <!-- /.box-body -->
