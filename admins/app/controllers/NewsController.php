@@ -10,37 +10,76 @@ class NewsController extends BaseController
      */
     public function getIndex()
     {
+        $data = Input::all();
+
         $theme = Theme::uses('default')->layout('adminlte2');
         $theme->setTitle('Admin SiamiTs :: News');
         $theme->setDescription('News description');
         $theme->share('user', $this->user);
 
+        $page    = array_get($data, 'page', '1');
+        $perpage = array_get($data, 'perpage', '10');
+        $order   = array_get($data, 'order', 'id');
+        $sort    = array_get($data, 'sort', 'desc');
+
         $parameters = array(
-            'user_id' => '1',
-            'perpage' => '20',
-            'order' => 'updated_at',
-            'sort' => 'desc',
+            'page'    => $page,
+            'perpage' => $perpage,
+            'order'   => $order,
+            'sort'    => $sort,
         );
+
+        if ($s = array_get($data, 's', false)) {
+            $parameters['s'] = $s;
+        }
 
         $client = new Client(Config::get('url.siamits-api'));
         $results = $client->get('news', $parameters);
         $results = json_decode($results, true);
 
-        $news = array_get($results, 'data.record', array());
+        if ($status_code = array_get($results, 'status_code', false) != '0') {
+            $message = array_get($results, 'status_txt', 'Data not found');
+
+            if ($status_code != '1004') {
+                return Redirect::to('news')->with('error', $message);
+            }
+        }
 
         if (isset($_GET['sdebug'])) {
             alert($results);
             die();
         }
 
-        $view = array(
-            'news' => $news,
+        $entries = array_get($results, 'data.record', array());
+
+        $table_title = array(
+            'id'         => array('ID ', 1),
+            'title'      => array('Title', 1),
+            'images'     => array('Image', 0),
+            'reference'  => array('Reference', 1),
+            // 'category'   => array('Category', 1),
+            'type'       => array('Type', 1),
+            'created_at' => array('Created', 1),
+            'updated_at' => array('Updated', 1),
+            'manage'     => array('Manage', 0),
         );
 
-        $script = $theme->scopeWithLayout('news.jscript_index', $view)->content();
+        $view = array(
+            'num_rows'    => count($entries),
+            'data'        => $entries,
+            'param'       => $parameters,
+            'table_title' => $table_title,
+        );
+
+        //Pagination
+        if ($pagination = self::getDataArray($results, 'data.pagination')) {
+            $view['pagination'] = self::getPaginationsMake($pagination, $entries);
+        }
+
+        $script = $theme->scopeWithLayout('news.jscript_list', $view)->content();
         $theme->asset()->container('inline_script')->usePath()->writeContent('custom-inline-script', $script);
 
-        return $theme->scopeWithLayout('news.index', $view)->render();
+        return $theme->scopeWithLayout('news.list', $view)->render();
     }
 
     public function getAdd()
@@ -60,11 +99,9 @@ class NewsController extends BaseController
         $results = json_decode($results, true);
 
         if (array_get($results, 'status_code', false) != '0') {
-            $message = array(
-                'message' => array_get($results, 'status_txt', false),
-            );
+            $message = array_get($results, 'status_txt', false);
 
-            return Redirect::to('news')->withErrors($message);
+            return Redirect::to('news')->with('error', $message);
         }
 
         $categories = array_get($results, 'data.record', array());
@@ -121,11 +158,9 @@ class NewsController extends BaseController
 
         $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
-            $message = array(
-                'message' => $validator->messages()->first(),
-            );
+            $message = $validator->messages()->first();
 
-            return Redirect::to('news')->withErrors($message);
+            return Redirect::to('news')->with('error', $message);
         }
 
         $images_arr = array_get($data, 'images_arr', array());
@@ -170,16 +205,14 @@ class NewsController extends BaseController
 
                     if ($status_code = array_get($results, 'status_code', false) != '0') {
                         $message = array_get($results, 'status_txt', '');
-                        return Redirect::to('news')->withErrors($message);
+                        return Redirect::to('news')->with('error', $message);
                     }
                 }
             }
 
-            $message = array(
-                'message' => array_get($results, 'status_txt', 'Can not created news'),
-            );
+            $message = array_get($results, 'status_txt', 'Can not created news');
 
-            return Redirect::to('news')->withErrors($message);
+            return Redirect::to('news')->with('error', $message);
         } else {
             if (isset($images_arr) && is_array($images_arr)) {
                 foreach ($images_arr as $key => $value) {
@@ -194,16 +227,14 @@ class NewsController extends BaseController
 
                     if ($status_code = array_get($results, 'status_code', false) != '0') {
                         $message = array_get($results, 'status_txt', '');
-                        return Redirect::to('news')->withErrors($message);
+                        return Redirect::to('news')->with('error', $message);
                     }
                 }
             }
         }
 
-        $message = array(
-            'message' => 'You successfully created',
-        );
-        return Redirect::to('news')->withSuccess($message);
+        $message = 'You successfully created';
+        return Redirect::to('news')->with('success', $message);
     }
 
     public function getEdit($id)
@@ -227,11 +258,9 @@ class NewsController extends BaseController
         $results = json_decode($results, true);
 
         if (array_get($results, 'status_code', false) != '0') {
-            $message = array(
-                'message' => array_get($results, 'status_txt', 'Can not created news'),
-            );
+            $message = array_get($results, 'status_txt', 'Can not created news');
 
-            return Redirect::to('news')->withErrors($message);
+            return Redirect::to('news')->with('error', $message);
         }
 
         $news = array_get($results, 'data.record', array());
@@ -245,11 +274,9 @@ class NewsController extends BaseController
         $results = json_decode($results, true);
 
         if (array_get($results, 'status_code', false) != '0') {
-            $message = array(
-                'message' => array_get($results, 'status_txt', false),
-            );
+            $message = array_get($results, 'status_txt', false);
 
-            return Redirect::to('news')->withErrors($message);
+            return Redirect::to('news')->with('error', $message);
         }
 
         $categories = array_get($results, 'data.record', array());
@@ -294,11 +321,9 @@ class NewsController extends BaseController
 
         $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
-            $message = array(
-                'message' => $validator->messages()->first(),
-            );
+            $message = $validator->messages()->first();
 
-            return Redirect::to('news')->withErrors($message);
+            return Redirect::to('news')->with('error', $message);
         }
 
         $action = array_get($data, 'action', null);
@@ -315,11 +340,9 @@ class NewsController extends BaseController
 
             $validator = Validator::make($data, $rules);
             if ($validator->fails()) {
-                $message = array(
-                    'message' => $validator->messages()->first(),
-                );
+                $message = $validator->messages()->first();
 
-                return Redirect::to('news')->withErrors($message);
+                return Redirect::to('news')->with('error', $message);
             }
 
             $id         = array_get($data, 'id', 0);
@@ -362,16 +385,12 @@ class NewsController extends BaseController
             $results = json_decode($results, true);
 
             if (array_get($results, 'status_code', false) != '0') {
-                $message = array(
-                    'message' => array_get($results, 'status_txt', 'Can not delete news'),
-                );
+                $message = array_get($results, 'status_txt', 'Can not delete news');
 
-                return Redirect::to('news')->withErrors($message);
+                return Redirect::to('news')->with('error', $message);
             }
 
-            $message = array(
-                'message' => 'You successfully delete',
-            );
+            $message = 'You successfully delete';
 
             // Order
         } else if ($action == 'order') {
@@ -383,11 +402,9 @@ class NewsController extends BaseController
 
             $validator = Validator::make($data, $rules);
             if ($validator->fails()) {
-                $message = array(
-                    'message' => $validator->messages()->first(),
-                );
+                $message = $validator->messages()->first();
 
-                return Redirect::to('news')->withErrors($message);
+                return Redirect::to('news')->with('error', $message);
             }
 
             $user_id = array_get($data, 'user_id', 0);
@@ -410,16 +427,12 @@ class NewsController extends BaseController
             }
 
             if (array_get($results, 'status_code', false) != '0') {
-                $message = array(
-                    'message' => array_get($results, 'status_txt', 'Can not order news'),
-                );
+                $message = array_get($results, 'status_txt', 'Can not order news');
 
-                return Redirect::to('news')->withErrors($message);
+                return Redirect::to('news')->with('error', $message);
             }
 
-            $message = array(
-                'message' => 'You successfully order',
-            );
+            $message = 'You successfully order';
 
             // Edit
         } else {
@@ -445,11 +458,9 @@ class NewsController extends BaseController
 
             $validator = Validator::make($data, $rules);
             if ($validator->fails()) {
-                $message = array(
-                    'message' => $validator->messages()->first(),
-                );
+                $message = $validator->messages()->first();
 
-                return Redirect::to('news')->withErrors($message);
+                return Redirect::to('news')->with('error', $message);
             }
 
             $images_arr = array_get($data, 'images_arr', array());
@@ -479,11 +490,9 @@ class NewsController extends BaseController
             $results = json_decode($results, true);
 
             if (array_get($results, 'status_code', false) != '0') {
-                $message = array(
-                    'message' => array_get($results, 'status_txt', 'Can not updated news'),
-                );
+                $message = array_get($results, 'status_txt', 'Can not updated news');
 
-                return Redirect::to('news')->withErrors($message);
+                return Redirect::to('news')->with('error', $message);
             } else {
                 if (isset($images_arr) && is_array($images_arr)) {
                     foreach ($images_arr as $key => $value) {
@@ -498,19 +507,17 @@ class NewsController extends BaseController
 
                         if ($status_code = array_get($results, 'status_code', false) != '0') {
                             $message = array_get($results, 'status_txt', '');
-                            return Redirect::to('news')->withErrors($message);
+                            return Redirect::to('news')->with('error', $message);
                         }
                     }
                 }
             }
 
-            $message = array(
-                'message' => 'You successfully updated',
-            );
-            return Redirect::to('news')->withSuccess($message);
+            $message = 'You successfully updated';
+            return Redirect::to('news')->with('success', $message);
         }
 
-        return Redirect::to('news')->withSuccess($message);
+        return Redirect::to('news')->with('success', $message);
     }
 
     public function postUploads()
@@ -608,9 +615,7 @@ class NewsController extends BaseController
 
         $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
-            $message = array(
-                'message' => $validator->messages()->first(),
-            );
+            $message = $validator->messages()->first();
 
             return $client->createResponse($response, 1003);
         }
@@ -650,9 +655,7 @@ class NewsController extends BaseController
 
         $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
-            $message = array(
-                'message' => $validator->messages()->first(),
-            );
+            $message = $validator->messages()->first();
 
             return json_encode(false);
         }
@@ -681,5 +684,18 @@ class NewsController extends BaseController
         }
 
         return json_encode($entry);
+    }
+
+    private function getPaginationsMake($pagination, $record)
+    {
+        $total = array_get($pagination, 'total', 0);
+        $limit = array_get($pagination, 'perpage', 0);
+        $paginations = Paginator::make($record, $total, $limit);
+        return isset($paginations) ? $paginations : '';
+    }
+
+    private function getDataArray($data, $key)
+    {
+        return array_get($data, $key, false);
     }
 }

@@ -49,6 +49,8 @@ class BannersController extends ApiController
             'order' => array_get($data, 'order', 'position'),
             'sort' => array_get($data, 'sort', 'asc'),
         );
+        
+        isset($data['s']) ? $filters['s'] = $data['s'] : '';
 
         $query = Banners::filters($filters)
             ->with('images')

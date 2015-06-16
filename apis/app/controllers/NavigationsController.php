@@ -15,7 +15,7 @@ class NavigationsController extends ApiController
 
         // Validator request
         $rules = array(
-            'member_id' => 'required|integer|min:1',
+            'user_id' => 'required|integer|min:1',
         );
 
         $validator = Validator::make($data, $rules);
@@ -28,7 +28,7 @@ class NavigationsController extends ApiController
         }
 
         $parameters = array(
-            'member_id' => $data['member_id'],
+            'user_id' => $data['user_id'],
         );
 
         $results = $this->navigationsRepository->lists($parameters);
@@ -52,7 +52,7 @@ class NavigationsController extends ApiController
 
         // Validator request
         $rules = array(
-            'member_id' => 'required|integer|min:1',
+            'user_id' => 'required|integer|min:1',
             'title'     => 'required|min:1',
             'position'  => 'required|integer|min:1',
             'url'       => 'required|min:1',
@@ -69,7 +69,7 @@ class NavigationsController extends ApiController
         }
 
         $parameters = array(
-            'member_id' => $data['member_id'],
+            'user_id' => $data['user_id'],
             'title'     => $data['title'],
             'position'  => $data['position'],
             'url'       => $data['url'],
@@ -104,7 +104,7 @@ class NavigationsController extends ApiController
         // Validator request
         $rules = array(
             'id'        => 'required|integer|min:1',
-            'member_id' => 'required|integer|min:1',
+            'user_id' => 'required|integer|min:1',
             'title'     => 'required|min:1',
             'position'  => 'required|integer|min:1',
             'url'       => 'required|min:1',
@@ -122,7 +122,7 @@ class NavigationsController extends ApiController
 
         $parameters = array(
             'id'        => $data['id'],
-            'member_id' => $data['member_id'],
+            'user_id' => $data['user_id'],
             'title'     => $data['title'],
             'position'  => $data['position'],
             'url'       => $data['url'],

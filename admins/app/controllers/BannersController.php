@@ -22,8 +22,8 @@ class BannersController extends BaseController
         $data = Input::all();
 
         $theme = Theme::uses('default')->layout('adminlte2');
-        $theme->setTitle('Admin SiamiTs :: Members');
-        $theme->setDescription('Members description');
+        $theme->setTitle('Admin SiamiTs :: Banners');
+        $theme->setDescription('Banners description');
         $theme->share('user', $this->user);
 
         $page    = array_get($data, 'page', '1');
@@ -150,7 +150,7 @@ class BannersController extends BaseController
             'images'     => array_get($data, 'images', ''),
             'position'   => array_get($data, 'positon', '0'),
             'type'       => array_get($data, 'user_id', '1'),
-            'status'     => array_get($data, 'user_id', '1'),
+            'status'     => array_get($data, 'status', '1'),
         );
 
         $client = new Client(Config::get('url.siamits-api'));
@@ -239,11 +239,11 @@ class BannersController extends BaseController
             }
 
             $id        = array_get($data, 'id', '');
-            $images_id = array_get($data, 'user_id', '');
-            $user_id = array_get($data, 'images_id', '');
+            $images_id = array_get($data, 'images_id', '');
+            $user_id = array_get($data, 'user_id', '');
 
             $delete_file  = true;
-            if ($fileName = array_get($data, 'code', false)) {
+            if ($name = array_get($data, 'code', false)) {
                 $path     = '../res/public/uploads/'.$user_id; // upload path
 
                 // Delete old image

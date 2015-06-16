@@ -84,7 +84,7 @@ class TagsController extends ApiController
             return API::createResponse($response, 1003);
         }
 
-        $member_id = array_get($data, 'member_id', 0);
+        $user_id = array_get($data, 'user_id', 0);
 
         $filters = array(
             'id'        => $id,

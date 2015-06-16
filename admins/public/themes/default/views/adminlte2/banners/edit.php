@@ -21,26 +21,31 @@
     <section class="content">
 
         <!-- Message Success -->
-        <?php if($success = Session::get('success')): ?>
+        <?php if($success = Session::has('success')): ?>
         <div class="alert alert-success alert-dismissable">
             <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-            <h4>
-                <i class="icon fa fa-check"></i>
-                Success! <?php echo $success['message']; ?>
-            </h4>         
+            <i class="icon fa fa-check"></i>
+            <?php echo (null !== Session::get('success')) ? Session::get('success') : '';?>       
         </div>
-        <?php endif;?>
+        <?php endif; ?>
 
         <!-- Message Error -->
-        <?php if($message = $errors->first()): ?>
+        <?php if($error = Session::has('error')): ?>
         <div class="alert alert-danger alert-dismissable">
             <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-            <h4>
-                <i class="icon fa fa-ban"></i>
-                Errors! <?php echo $message; ?>
-            </h4>
+            <i class="icon fa fa-ban"></i>
+            <?php echo (null !== Session::get('error')) ? Session::get('error') : '';?>
         </div>
-        <?php endif;?>
+        <?php endif; ?>
+
+        <!-- Message Warning -->
+        <?php if($error = Session::has('warning')): ?>
+        <div class="alert alert-warning alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <i class="icon fa fa-warning"></i>
+            <?php echo (null !== Session::get('warning')) ? Session::get('warning') : '';?>
+        </div>
+        <?php endif; ?>
 
         <div class="row">
             <!-- left column -->

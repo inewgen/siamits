@@ -12,7 +12,7 @@ class CategoriesController extends ApiController
 
         // Validator
         $rules = array(
-            'member_id' => 'required|integer|min:1',
+            'user_id' => 'required|integer|min:1',
             'type'      => 'integer|min:1',
         );
 
@@ -35,7 +35,7 @@ class CategoriesController extends ApiController
         $skip = ($page - 1) * $take;
 
         $filters = array(
-            'member_id' => $data['member_id'],
+            'user_id' => $data['user_id'],
         );
 
         isset($data['type']) ? $filters['type'] = $data['type']:'';
@@ -73,7 +73,7 @@ class CategoriesController extends ApiController
             'title'       => 'required',
             // 'description' => 'required',
             'parent_id'   => 'required|integer',
-            'member_id'   => 'required|integer',
+            'user_id'   => 'required|integer',
             'position'    => 'required|integer',
             'images'      => 'integer',
             'type'        => 'required|integer',
@@ -94,7 +94,7 @@ class CategoriesController extends ApiController
             'title'       => array_get($data, 'title', ''),
             'description' => array_get($data, 'description', ''),
             'parent_id'   => array_get($data, 'parent_id', '0'),
-            'member_id'   => array_get($data, 'member_id', '1'),
+            'user_id'   => array_get($data, 'user_id', '1'),
             'position'    => array_get($data, 'position', '0'),
             'images'      => array_get($data, 'images', '0'),
             'type'        => array_get($data, 'type', '0'),
@@ -134,7 +134,7 @@ class CategoriesController extends ApiController
         // Validator
         $rules = array(
             'id'        => 'required|integer|min:1',
-            'member_id' => 'required|integer|min:1',
+            'user_id' => 'required|integer|min:1',
         );
 
         $validator = Validator::make($data, $rules);
@@ -146,11 +146,11 @@ class CategoriesController extends ApiController
             return API::createResponse($response, 1003);
         }
 
-        $member_id = array_get($data, 'member_id', 0);
+        $user_id = array_get($data, 'user_id', 0);
 
         $filters = array(
             'id'        => $id,
-            'member_id' => $member_id,
+            'user_id' => $user_id,
         );
 
         // Query
@@ -178,7 +178,7 @@ class CategoriesController extends ApiController
         // Validator
         $rules = array(
             'id'        => 'required|integer|min:1',
-            'member_id' => 'required|integer'
+            'user_id' => 'required|integer'
         );
 
         $validator = Validator::make($data, $rules);
@@ -191,7 +191,7 @@ class CategoriesController extends ApiController
         }
 
         $id        = array_get($data, 'id', null);
-        $member_id = array_get($data, 'member_id', null);
+        $user_id = array_get($data, 'user_id', null);
         $response  = array();
 
         // Update
@@ -199,7 +199,7 @@ class CategoriesController extends ApiController
             'title',
             'description',
             'parent_id',
-            'member_id',
+            'user_id',
             'position',
             'images',
             'type',
@@ -217,7 +217,7 @@ class CategoriesController extends ApiController
 
             // Update
             $query = Categories::where('id', '=', $id)
-                ->where('member_id', '=', $member_id);
+                ->where('user_id', '=', $user_id);
               
             if ($query) {
                 $query->update($parameters);

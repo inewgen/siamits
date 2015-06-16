@@ -17,6 +17,11 @@ class Banners extends Eloquent
             $query->where('user_id', '=', $val);
         }
 
+        if ($val = array_get($filters, 's')) {
+            $query->where('title', 'LIKE', '%'.$val.'%');
+            $query->orWhere('subtitle', 'LIKE', '%'.$val.'%');
+        }
+
         return $query;
     }
 }

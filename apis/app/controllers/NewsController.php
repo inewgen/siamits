@@ -15,7 +15,7 @@ class NewsController extends ApiController
 
         // Validator request
         $rules = array(
-            'user_id' => 'required|integer|min:1',
+            'user_id' => 'integer|min:1',
         );
 
         $validator = Validator::make($data, $rules);
@@ -39,6 +39,8 @@ class NewsController extends ApiController
             'user_id' => $user_id,
             'ids_type' => '2'
         );
+
+        isset($data['s']) ? $filters['s'] = $data['s'] : '';
 
         // Query
         $order   = array_get($data, 'order', 'updated_at');

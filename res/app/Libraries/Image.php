@@ -71,7 +71,7 @@ class Image
         // Open the file, resize it and save it.
         $this->imagine->open($inputFile)
              ->thumbnail($size, $mode)
-             ->save($outputFile, array('quality' => 100));
+             ->save($outputFile, array('quality' => 90));
 
         // Return the resized file.
         return File::get($outputFile);

@@ -24,10 +24,8 @@
         <?php if($success = Session::has('success')): ?>
         <div class="alert alert-success alert-dismissable">
             <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-            <h4>
-                <i class="icon fa fa-check"></i>
-                <?php echo (null !== Session::get('success')) ? Session::get('success') : '';?>
-            </h4>         
+            <i class="icon fa fa-check"></i>
+            <?php echo (null !== Session::get('success')) ? Session::get('success') : '';?>       
         </div>
         <?php endif; ?>
 
@@ -35,10 +33,17 @@
         <?php if($error = Session::has('error')): ?>
         <div class="alert alert-danger alert-dismissable">
             <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-            <h4>
-                <i class="icon fa fa-ban"></i>
-                <?php echo (null !== Session::get('error')) ? Session::get('error') : '';?>
-            </h4>
+            <i class="icon fa fa-ban"></i>
+            <?php echo (null !== Session::get('error')) ? Session::get('error') : '';?>
+        </div>
+        <?php endif; ?>
+
+        <!-- Message Warning -->
+        <?php if($error = Session::has('warning')): ?>
+        <div class="alert alert-warning alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <i class="icon fa fa-warning"></i>
+            <?php echo (null !== Session::get('warning')) ? Session::get('warning') : '';?>
         </div>
         <?php endif; ?>
 
@@ -129,10 +134,10 @@
                                                 <img alt="150x150" src="<?php echo $image['url'];?>" width="150" height="150">
                                             </a>
                                             <div class="tools tools-bottom">
-                                                <a href="javascript:void(0)" onclick="return image_delete('<?php echo $image['code'];?>', '<?php echo $news['member_id'];?>', '<?php echo $image['extension'];?>');" title="Delete">
+                                                <a href="javascript:void(0)" onclick="return image_delete('<?php echo $image['code'];?>', '<?php echo $news['user_id'];?>', '<?php echo $image['extension'];?>');" title="Delete">
                                                     <i class="fa fa-fw fa-trash-o"></i>
                                                 </a>
-                                                <a class="copy-link-wrap" href="javascript:void(0)" title="Copy Link" data="<?php echo URL::to('public');?>/uploads/<?php echo $news['member_id'];?>/news/<?php echo $image['code'];?>.<?php echo $image['extension'];?>">
+                                                <a class="copy-link-wrap" href="javascript:void(0)" title="Copy Link" data="<?php echo URL::to('public');?>/uploads/<?php echo $news['user_id'];?>/news/<?php echo $image['code'];?>.<?php echo $image['extension'];?>">
                                                     <i class="fa fa-fw fa-link"></i>
                                                 </a>
                                             </div>
@@ -152,7 +157,7 @@
                         </div>
 
                         <input type="hidden" name="action" value="edit">
-                        <input type="hidden" name="member_id" value="<?php echo $member_id;?>">
+                        <input type="hidden" name="user_id" value="<?php echo $user_id;?>">
                         <input type="hidden" name="ids" value="<?php echo $ids;?>">
                         <input type="hidden" name="id" value="<?php echo $id;?>">
                     </form>

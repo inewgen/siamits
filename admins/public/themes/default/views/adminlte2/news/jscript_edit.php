@@ -102,7 +102,7 @@ Theme::asset()->container('footer')->add('fastclick', 'public/themes/adminlte2/p
         $('#file_upload').uploadify({
             'formData'     : {
                 'ids':       '<?php echo $ids;?>',
-                'member_id': '<?php echo $member_id;?>',
+                'user_id': '<?php echo $user_id;?>',
                 'cate':      '<?php echo $cate;?>',
                 'cate_id':   '<?php echo $cate_id;?>', //2=news
                 'timestamp': '<?php echo $timestamp;?>',
@@ -117,10 +117,10 @@ Theme::asset()->container('footer')->add('fastclick', 'public/themes/adminlte2/p
                 var data      = jQuery.parseJSON(data);
                 var url       = data.url;
                 var code      = data.code;
-                var member_id = data.member_id;
+                var user_id = data.user_id;
                 var extension = data.extension;
 
-                var url_img = '<?php echo URL::to("public");?>/uploads/'+member_id+'/news/'+code+'.'+extension;
+                var url_img = '<?php echo URL::to("public");?>/uploads/'+user_id+'/news/'+code+'.'+extension;
 
                 $('#images').val('<?php echo $ids;?>');
                 var img_upload_tag = ''+
@@ -130,7 +130,7 @@ Theme::asset()->container('footer')->add('fastclick', 'public/themes/adminlte2/p
                             '<img alt="150x150" src="'+ url +'" width="150" height="150">'+
                         '</a>'+
                         '<div class="tools tools-bottom">'+
-                            '<a href="javascript:void(0)" onclick="return image_delete(\''+code+'\', \''+member_id+'\', \''+extension+'\');" title="Delete">'+
+                            '<a href="javascript:void(0)" onclick="return image_delete(\''+code+'\', \''+user_id+'\', \''+extension+'\');" title="Delete">'+
                                 '<i class="fa fa-fw fa-trash-o"></i>'+
                             '</a>'+
                             '<a class="copy-link-wrap" href="javascript:void(0)" title="Copy Link" data="'+url_img+'">'+
@@ -168,13 +168,13 @@ Theme::asset()->container('footer')->add('fastclick', 'public/themes/adminlte2/p
         });
     });
 
-    function image_delete(code, member_id, extension){
+    function image_delete(code, user_id, extension){
         bootbox.confirm("คุณต้องการลบหรือไม่", function(result) {
             if(result){
                 $.ajax({
                     type: "GET",
                     url: "<?php echo URL::to('news/deleteimages');?>",
-                    data: 'code='+code+'&member_id='+member_id+'&extension='+extension,
+                    data: 'code='+code+'&user_id='+user_id+'&extension='+extension,
                     dataType: "json",
                     success: function(data) {
                         
