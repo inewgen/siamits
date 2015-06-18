@@ -57,31 +57,26 @@
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form id="frm_add_news" role="form" method="post" action="<?php echo URL::to('news/add');?>" enctype="multipart/form-data">
+                    <form id="frm_main" role="form" method="post" action="<?php echo URL::to('news/add');?>" enctype="multipart/form-data">
                         <div class="box-body">
                             <div class="form-group">
-                                <label for="">Title</label>
+                                <label for="">Title <font color="red">*</font></label>
                                 <input type="text" placeholder="" name="title" class="form-control">
                             </div>
                             <div class="form-group">
-                                <label for="">Sub Description</label>
+                                <label for="">Sub Description <font color="red">*</font></label>
                                 <input type="text" placeholder="" name="sub_description" class="form-control" maxlength="250">
                             </div>
                             <div class="form-group">
-                                <label for="">Description</label>
-                                <textarea name="description" class="textarea" placeholder="Place some text here" style="width: 100%; height: 400px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
-                                </textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="">Tags</label>
+                                <label for="">Tags <font color="red">*</font></label>
                                 <input type="text" placeholder="" name="tags" id="tags" class="form-control">
                             </div>
                             <div class="form-group">
-                                <label for="">Position</label>
+                                <label for="">Position <font color="red">*</font></label>
                                 <input type="text" placeholder="" name="position" class="form-control" value="0">
                             </div>
                             <div class="form-group">
-                                <label for="">Status</label>
+                                <label for="">Status <font color="red">*</font></label>
                                 <input type="text" placeholder="" name="status" class="form-control" value="1">
                             </div>
                             <div class="form-group">
@@ -93,7 +88,7 @@
                                 <input type="text" placeholder="" name="reference_url" class="form-control">
                             </div>
                             <div class="form-group">
-                                <label for="">Category</label>
+                                <label for="">Category <font color="red">*</font></label>
                                 <select name="category_id" class="form-control">
                             <?php if(isset($categories) && is_array($categories)):?>
                             <?php foreach ($categories as $key => $value): ?>
@@ -103,17 +98,23 @@
                                 </select>
                             </div> 
                             <div class="form-group">
-                                <label for="">Type</label>
+                                <label for="">Type <font color="red">*</font></label>
                                 <select name="type" class="form-control">
                                     <option value="1" selected="selected">ทั่วไป</option>
                                     <option value="2">Hightlight</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="">Images</label>
+                                <label for="">Description <font color="red">*</font></label>
+                                <textarea name="description" class="textarea" placeholder="Place some text here" style="width: 100%; height: 400px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
+                                </textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Images <font color="red">*</font></label>
                                 <input placeholder="" class="form-control" id="file_upload" name="file_upload" type="file" multiple="true">
-                                <input type="hidden" name="images" id="images" value="">
-                                <div id="show_image_upload" style="hight:150"></div>
+                                <input type="hidden" name="images_code" id="images_code" value="">
+                                <div id="show_image_upload" style="hight:150">      
+                                </div>
                             </div>
                         </div>
                         <!-- /.box-body -->

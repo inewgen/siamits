@@ -58,18 +58,20 @@
                 <!-- /.col -->
             </div>
         </form>
-
+<?php   if($_SERVER['MY_LARAVEL_ENV'] != 'production'): ?>
         <div class="social-auth-links text-center">
             <p>- OR -</p>
-            <!-- <a href="<?php echo URL::to('login/fb');?>" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign in using Facebook 1</a> -->
             <a href="<?php echo URL::to('fbauth');?>" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i> Sign in using Facebook</a>
             <a href="<?php echo URL::to('gauth');?>" class="btn btn-block btn-social btn-google-plus btn-flat"><i class="fa fa-google-plus"></i> Sign in using Google+</a>
         </div>
         <!-- /.social-auth-links -->
+<?php   endif;?>
 
         <a href="<?php echo URL::to('forgot');?>">I forgot my password</a>
         <br>
+<?php   if($_SERVER['MY_LARAVEL_ENV'] != 'production'): ?>
         <a href="<?php echo URL::to('register');?>" class="text-center">Register a new membership</a>
+<?php   endif;?>
 <?php else: ?>
         <form action="<?php echo URL::to('login');?>" method="post" id="frm_login" action="<?php echo URL::to('login');?>" enctype="multipart/form-data">
             <div class="form-group has-feedback" align="center">

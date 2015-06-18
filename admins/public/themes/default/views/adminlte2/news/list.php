@@ -110,9 +110,9 @@
                                     <tr>
                     <?php   foreach ($table_title as $key2 => $value2): ?>
                     <?php       if ($key2 == 'images'):?>
-                    <?php           if(array_get($value, 'images.0.url', false)): ?>
+                    <?php           if($url = array_get($value, 'images.0.url', false)): ?>
                                         <td>
-                                            <img src="<?php echo getImageLink('images', array_get($value, 'user_id', ''), array_get($value, 'images.0.code', ''), array_get($value, 'images.0.extension', ''), 200, 70, array_get($value, 'images.0.name', ''));?>" width="200px">
+                                            <img src="<?php echo $url;?>" width="150px">
                                         </td>
                     <?php           else: ?>
                                         <td>

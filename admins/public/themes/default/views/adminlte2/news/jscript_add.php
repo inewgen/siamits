@@ -10,7 +10,7 @@ Theme::asset()->container('footer')->add('bootbox', 'public/themes/adminlte2/plu
 Theme::asset()->container('footer')->add('validate', 'public/themes/adminlte2/plugins/jQuery/jquery.validate.min.js');
 Theme::asset()->container('footer')->add('uploadify', 'public/themes/adminlte2/plugins/uploadify/jquery.uploadify.min.js');
 Theme::asset()->container('footer')->add('ckeditor', 'public/themes/adminlte2/plugins/ckeditor2/ckeditor.js');
-Theme::asset()->container('footer')->add('zclip', 'public/themes/adminlte2/plugins/zclip/jquery.zclip.js');
+// Theme::asset()->container('footer')->add('zclip', 'public/themes/adminlte2/plugins/zclip/jquery.zclip.js');
 Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/plugins/jQuery-Tags-Input-master/src/jquery.tagsinput.js');
 ?>
 
@@ -19,7 +19,7 @@ Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/p
 
     $(function () {
 
-        var url_to_autocomplete_api = '<?php echo URL::to("news/tags");?>';
+        var url_to_autocomplete_api = '<?php echo URL::to("tags/check");?>';
     
         $('#tags').tagsInput({
             'autocomplete_url': url_to_autocomplete_api,
@@ -44,24 +44,7 @@ Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/p
             height: 400
         } );
 
-        $('.copy-link-wrap').zclip({
-            path: '<?php echo URL::to("public");?>/themes/adminlte2/plugins/zclip/ZeroClipboard.swf',
-            copy:function(){return $(this).attr('data');},
-            afterCopy:function(){
-                console.log('Copy Success');
-                // bootbox.dialog({
-                //   message: "Data in clipboard! '"+$(this).attr('data')+"'",
-                //   buttons: {
-                //     success: {
-                //       label: "ตกลง",
-                //       className: "btn-small btn-primary"
-                //     }
-                //   }
-                // });
-            }
-        });
-
-        $("#frm_add_news").validate({
+        $("#frm_main").validate({
             ignore: [],
             errorElement: 'span',
             errorClass: 'text-red',
@@ -74,7 +57,7 @@ Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/p
                 status: "required",
                 tags: "required",
                 type: "required",
-                images: "required",
+                images_code: "required",
                 category_id: "required",
             },
             messages: {
@@ -85,7 +68,7 @@ Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/p
                 status: "This field is required",
                 tags: "This field is required",
                 type: "This field is required",
-                images: "This field is required",
+                images_code: "This field is required",
                 category_id: "This field is required",
             }
         });
@@ -93,93 +76,134 @@ Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/p
         <?php $timestamp = time();?>
         $('#file_upload').uploadify({
             'formData'     : {
-                'ids':       '<?php echo $ids;?>',
-                'user_id': '<?php echo $user_id;?>',
-                'cate':      '<?php echo $cate;?>',
-                'cate_id':   '<?php echo $cate_id;?>', //2=news
+                'w': '150',
+                'section': 'news',
+                'user_id': '<?php echo $user->id;?>',
                 'timestamp': '<?php echo $timestamp;?>',
-                'token':     '<?php echo md5("unique_salt" . $timestamp);?>'
+                'token':     '<?php echo md5(Config::get("web.siamits-keys") . $timestamp);?>'
             },
             'removeCompleted' : true,
             //'debug'    : true,
             'multi'    : true,
             'swf'      : '<?php echo URL::to("public/themes/adminlte2");?>/plugins/uploadify/uploadify.swf',
-            'uploader' : '<?php echo URL::to("news/uploads");?>',
+            'uploader' : '<?php echo URL::to("images/uploads");?>',
             'onUploadSuccess' : function(file, data, response) {
+                console.log(data);
                 var data      = jQuery.parseJSON(data);
-                var url       = data.url;
-                var code      = data.code;
-                var user_id = data.user_id;
-                var extension = data.extension;
+                var status_code = data.status_code;
+                if(status_code == '2000'){
+                    alert(data.data);
+                }else if(status_code != '0'){
+                    var error       = data.data.message;
+                    bootbox.dialog({
+                      message: error,
+                      buttons: {
+                        success: {
+                          label: "ตกลง",
+                          className: "btn-small btn-primary"
+                        }
+                      }
+                    });
+                }else if(status_code == '0'){
+                    var id        = data.data.id;
+                    var url       = data.data.url;
+                    var url_real       = data.data.url_real;
+                    var code      = data.data.code;
+                    var user_id   = data.data.user_id;
+                    var extension = data.data.extension;
 
-                var url_img = '<?php echo URL::to("public");?>/uploads/'+user_id+'/news/'+code+'.'+extension;
+                    var w = 150;
+                    var show_hover_button = true;
 
-                $('#images').val('<?php echo $ids;?>');
-                var img_upload_tag = ''+
-                '<div id="'+code+'"><ul class="ace-thumbnails">'+
-                    '<li>'+
-                        '<a href="javascript:void(0)">'+
-                            '<img alt="150x150" src="'+ url +'" width="150" height="150">'+
-                        '</a>'+
-                        '<div class="tools tools-bottom">'+
-                            '<a href="javascript:void(0)" onclick="return image_delete(\''+code+'\', \''+user_id+'\', \''+extension+'\');" title="Delete">'+
-                                '<i class="fa fa-fw fa-trash-o"></i>'+
-                            '</a>'+
-                            '<a class="copy-link-wrap" href="javascript:void(0)" title="Copy Link" data="'+url_img+'">'+
-                                '<i class="fa fa-fw fa-link"></i>'+
-                            '</a>'+
-                        '</div>'+
-                    '</li>'+
-                '</ul><input type="hidden" name="images_arr['+code+']" value="'+code+'">'+
-                '</div>';
+                    $('#images_code').val(code);
 
-                $("#show_image_upload").append(img_upload_tag);
+                    var img_upload_tag = ''+
+                    '<div id="'+id+'" align="center"><ul class="ace-thumbnails">'+
+                        '<li>'+
+                            '<a href="javascript:void(0)">'+
+                                '<img alt="'+w+'" src="'+ url +'" width="'+w+'" height="">'+
+                            '</a>';
+                    if(show_hover_button){
+                        img_upload_tag = img_upload_tag +
+                            '<div class="tools tools-bottom">'+
+                                '<a href="javascript:void(0)" onclick="return image_delete(\''+id+'\',\''+code+'\', \''+user_id+'\', \''+extension+'\');" title="Delete">'+
+                                    '<i class="fa fa-fw fa-trash-o"></i>'+
+                                '</a>'+
+                                '<a class="copy-link-wrap" id="copy_link_'+num_images+'" href="javascript:void(0)" title="Copy Link" data="'+url_real+'">'+
+                                    '<i class="fa fa-fw fa-link"></i>'+
+                                '</a>'+
+                            '</div>';
+                    }   
+                        img_upload_tag = img_upload_tag +
+                        '</li>'+
+                    '</ul><input type="hidden" name="images[]" value="'+id+'">'+
+                    '</div>';
 
-                $('.copy-link-wrap').zclip({
-                    path: '<?php echo URL::to("public");?>/themes/adminlte2/plugins/zclip/ZeroClipboard.swf',
-                    copy:function(){return $(this).attr('data');},
-                    afterCopy:function(){
-                        console.log('Copy Success');
-                        // bootbox.dialog({
-                        //   message: "Data in clipboard! '"+$(this).attr('data')+"'",
-                        //   buttons: {
-                        //     success: {
-                        //       label: "ตกลง",
-                        //       className: "btn-small btn-primary"
-                        //     }
-                        //   }
-                        // });
-                    }
-                });
+                    $("#show_image_upload").append(img_upload_tag);
 
-                num_images++;
-                //alert('The file ' + file.name + ' was successfully uploaded with a response of ' + response + ':' + data);
+                    $('#copy_link_'+num_images).click(function() {
+                        var url_real = $(this).attr('data');
+                        
+                        bootbox.dialog({
+                          message: "<input id='image_link' type='text' size='85' value='"+$(this).attr('data')+"'/>",
+                          buttons: {
+                            success: {
+                              label: "ตกลง",
+                              className: "btn-small btn-primary"
+                            }
+                          }
+                        });
+
+                        $("#image_link").click(function() {
+                            $(this).select();
+                        });
+                    });
+
+                    num_images++;
+                }
             },
             'onUploadError' : function(file, errorCode, errorMsg, errorString) {
                 alert('The file ' + file.name + ' could not be uploaded: ' + errorString);
             } 
         });
+        
+        $('.copy-link-wrap').click(function() {
+            var url_real = $(this).attr('data');
+            
+            bootbox.dialog({
+              message: "<input id='image_link' type='text' size='85' value='"+$(this).attr('data')+"'/>",
+              buttons: {
+                success: {
+                  label: "ตกลง",
+                  className: "btn-small btn-primary"
+                }
+              }
+            });
+
+            $("#image_link").click(function() {
+                $(this).select();
+            });
+        });
     });
 
-    function image_delete(code, user_id, extension){
+    function image_delete(id, code, user_id, extension){
         bootbox.confirm("คุณต้องการลบหรือไม่", function(result) {
             if(result){
                 $.ajax({
                     type: "GET",
-                    url: "<?php echo URL::to('news/deleteimages');?>",
-                    data: 'code='+code+'&user_id='+user_id+'&extension='+extension,
+                    url: "<?php echo URL::to('images/delete');?>",
+                    data: 'id='+id+'&code='+code+'&user_id='+user_id+'&extension='+extension,
                     dataType: "json",
                     success: function(data) {
                         
                         if(data.status_code == '0')
-                        {
-                            num_images--;
-                            if(num_images < 0){
-                                $('#images').val('');
+                        {   
+                            if(num_images == 1){
+                                $('#images_code').val('');
                             }
-
+                            num_images--;
                             console.log("Success");
-                            $('#'+code).remove();
+                            $('#'+id).remove();
                         }else{
                             bootbox.dialog({
                               message: "Can't delete this item!",
@@ -205,7 +229,7 @@ Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/p
                             }
                           }
                         });
-                        onsole.log("Unsuccess");
+                        console.log("Unsuccess");
                     }
                 });
             }

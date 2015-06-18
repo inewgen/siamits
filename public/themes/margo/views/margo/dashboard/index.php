@@ -242,7 +242,7 @@
                             <?php echo htmlspecialchars($value['title']); ?>
                             </a></h3>
                             <div class="post-content">
-                                <img src="<?php echo array_get($banner, 'images.0.url', '');?>" alt="" />
+                                <img src="<?php echo array_get($value, 'images.0.url', '');?>" alt="" width="200"/>
                                 <p>
                                 <?php echo htmlspecialchars($value['sub_description']); ?>
                                 <a class="read-more" href="<?php echo URL::to('news/'.$value['id']);?>">Read More...</a>
@@ -333,7 +333,7 @@
                 <div class="team-member modern">
                     <!-- Memebr Photo, Name & Position -->
                     <div class="member-photo">
-                        <img alt="" src="<?php echo array_get($banner, 'images.0.url', '');?>" />
+                        <img alt="" src="<?php echo array_get($value, 'images.0.url', '');?>" />
                         <div class="member-name"><?php echo htmlspecialchars($value['title']); ?><span><?php echo $d;?> <?php echo $d;?> <?php echo $y;?></span>
                         </div>
                     </div>

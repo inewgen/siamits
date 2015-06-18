@@ -57,7 +57,7 @@
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form id="frm_add_news" role="form" method="post" action="<?php echo URL::to('news');?>" enctype="multipart/form-data">
+                    <form id="frm_main" role="form" method="post" action="<?php echo URL::to('news');?>" enctype="multipart/form-data">
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="">Title</label>
@@ -66,12 +66,6 @@
                             <div class="form-group">
                                 <label for="">Sub Description</label>
                                 <input type="text" placeholder="" name="sub_description" class="form-control" value="<?php echo htmlspecialchars($news['sub_description']);?>" maxlength="250">
-                            </div>
-                            <div class="form-group">
-                                <label for="">Description</label>
-                                <textarea name="description" class="textarea" placeholder="Place some text here" style="width: 100%; height: 400px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
-                                     <?php echo htmlspecialchars($news['description']);?>
-                                </textarea>
                             </div>
                             <div class="form-group">
                                 <label for="">Tags</label>
@@ -122,28 +116,38 @@
                                 </label>
                             </div>
                             <div class="form-group">
+                                <label for="">Description</label>
+                                <textarea name="description" class="textarea" placeholder="Place some text here" style="width: 100%; height: 400px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
+                                     <?php echo htmlspecialchars($news['description']);?>
+                                </textarea>
+                            </div>
+                            <div class="form-group">
                                 <label for="">Images</label>
                                 <input placeholder="" class="form-control" id="file_upload" name="file_upload" type="file" multiple="true">
-                                <input type="hidden" name="images" id="images" value="<?php echo array_get($news, 'images.0.ids', '');?>">
+                                <!-- <input type="hidden" name="images" id="images" value="<?php echo array_get($news, 'images.0.ids', '');?>"> -->
+                                <input type="hidden" name="images_code" id="images_code" value="1">
                                 <div id="show_image_upload" style="hight:150">
 <?php if(isset($news['images']) && is_array($news['images'])):?>
+<?php $i = 0; ?>
 <?php foreach ($news['images'] as $key => $image): ?>
-                                    <div id="<?php echo $image['code'];?>"><ul class="ace-thumbnails">
+<?php $j = $i + 1; ?>
+                                    <div id="<?php echo $image['id'];?>"><ul class="ace-thumbnails">
                                         <li>
                                             <a href="javascript:void(0)">
                                                 <img alt="150x150" src="<?php echo $image['url'];?>" width="150" height="150">
                                             </a>
                                             <div class="tools tools-bottom">
-                                                <a href="javascript:void(0)" onclick="return image_delete('<?php echo $image['code'];?>', '<?php echo $news['user_id'];?>', '<?php echo $image['extension'];?>');" title="Delete">
+                                                <a href="javascript:void(0)" onclick="return image_delete('<?php echo $image['id'];?>', '<?php echo $image['code'];?>', '<?php echo $news['user_id'];?>', '<?php echo $image['extension'];?>');" title="Delete">
                                                     <i class="fa fa-fw fa-trash-o"></i>
                                                 </a>
-                                                <a class="copy-link-wrap" href="javascript:void(0)" title="Copy Link" data="<?php echo URL::to('public');?>/uploads/<?php echo $news['user_id'];?>/news/<?php echo $image['code'];?>.<?php echo $image['extension'];?>">
+                                                <a class="copy-link-wrap" id="copy_link_<?php echo $j;?>" href="javascript:void(0)" title="Copy Link" data="<?php echo $image['url_real'];?>">
                                                     <i class="fa fa-fw fa-link"></i>
                                                 </a>
                                             </div>
                                         </li>
-                                    </ul><input type="hidden" name="images_arr[<?php echo $image['code'];?>]" value="<?php echo $image['code'];?>">
+                                    </ul><input type="hidden" name="images[<?php echo $i;?>]" value="<?php echo $image['id'];?>">
                                     </div>
+<?php $i++; ?>
 <?php endforeach;?>
 <?php endif;?>
                                 </div>
