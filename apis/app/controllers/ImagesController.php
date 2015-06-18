@@ -146,7 +146,8 @@ class ImagesController extends ApiController
 
         // Validator request
         $rules = array(
-            'id' => 'required|integer|min:1',
+            'id'      => 'required|integer|min:1',
+            'user_id' => 'required|integer|min:1',
         );
 
         $validator = Validator::make($data, $rules);
@@ -162,11 +163,12 @@ class ImagesController extends ApiController
             'images_id' => $id,
         );
 
-        $count = Imageables::filters($filters)->count();
+        $count = Imageables::filters($filters_count)->count();
 
         if ($count == 0) {
             $filters = array(
-                'id'    => $data['id']
+                'id'      => $data['id'],
+                'user_id' => $data['user_id'],
             );
 
             $query = Images::filters($filters);

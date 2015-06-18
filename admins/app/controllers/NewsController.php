@@ -50,7 +50,50 @@ class NewsController extends BaseController
             die();
         }
 
-        $entries = array_get($results, 'data.record', array());
+        $results2 = array_get($results, 'data.record', array());
+        
+        // Loop data
+        $entries = array();
+        foreach ($results2 as $key => $value) {
+            $entry = array();
+            foreach ($value as $key2 => $value2) {
+                if (($key2 == 'images') && isset($value2) && is_array($value2)) {
+                    $entr = array();
+                    foreach ($value2 as $key3 => $value3) {
+                        $ent = array();
+                        foreach ($value3 as $key4 => $value4) {
+                            if ($key4 == 'url') {
+                                $w = 150;
+                                $width = array_get($value3, 'width', 200);
+                                $height = array_get($value3, 'height', 200);
+                                $user_id = array_get($value3, 'user_id', '');
+                                $image_code = array_get($value3, 'code', '');
+                                $extension = array_get($value3, 'extension', '');
+                                $name = array_get($value3, 'name', '');
+
+                                $h = 200;
+                                if ($width != 0) {
+                                    $h = (int) ceil($w * $height / $width);
+                                }
+                            
+                                $ent[$key4] = getImageLink('image', $user_id, $image_code, $extension, $w, $h, $name);
+                                $ent['url_real'] = getImageLink('image', $user_id, $image_code, $extension, $width, $height, $name);
+                            } else {
+                                $ent[$key4] = $value4;
+                            }
+                        }
+                        
+                        $entr[$key3] = $ent;
+                    }
+
+                    $entry[$key2] = $entr;
+                } else {
+                    $entry[$key2] = $value2;
+                }
+            }
+
+            $entries[] = $entry;
+        }
 
         $table_title = array(
             'id'         => array('ID ', 1),
@@ -150,20 +193,18 @@ class NewsController extends BaseController
             'position'        => 'required',
             'status'          => 'required',
             'type'            => 'required',
-            'user_id'       => 'required',
+            'user_id'         => 'required',
             'category_id'     => 'required',
             'tags'            => 'required',
-            'images_arr'      => 'required',
         );
 
         $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
             $message = $validator->messages()->first();
 
-            return Redirect::to('news')->with('error', $message);
+            return Redirect::to('news/add')->with('error', $message);
         }
 
-        $images_arr = array_get($data, 'images_arr', array());
         $user_id  = array_get($data, 'user_id', 0);
 
         // Add news
@@ -175,7 +216,7 @@ class NewsController extends BaseController
             'position'        => (isset($data['position']) ? $data['position'] : '0'),
             'status'          => (isset($data['status']) ? $data['status'] : '1'),
             'type'            => (isset($data['type']) ? $data['type'] : '1'),
-            'user_id'       => (isset($data['user_id']) ? $data['user_id'] : '0'),
+            'user_id'         => (isset($data['user_id']) ? $data['user_id'] : '0'),
             'reference'       => (isset($data['reference']) ? $data['reference'] : ''),
             'reference_url'   => (isset($data['reference_url']) ? $data['reference_url'] : '0'),
             'tags'            => (isset($data['tags']) ? $data['tags'] : ''),
@@ -187,50 +228,9 @@ class NewsController extends BaseController
         $results = json_decode($results, true);
 
         if (array_get($results, 'status_code', false) != '0') {
-            if (isset($images_arr) && is_array($images_arr)) {
-                foreach ($images_arr as $key => $value) {
-                    $code      = $key;
-                    $extension = $value;
-                    $user_id = $user_id;
-                    $cate      = 'news';
-                    $path      = 'public/uploads/' . $user_id . '/' . $cate; // upload path
-                    $file_path = $path . '/' . $code .'.'. $extension;
-
-                    // Delete image
-                    $delete_file = File::delete($file_path);
-              
-                    $parameters = array();
-                    $results    = $client->delete('images/'.$code, $parameters);
-                    $results    = json_decode($results, true);
-
-                    if ($status_code = array_get($results, 'status_code', false) != '0') {
-                        $message = array_get($results, 'status_txt', '');
-                        return Redirect::to('news')->with('error', $message);
-                    }
-                }
-            }
-
             $message = array_get($results, 'status_txt', 'Can not created news');
 
-            return Redirect::to('news')->with('error', $message);
-        } else {
-            if (isset($images_arr) && is_array($images_arr)) {
-                foreach ($images_arr as $key => $value) {
-                    $code      = $key;
-                    $parameters = array(
-                        'user_id' => $user_id,
-                        'type'      => '2',
-                    );
-
-                    $results    = $client->put('images/'.$code, $parameters);
-                    $results    = json_decode($results, true);
-
-                    if ($status_code = array_get($results, 'status_code', false) != '0') {
-                        $message = array_get($results, 'status_txt', '');
-                        return Redirect::to('news')->with('error', $message);
-                    }
-                }
-            }
+            return Redirect::to('news/add')->with('error', $message);
         }
 
         $message = 'You successfully created';
@@ -248,13 +248,7 @@ class NewsController extends BaseController
         $theme->setDescription('Edit News description');
         $theme->share('user', $this->user);
 
-        $user_id = '1';
-
-        $parameters = array(
-            'user_id' => $user_id,
-        );
-
-        $results = $client->get('news/' . $id, $parameters);
+        $results = $client->get('news/' . $id);
         $results = json_decode($results, true);
 
         if (array_get($results, 'status_code', false) != '0') {
@@ -263,11 +257,60 @@ class NewsController extends BaseController
             return Redirect::to('news')->with('error', $message);
         }
 
-        $news = array_get($results, 'data.record', array());
+        $news = array_get($results, 'data.record.0', array());
+
+        // Loop data
+        $entries = array();
+        foreach ($news as $key => $value) {
+            if ($key == 'images') {
+                $entry = array();
+                foreach ($value as $key2 => $value2) {
+                    $entry2 = array();
+                    foreach ($value2 as $key3 => $value3) {
+                        if ($key3 == 'url') {
+                            $w = 150;
+                            $width = array_get($value2, 'width', 200);
+                            $height = array_get($value2, 'height', 200);
+                            $user_id = array_get($value2, 'user_id', '');
+                            $image_code = array_get($value2, 'code', '');
+                            $extension = array_get($value2, 'extension', '');
+                            $name = array_get($value2, 'name', '');
+
+                            $h = 200;
+                            if ($width != 0) {
+                                $h = (int) ceil($w * $height / $width);
+                            }
+                        
+                            $entry2[$key3] = getImageLink('image', $user_id, $image_code, $extension, $w, $h, $name);
+                            $entry2['url_real'] = getImageLink('image', $user_id, $image_code, $extension, $width, $height, $name);
+                            //$entry2[$key3] = $value3;
+                        } else {
+                            $entry2[$key3] = $value3;
+                        }
+                    }
+                    $entry[$key2] = $entry2;
+                }
+                $entries[$key] = $entry;
+
+            } else if ($key == 'tags') {
+                $entry = array();
+                $tages = array();
+                foreach ($value as $key2 => $value2) {
+                    foreach ($value2 as $key3 => $value3) {
+                        if ($key3 == 'title') {
+                            $tages[] = $value3;
+                        }
+                    }
+                }
+                $entries[$key] = implode(',', $tages);
+            } else {
+                $entries[$key] = $value;
+            }
+        }
 
         $parameters = array(
             'user_id' => '1',
-            'type'      => '2' //1=banners,2=news
+            'type'    => '2' //1=banners,2=news
         );
 
         $results = $client->get('categories', $parameters);
@@ -291,16 +334,16 @@ class NewsController extends BaseController
             $ids = $user_id . $cate_id . $datetime . $random;
         }
 
-        $num_image = count($news['images']);
+        $num_image = count(array_get($news, 'images', array()));
 
         $view = array(
-            'news'       => $news,
+            'news'       => $entries,
             'categories' => $categories,
             'cate'       => 'news',
             'cate_id'    => '2',
             'id'         => $id,
             'ids'        => $ids,
-            'user_id'  => $user_id,
+            'user_id'    => $user_id,
             'num_image'  => $num_image,
         );
 
@@ -333,7 +376,7 @@ class NewsController extends BaseController
             // Validator request
             $rules = array(
                 'id'         => 'required',
-                'images'     => 'required',
+                // 'images'     => 'required',
                 'user_id'  => 'required',
                 // 'images_old' => 'required',
             );
@@ -348,36 +391,11 @@ class NewsController extends BaseController
             $id         = array_get($data, 'id', 0);
             $images     = array_get($data, 'images', '');
             $user_id  = array_get($data, 'user_id', 0);
-            $images_old = array_get($data, 'images_old.'.$images, array());
-            $extension = array_get($data, 'extension.'.$images, array());
-
-            $delete_file = true;
-            if (isset($images_old) && is_array($images_old)) {
-                $cate = 'news';
-                $path = 'public/uploads/' . $user_id . '/' . $cate; // upload path
-                foreach ($images_old as $key => $value) {
-                    $image_name = $value.'.'.$extension[$value];
-                    $old_file = $path . '/' . $image_name;
-
-                    // Delete old image
-                    $delete_file = File::delete($old_file);
-
-                    $parameters = array();
-                    $code = $value;
-                    $results    = $client->delete('images/'.$code, $parameters);
-                    $results    = json_decode($results, true);
-
-                    if ($status_code = array_get($results, 'status_code', false) != '0') {
-                        $status_txt = array_get($results, 'status_txt', '');
-                        return $client->createResponse($status_txt, $status_code);
-                    }
-                }
-            }
 
             // Delete news
             $parameters = array(
                 'id'        => $id,
-                'images'    => $images,
+                // 'images'    => $images,
                 'user_id' => $user_id,
             );
 
@@ -453,17 +471,15 @@ class NewsController extends BaseController
                 // 'views'        => 'required',
                 // 'likes'        => 'required',
                 // 'share'        => 'required',
-                'images_arr'      => 'required',
             );
 
             $validator = Validator::make($data, $rules);
             if ($validator->fails()) {
                 $message = $validator->messages()->first();
 
-                return Redirect::to('news')->with('error', $message);
+                return Redirect::to('news/'.array_get($data, 'id', ''))->with('error', $message);
             }
 
-            $images_arr = array_get($data, 'images_arr', array());
             $user_id  = array_get($data, 'user_id', 0);
 
             // Edit news
@@ -493,24 +509,6 @@ class NewsController extends BaseController
                 $message = array_get($results, 'status_txt', 'Can not updated news');
 
                 return Redirect::to('news')->with('error', $message);
-            } else {
-                if (isset($images_arr) && is_array($images_arr)) {
-                    foreach ($images_arr as $key => $value) {
-                        $code      = $key;
-                        $parameters = array(
-                            'user_id' => $user_id,
-                            'type'      => '2',
-                        );
-
-                        $results    = $client->put('images/'.$code, $parameters);
-                        $results    = json_decode($results, true);
-
-                        if ($status_code = array_get($results, 'status_code', false) != '0') {
-                            $message = array_get($results, 'status_txt', '');
-                            return Redirect::to('news')->with('error', $message);
-                        }
-                    }
-                }
             }
 
             $message = 'You successfully updated';

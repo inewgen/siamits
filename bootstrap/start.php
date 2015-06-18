@@ -70,6 +70,7 @@ require $framework.'/Illuminate/Foundation/start.php';
 |
 */
 require $app['path.base'].'/app/helpers/debug.php';
+require $app['path.base'].'/app/helpers/common.php';
 
 
 /*

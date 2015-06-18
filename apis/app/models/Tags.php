@@ -1,13 +1,14 @@
 <?php
 
-class Tags extends Eloquent {
+class Tags extends Eloquent
+{
 
     public function news()
     {
         return $this->morphedByMany('News', 'tagable');
     }
 
-	public function scopeFilters($query, $filters = array())
+    public function scopeFilters($query, $filters = array())
     {
         if ($val = array_get($filters, 'id')) {
             $query->where('id', '=', $val);
@@ -18,7 +19,7 @@ class Tags extends Eloquent {
         }
 
         if ($val = array_get($filters, 'search')) {
-            $query->where('title', 'LIKE', '%'.$val.'%');
+            $query->where('title', 'LIKE', '%' . $val . '%');
         }
 
         return $query;

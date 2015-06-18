@@ -22,6 +22,11 @@ return array(
         '1016' => 'Cannot return some stocks',
         '1017' => 'Duplicate category name',
 
+        '2000' => 'Debug value',
         '2001' => 'Error upload file',
+        '2002' => 'No finle to upload',
+        '2003' => 'Invalid token',
+        '2004' => 'Invalid parameter',
+        '2005' => 'File not found',
     ),
 );

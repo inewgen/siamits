@@ -123,6 +123,7 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		'Teepluss\Theme\ThemeServiceProvider',
 		'Teepluss\Api\ApiServiceProvider',
+		'Cviebrock\ImageValidator\ImageValidatorServiceProvider',
 	),
 
 	/*

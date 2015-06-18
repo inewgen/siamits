@@ -11,7 +11,8 @@
 		"teepluss/api": "dev-master",
 		"guzzlehttp/guzzle": "5.0.*",
 		"facebook/php-sdk-v4" : "4.0.*",
-		"hybridauth/hybridauth": "dev-master"
+		"hybridauth/hybridauth": "dev-master",
+		"cviebrock/image-validator": "1.0.*"
 	},
 	"autoload": {
 		"classmap": [

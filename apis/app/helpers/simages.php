@@ -7,9 +7,19 @@ class Simages
         $images = array();
         foreach ($data as $key3 => $value3) {
 
-            $w_h = array(200, 200);
+            $w = array_get($value3, 'width', 200);
+            if ($w == 0) {
+                $w = 200;
+            }
+
+            $h = array_get($value3, 'height', 200);
+            if ($h == 0) {
+                $h = 200;
+            }
+
             if ($section == 'banners') {
-                $w_h = array(1440, 500);
+                $w = 1440;
+                $h = 500;
             }
 
             $file_name = $value3['code'] . '.' . $value3['extension'];
@@ -17,7 +27,10 @@ class Simages
             $image['code'] = $value3['code'];
             $image['extension'] = $value3['extension'];
             $image['name'] = $value3['name'];
-            $image['url'] = self::getImageLink('images', $value3['user_id'], $value3['code'], $value3['extension'], $w_h[0], $w_h[1], $value3['name']);
+            $image['width'] = $value3['width'];
+            $image['height'] = $value3['height'];
+            $image['size'] = $value3['size'];
+            $image['url'] = self::getImageLink('images', $value3['user_id'], $value3['code'], $value3['extension'], $w, $h, $value3['name']);
             $image['position'] = $value3['position'];
             $image['user_id'] = $value3['user_id'];
             $images[] = $image;

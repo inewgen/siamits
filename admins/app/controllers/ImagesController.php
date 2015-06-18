@@ -18,107 +18,113 @@ class ImagesController extends BaseController
 
         // Validator request
         $rules = array(
-            'user_id' => 'required',
-            'token' => 'required',
+            'user_id'   => 'required',
+            'token'     => 'required',
             'timestamp' => 'required',
+            'Filedata'  => 'required|mimes:gif,jpg,jpeg,png|image|image_size:<=1280,<=800|max:3000',
         );
 
         $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
-            $message = $validator->messages()->first();
+            $response = array(
+                'message' => $validator->messages()->first()
+            );
 
-            echo 'Invalid parameters, '.$message;
+            return $client->createResponse($response, 2004);
         }
+
+        $response = array();
 
         // Define a destination
         $user_id = isset($data['user_id']) ? $data['user_id'] : '';
-        $verifyToken = md5(Config::get('web.siamits-keys') . $data['timestamp']);
-        $targetFolder = '../res/public/uploads/' . $user_id ; // Relative to the root
+        $verify_token = md5(Config::get('web.siamits-keys') . $data['timestamp']);
 
-        if (!empty($_FILES) && ($data['token'] == $verifyToken)) {
+        if ($data['token'] != $verify_token) {
+            return $client->createResponse($response, 2003);
+        }
+
+        if (Input::hasFile('Filedata')) {
+            $images = $data['Filedata'];
             $image_code = $this->scode->imageCode();
+            $target_folder = '../res/public/uploads/' . $user_id ; // Relative to the root
+            $target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . $target_folder;
 
-            $tempFile = $_FILES['Filedata']['tmp_name'];
-            $targetPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $targetFolder;
-
-            if (!file_exists($targetPath)) {
-                mkdir($targetPath, 0777);
+            if (!File::exists($target_path)) {
+                $folder_create = File::makeDirectory($target_path, 0775, true);
             }
+            
+            $name      = $images->getClientOriginalName();
+            $extension = $images->getClientOriginalExtension();
+            $extension = strtolower($extension);
+            $size      = $images->getSize();
+            $file_name = $image_code . '.' . $extension; // renameing image
+            list($width, $height, $type, $attr) = getimagesize($images);
 
-            // Validate the file type
-            $fileTypes   = array('jpg', 'jpeg', 'gif', 'png', 'JPG', 'JPEG', 'GIF', 'PNG'); // File extensions
-            $fileParts   = pathinfo($_FILES['Filedata']['name']);
-            $fileNameOld = $_FILES['Filedata']['name'];
+            $uploadSuccess = Input::file('Filedata')->move($target_path, $file_name);
 
-            $fileExtension = strtolower($fileParts['extension']);
-            $fileName      = $image_code . '.' . $fileExtension; // renameing image
-            $targetFile    = rtrim($targetPath, '/') . '/' . $fileName;
+            if ($uploadSuccess) {
+                // Add images
+                $parameters = array(
+                    'code'      => $image_code,
+                    'name'      => $name,
+                    'extension' => $extension,
+                    'url'       => '',
+                    'type'      => '0',
+                    'size'      => $size,
+                    'width'     => $width,
+                    'height'    => $height,
+                    'position'  => '0',
+                    'status'    => '1',
+                    'user_id'   => $user_id,
+                );
 
-            if (in_array($fileParts['extension'], $fileTypes)) {
-                $uploadSuccess = Input::file('Filedata')->move($targetPath, $fileName);
-                if ($uploadSuccess) {
-                // if (move_uploaded_file($tempFile, $targetFile)) {
-                    // Add images
-                    $parameters = array(
-                        'code'      => $image_code,
-                        'name'      => $fileNameOld,
-                        'extension' => $fileExtension,
-                        'url'       => '',
-                        'type'      => '0',
-                        'size'      => '0',
-                        'width'     => '0',
-                        'height'    => '0',
-                        'position'  => '0',
-                        'status'    => '1',
-                        'user_id'   => $user_id,
-                    );
-
-                    $results = $client->post('images', $parameters);
-                    $results = json_decode($results, true);
-                    
-                    if (array_get($results, 'status_code', false) != '0') {
-                        $response = array(
-                            'data' => 'Errors insert image.',
-                        );
-                        return $client->createResponse($response, 2001);
-                    } else {
-                        $url_img = getImageLink('image', $user_id, $image_code, $fileExtension, 200, 200);
-                        
-                        if ($section = array_get($data, 'section', false)) {
-                            if ($section == 'banners') {
-                                $url_img = getImageLink('image', $user_id, $image_code, $fileExtension, 1440, 500);
-                            }
-                        }
-
-                        $id = array_get($results, 'id', '');
-
-                        $jsons_return = array(
-                            'id'        => $id,
-                            'code'      => $image_code,
-                            'url'       => $url_img,
-                            'extension' => $fileExtension,
-                            'user_id'   => $user_id,
-                        );
-                        
-                        $response = array(
-                            'data' => $jsons_return,
-                        );
-                        return $client->createResponse($response, 0);
-                    }
-
-                } else {
+                $results = $client->post('images', $parameters);
+                $results = json_decode($results, true);
+                
+                if (array_get($results, 'status_code', false) != '0') {
                     $response = array(
-                        'data' => 'Can not upload file',
+                        'message' => 'Errors insert image.',
                     );
                     return $client->createResponse($response, 2001);
+                } else {
+                    $w = array_get($data, 'w', 200);
+                    $h = (int) ceil($w * $height / $width);
+            
+                    if ($section = array_get($data, 'section', false)) {
+                        if ($section == 'banners') {
+                            $w = 1440;
+                            $h = 500;
+                        }
+                    }
+
+                    $url_img = getImageLink('image', $user_id, $image_code, $extension, $w, $h, $name);
+                    $url_img_real = getImageLink('image', $user_id, $image_code, $extension, $width, $height, $name);
+                    $id = array_get($results, 'id', '');
+
+                    $jsons_return = array(
+                        'id'        => $id,
+                        'code'      => $image_code,
+                        'url'       => $url_img,
+                        'url_real'  => $url_img_real,
+                        'extension' => $extension,
+                        'user_id'   => $user_id,
+                    );
+                    
+                    $response = array(
+                        'data' => $jsons_return,
+                    );
+                    return $client->createResponse($response, 0);
                 }
+
             } else {
                 $response = array(
-                    'data' => 'Invalid file type.',
+                    'message' => 'Can not upload file',
                 );
                 return $client->createResponse($response, 2001);
             }
         }
+
+        return $client->createResponse($response, 2002);
     }
 
     public function getDeleteImage()
@@ -148,14 +154,27 @@ class ImagesController extends BaseController
         }
 
         $id        = array_get($data, 'id', 0);
+        $user_id   = array_get($data, 'user_id', 0);
+
+        $parameters = array(
+            'user_id' => $user_id
+        );
+
+        $results    = $client->delete('images/'.$id, $parameters);
+        $results    = json_decode($results, true);
+
+        if ($status_code = array_get($results, 'status_code', false) != '0') {
+            $status_txt = array_get($results, 'status_txt', '');
+            return $client->createResponse($status_txt, $status_code);
+        }
+        
         $code      = array_get($data, 'code', 0);
         $extension = strtolower(array_get($data, 'extension', 0));
-        $user_id   = array_get($data, 'user_id', 0);
         $path      = '../res/public/uploads/' . $user_id; // upload path
         $file_path = $path . '/' . $code .'.'. $extension;
 
         if (!file_exists($file_path)) {
-            return $client->createResponse($data, 1004);
+            //return $client->createResponse($data, 2005);
         }
 
         // Delete old images
@@ -173,22 +192,12 @@ class ImagesController extends BaseController
 
                     if (!$image_delete) {
                         $message = array_get($results, 'data.message', 'Delete old image user error.');
-                        return Redirect::to('/login')->with('error', $message);
+                        return $client->createResponse($response, 2005);
                     }
                 }
             }
             closedir($handle);
         }
-  
-        $parameters = array();
-        $results    = $client->delete('images/'.$id, $parameters);
-        $results    = json_decode($results, true);
-
-        if ($status_code = array_get($results, 'status_code', false) != '0') {
-            $status_txt = array_get($results, 'status_txt', '');
-            return $client->createResponse($status_txt, $status_code);
-        }
-
 
         return $client->createResponse($response, 0);
     }

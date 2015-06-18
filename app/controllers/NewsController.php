@@ -60,7 +60,7 @@ class NewsController extends BaseController
         $results = $client->get('news/'.$id, $parameters);
         $results = json_decode($results, true);
 
-        $news = array_get($results, 'data.record', array());
+        $news = array_get($results, 'data.record.0', array());
 
         $view = array(
             'news' => $news,

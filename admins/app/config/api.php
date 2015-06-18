@@ -1,6 +1,6 @@
 <?php
 return array(
-    'base_url' => 'http://apis.siamits.com/api/',
+    'base_url' => 'http://apis.siamits.dev/api/',
     'error_code'=>array(
         '0'    => 'Success',
         '1000' => 'Invalid token',
@@ -22,6 +22,11 @@ return array(
         '1016' => 'Cannot return some stocks',
         '1017' => 'Duplicate category name',
 
+        '2000' => 'Debug value',
         '2001' => 'Error upload file',
+        '2002' => 'No finle to upload',
+        '2003' => 'Invalid token',
+        '2004' => 'Invalid parameter',
+        '2005' => 'File not found',
     ),
 );
