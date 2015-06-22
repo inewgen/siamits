@@ -104,7 +104,7 @@
                                 <p class="help-block">Dimensions 1440 × 500 only</p>
                                 <!-- <input type="hidden" name="images" id="images" value=""> -->
                                 <div id="show_image_upload" style="hight:150">
-                                    <img src="<?php echo getImageLink('image', array_get($banners, 'user_id', '1'), array_get($banners, 'images.0.code', '1'), array_get($banners, 'images.0.extension', 'jpg'), 1440, 500, array_get($banners, 'images.0.name', 'siamit.jpg'));?>" width="100%">
+                                    <img src="<?php echo getImageLink('image', array_get($banners, 'images.0.user_id', '1'), array_get($banners, 'images.0.code', '1'), array_get($banners, 'images.0.extension', 'jpg'), 1440, 500, array_get($banners, 'images.0.name', 'siamit.jpg'));?>" width="100%">
                                 </div>
                                 
                                 <input name="images_old[user_id]" value="<?php echo array_get($banners, 'images.0.user_id', '');?>" type="hidden">

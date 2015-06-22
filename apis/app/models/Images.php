@@ -44,6 +44,11 @@ class Images extends Eloquent
         return $this->morphedByMany('Banners', 'imageable');
     }
 
+    public function categories()
+    {
+        return $this->morphedByMany('Categories', 'imageable');
+    }
+
     public function imageables()
     {
         return $this->hasMany('Imageables');

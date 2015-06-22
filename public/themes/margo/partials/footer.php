@@ -84,48 +84,48 @@
                     <h4>IT New Gadget Feed<span class="head-line"></span></h4>
                     <ul class="flickr-list">
                         <li>
-                            <a href="<?php echo URL::to('public/themes/margo');?>/assets/img/flickr01.png" class="lightbox">
-                                <img alt="" src="<?php echo URL::to('public/themes/margo');?>/assets/img/flickr01.png">
+                            <a href="<?php echo getImageLink('img', 'flickr', 'flickr01', 'jpg', 800, 531, 'flickr.jpg');?>" class="lightbox">
+                                <img alt="" src="<?php echo getImageLink('img', 'flickr', 'flickr01', 'jpg', 72, 65, 'flickr.jpg');?>">
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo URL::to('public/themes/margo');?>/assets/img/flickr02.png" class="lightbox">
-                                <img alt="" src="<?php echo URL::to('public/themes/margo');?>/assets/img/flickr02.png">
+                            <a href="<?php echo getImageLink('img', 'flickr', 'flickr02', 'jpg', 800, 531, 'flickr.jpg');?>" class="lightbox">
+                                <img alt="" src="<?php echo getImageLink('img', 'flickr', 'flickr02', 'jpg', 72, 65, 'flickr.jpg');?>">
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo URL::to('public/themes/margo');?>/assets/img/flickr03.png" class="lightbox">
-                                <img alt="" src="<?php echo URL::to('public/themes/margo');?>/assets/img/flickr03.png">
+                            <a href="<?php echo getImageLink('img', 'flickr', 'flickr03', 'jpg', 800, 531, 'flickr.jpg');?>" class="lightbox">
+                                <img alt="" src="<?php echo getImageLink('img', 'flickr', 'flickr03', 'jpg', 72, 65, 'flickr.jpg');?>">
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo URL::to('public/themes/margo');?>/assets/img/flickr04.png" class="lightbox">
-                                <img alt="" src="<?php echo URL::to('public/themes/margo');?>/assets/img/flickr04.png">
+                            <a href="<?php echo getImageLink('img', 'flickr', 'flickr04', 'jpg', 800, 531, 'flickr.jpg');?>" class="lightbox">
+                                <img alt="" src="<?php echo getImageLink('img', 'flickr', 'flickr04', 'jpg', 72, 65, 'flickr.jpg');?>">
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo URL::to('public/themes/margo');?>/assets/img/flickr05.png" class="lightbox">
-                                <img alt="" src="<?php echo URL::to('public/themes/margo');?>/assets/img/flickr05.png">
+                            <a href="<?php echo getImageLink('img', 'flickr', 'flickr05', 'jpg', 800, 531, 'flickr.jpg');?>" class="lightbox">
+                                <img alt="" src="<?php echo getImageLink('img', 'flickr', 'flickr05', 'jpg', 72, 65, 'flickr.jpg');?>">
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo URL::to('public/themes/margo');?>/assets/img/flickr06.png" class="lightbox">
-                                <img alt="" src="<?php echo URL::to('public/themes/margo');?>/assets/img/flickr06.png">
+                            <a href="<?php echo getImageLink('img', 'flickr', 'flickr06', 'jpg', 800, 531, 'flickr.jpg');?>" class="lightbox">
+                                <img alt="" src="<?php echo getImageLink('img', 'flickr', 'flickr06', 'jpg', 72, 65, 'flickr.jpg');?>">
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo URL::to('public/themes/margo');?>/assets/img/flickr07.png" class="lightbox">
-                                <img alt="" src="<?php echo URL::to('public/themes/margo');?>/assets/img/flickr07.png">
+                            <a href="<?php echo getImageLink('img', 'flickr', 'flickr07', 'jpg', 800, 531, 'flickr.jpg');?>" class="lightbox">
+                                <img alt="" src="<?php echo getImageLink('img', 'flickr', 'flickr07', 'jpg', 72, 65, 'flickr.jpg');?>">
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo URL::to('public/themes/margo');?>/assets/img/flickr08.png" class="lightbox">
-                                <img alt="" src="<?php echo URL::to('public/themes/margo');?>/assets/img/flickr08.png">
+                            <a href="<?php echo getImageLink('img', 'flickr', 'flickr08', 'jpg', 800, 531, 'flickr.jpg');?>" class="lightbox">
+                                <img alt="" src="<?php echo getImageLink('img', 'flickr', 'flickr08', 'jpg', 72, 65, 'flickr.jpg');?>">
                             </a>
                         </li>
                         <li>
-                            <a href="<?php echo URL::to('public/themes/margo');?>/assets/img/flickr09.png" class="lightbox">
-                                <img alt="" src="<?php echo URL::to('public/themes/margo');?>/assets/img/flickr09.png">
+                            <a href="<?php echo getImageLink('img', 'flickr', 'flickr09', 'jpg', 800, 531, 'flickr.jpg');?>" class="lightbox">
+                                <img alt="" src="<?php echo getImageLink('img', 'flickr', 'flickr09', 'jpg', 72, 65, 'flickr.jpg');?>">
                             </a>
                         </li>
                     </ul>

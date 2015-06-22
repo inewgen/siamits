@@ -34,7 +34,9 @@ if (routeLoad($prefix . 'members', $req_path)) {
 
 if (routeLoad($prefix . 'news', $req_path)) {
     Route::get('news', 'NewsController@Index');
+    Route::get('news/category', 'NewsController@listCategory');
     Route::get('news/{id}', 'NewsController@Show');
+    Route::get('news/category/{id}', 'NewsController@listNewsCategory');
 }
 
 if (routeLoad($prefix . 'pages', $req_path)) {

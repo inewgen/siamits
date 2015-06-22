@@ -12,7 +12,7 @@ class CategoriesController extends ApiController
 
         // Validator
         $rules = array(
-            'user_id' => 'required|integer|min:1',
+            // 'user_id' => 'required|integer|min:1',
             'type'      => 'integer|min:1',
         );
 
@@ -35,12 +35,14 @@ class CategoriesController extends ApiController
         $skip = ($page - 1) * $take;
 
         $filters = array(
-            'user_id' => $data['user_id'],
+            // 'user_id' => $data['user_id'],
         );
 
         isset($data['type']) ? $filters['type'] = $data['type']:'';
+        isset($data['s']) ? $filters['s'] = $data['s']:'';
 
         $query = Categories::filters($filters)
+                ->with('images')
                 ->orderBy($order, $sort);
         $count   = (int) $query->count();
         $results = $query->skip($skip)->take($take)->get();

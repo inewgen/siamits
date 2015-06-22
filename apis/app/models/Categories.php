@@ -23,4 +23,9 @@ class Categories extends Eloquent {
     {
         return $this->belongsTo('News');
     }
+
+    public function images()
+    {
+        return $this->morphToMany('Images', 'imageable');
+    }
 }

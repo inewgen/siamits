@@ -281,7 +281,7 @@ function getYoutube($youtube)
                                 <a href="#">
                                     <h5><?php echo array_get($value, 'title', '');?></h5>
                                     <span><?php echo array_get($value, 'channelTitle', '');?></span>
-                                    <span><font color="color">Youtube</font><img src="<?php echo getImageLink('img', 'default', 'youtube_logo', 'png', 40, 30, 'youtube.png');?>"></span>
+                                    <span><font color="color">Youtube</font><img src="<?php echo getImageLink('img', 'default', 'youtube_logo', 'jpg', 40, 30, 'youtube.jpg');?>"></span>
                                 </a>
                             </div>
                         </div>

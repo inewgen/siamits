@@ -42,6 +42,7 @@ class NewsController extends ApiController
 
         isset($data['s']) ? $filters['s'] = $data['s'] : '';
         isset($data['type']) ? $filters['type'] = $data['type'] : '';
+        isset($data['category_id']) ? $filters['categories'] = $data['category_id'] : '';
 
         // Query
         $order   = array_get($data, 'order', 'updated_at');
