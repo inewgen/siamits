@@ -22,7 +22,7 @@
                     <!-- Start Social Links -->
                     <ul class="social-list">
                         <li>
-                            <a class="google itl-tooltip" data-placement="bottom" title="Google Plus" href="https://plus.google.com/u/0/103098765144574170914/posts" target="_blank"><i class="fa fa-google-plus"></i></a>
+                            <a class="google itl-tooltip" data-placement="bottom" title="Google Plus" href="https://plus.google.com/103098765144574170914" target="_blank"><i class="fa fa-google-plus"></i></a>
                         </li>
                         <li>
                             <a class="facebook itl-tooltip" data-placement="bottom" title="Facebook" href="https://www.facebook.com/siamits" target="_blank"><i class="fa fa-facebook"></i></a>

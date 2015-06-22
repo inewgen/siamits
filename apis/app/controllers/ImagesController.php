@@ -5,7 +5,77 @@ class ImagesController extends ApiController
     public function index()
     {
         $data = Input::all();
-        $response = 'Index';
+
+        // Validator request
+        $rules = array(
+            // 'code' => 'integer',
+        );
+
+        $validator = Validator::make($data, $rules);
+        if ($validator->fails()) {
+            $response = array(
+                'message' => $validator->messages()->first(),
+            );
+
+            return API::createResponse($response, 1003);
+        }
+
+        // Get cache value
+        $key_cache = 'api.0.images.index.' . md5(serialize($data));
+
+        if ($response = getCache($key_cache)) {
+            $response['cached'] = true;
+            return API::createResponse($response, 0);
+        }
+
+        // Set Pagination
+        $take = (int) (isset($data['perpage'])) ? $data['perpage'] : 20;
+        $take = $take == 0 ? 20 : $take;
+        $page = (int) (isset($data['page']) && $data['page'] > 0) ? $data['page'] : 1;
+        $skip = ($page - 1) * $take;
+
+        $filters = array();
+
+        isset($data['id']) ? $filters['id'] = $data['id'] : '';
+        isset($data['code']) ? $filters['code'] = $data['code'] : '';
+        isset($data['user_id']) ? $filters['user_id'] = $data['user_id'] : '';
+        isset($data['name']) ? $filters['name'] = $data['name'] : '';
+        isset($data['s']) ? $filters['s'] = $data['s'] : '';
+
+        // Query
+        $order = array_get($data, 'order', 'updated_at');
+        $sort = array_get($data, 'sort', 'desc');
+
+        $query = Images::filters($filters)
+            ->with('imageables')
+            ->orderBy($order, $sort);
+        $count = (int) $query->count();
+        $results = $query->skip($skip)->take($take)->get();
+        $results = json_decode($results, true);
+
+        if (!$results) {
+            $response = array();
+
+            return API::createResponse($response, 1004);
+        }
+
+        $entries = $results;
+
+        $pagings = array(
+            'page' => $page,
+            'perpage' => $take,
+            'total' => $count,
+        );
+
+        $response = array(
+            'cached' => false,
+            'pagination' => $pagings,
+            'record' => $entries,
+        );
+
+        // Save cache value
+        saveCache($key_cache, $response);
+
         return API::createResponse($response, 0);
     }
 
@@ -22,17 +92,17 @@ class ImagesController extends ApiController
 
         // Validator request
         $rules = array(
-            'user_id'  => 'required|integer|min:1',
-            'code'       => 'required',
-            'name'       => 'required',
-            'extension'  => 'required',
+            'user_id' => 'required|integer|min:1',
+            'code' => 'required',
+            'name' => 'required',
+            'extension' => 'required',
             // 'url'        => 'min:1',
-            'type'       => 'integer',//1=images,2=video
-            'size'       => 'integer',
-            'width'      => 'integer',
-            'height'     => 'integer',
-            'position'   => 'integer',
-            'status'     => 'integer|in:0,1',
+            'type' => 'integer', //1=images,2=video
+            'size' => 'integer',
+            'width' => 'integer',
+            'height' => 'integer',
+            'position' => 'integer',
+            'status' => 'integer|in:0,1',
         );
 
         $validator = Validator::make($data, $rules);
@@ -46,17 +116,17 @@ class ImagesController extends ApiController
 
         // Upload images
         $parameters = array(
-            'user_id'  => $data['user_id'],
-            'code'       => $data['code'],
-            'name'       => $data['name'],
-            'extension'  => $data['extension'],
-            'url'        => (isset($data['url'])?$data['url']:''),
-            'type'       => (isset($data['type'])?$data['type']:'0'), //Unknown in future
-            'size'       => (isset($data['size'])?$data['size']:'0'),
-            'width'      => (isset($data['width'])?$data['width']:'0'),
-            'height'     => (isset($data['height'])?$data['height']:'0'),
-            'position'   => (isset($data['position'])?$data['position']:'0'),
-            'status'     => (isset($data['status'])?$data['status']:'1'),
+            'user_id' => $data['user_id'],
+            'code' => $data['code'],
+            'name' => $data['name'],
+            'extension' => $data['extension'],
+            'url' => (isset($data['url']) ? $data['url'] : ''),
+            'type' => (isset($data['type']) ? $data['type'] : '0'), //Unknown in future
+            'size' => (isset($data['size']) ? $data['size'] : '0'),
+            'width' => (isset($data['width']) ? $data['width'] : '0'),
+            'height' => (isset($data['height']) ? $data['height'] : '0'),
+            'position' => (isset($data['position']) ? $data['position'] : '0'),
+            'status' => (isset($data['status']) ? $data['status'] : '1'),
             'updated_at' => date("Y-m-d H:i:s"),
             'created_at' => date("Y-m-d H:i:s"),
         );
@@ -67,7 +137,7 @@ class ImagesController extends ApiController
             $query->$key = $value;
         }
         $query->save();
-        $id = (isset($query->id)?$query->id:null);
+        $id = (isset($query->id) ? $query->id : null);
 
         if (!$query) {
             $response = array();
@@ -90,7 +160,7 @@ class ImagesController extends ApiController
 
         // Validator request
         $rules = array(
-            'code'      => 'required|integer',
+            'code' => 'required|integer',
             'user_id' => 'required|integer',
         );
 
@@ -141,13 +211,13 @@ class ImagesController extends ApiController
         $data['id'] = $id;
 
         $response = array(
-            'data' => $data
+            'data' => $data,
         );
 
         // Validator request
         $rules = array(
-            'id'      => 'required|integer|min:1',
-            'user_id' => 'required|integer|min:1',
+            'id' => 'required|integer|min:1',
+            // 'user_id' => 'required|integer|min:1',
         );
 
         $validator = Validator::make($data, $rules);
@@ -167,8 +237,8 @@ class ImagesController extends ApiController
 
         if ($count == 0) {
             $filters = array(
-                'id'      => $data['id'],
-                'user_id' => $data['user_id'],
+                'id' => $data['id'],
+                // 'user_id' => $data['user_id'],
             );
 
             $query = Images::filters($filters);
@@ -188,6 +258,72 @@ class ImagesController extends ApiController
 
         $response = array(
             'record' => $query,
+        );
+
+        return API::createResponse($response, 0);
+    }
+
+    public function clear()
+    {
+        $data = Input::all();
+
+        // Validator request
+        $rules = array(
+            'code' => 'required',
+        );
+
+        $validator = Validator::make($data, $rules);
+        if ($validator->fails()) {
+            $response = array(
+                'message' => $validator->messages()->first(),
+            );
+
+            return API::createResponse($response, 1003);
+        }
+
+        $code = explode(',', $data['code']);
+
+        // Query
+        $order = array_get($data, 'order', 'updated_at');
+        $sort = array_get($data, 'sort', 'desc');
+
+        $query = Images::whereIn('code', $code)
+            ->with('imageables')
+            ->orderBy($order, $sort);
+        $count = (int) $query->count();
+        $results = $query->get();
+        $results = json_decode($results, true);
+
+        // Loop
+        $images = array();
+        if (is_array($results)) {
+            foreach ($results as $key => $value) {
+                $imageables = count(array_get($value, 'imageables', array()));
+                $image_id = array_get($value, 'id', '');
+
+                $images[array_get($value, 'code', '')]['imageables'] = $imageables;
+                $images[array_get($value, 'code', '')]['id'] = $image_id;
+                if ($imageables == 0) {
+                    $destroy = self::destroy($image_id);
+                }
+            }
+        }
+
+        // Loop
+        $entry = array();
+        foreach ($code as $key => $value) {
+            $entry[$value] = array_get($images, $value . '.imageables', '0');
+        }
+
+        $entries = $entry;
+
+        $pagings = array(
+            'total' => $count,
+        );
+
+        $response = array(
+            'pagination' => $pagings,
+            'record' => $entries,
         );
 
         return API::createResponse($response, 0);

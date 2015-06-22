@@ -12,7 +12,8 @@
 		"guzzlehttp/guzzle": "5.0.*",
 		"facebook/php-sdk-v4" : "4.0.*",
 		"hybridauth/hybridauth": "dev-master",
-		"cviebrock/image-validator": "1.0.*"
+		"cviebrock/image-validator": "1.0.*",
+		"patkruk/laravel-cached-settings": "dev-master"
 	},
 	"autoload": {
 		"classmap": [

@@ -63,7 +63,7 @@ class Scode
         $d        = new DateTime(date('Y-m-d H:i:s.'. $micro, $t));
         $datetime = $d->format("YmdHisu");
         $random   = rand(0, 9).rand(0, 9);
-        $code      = $datetime . $random;
+        $code      = $random . $datetime;
 
         return $code;
     }

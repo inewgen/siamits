@@ -17,6 +17,15 @@ class Images extends Eloquent
             $query->where('code', '=', $val);
         }
 
+        if ($val = array_get($filters, 'name')) {
+            $query->where('name', '=', $val);
+        }
+
+        if ($val = array_get($filters, 's')) {
+            $query->where('name', 'LIKE', '%'.$val.'%');
+            $query->orWhere('code', 'LIKE', '%'.$val.'%');
+        }
+
         return $query;
     }
 
@@ -33,5 +42,11 @@ class Images extends Eloquent
     public function banners()
     {
         return $this->morphedByMany('Banners', 'imageable');
+    }
+
+    public function imageables()
+    {
+        return $this->hasMany('Imageables');
+        $this->hasMany('Imageables', 'images_id', 'id');
     }
 }

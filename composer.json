@@ -11,7 +11,9 @@
 		"teepluss/api": "dev-master",
 		"guzzlehttp/guzzle": "5.0.*",
 		"facebook/php-sdk-v4" : "4.0.*",
-		"hybridauth/hybridauth": "dev-master"
+		"hybridauth/hybridauth": "dev-master",
+		"patkruk/laravel-cached-settings": "dev-master",
+		"madcoda/php-youtube-api": "^1.1"
 	},
 	"autoload": {
 		"classmap": [

@@ -66,11 +66,17 @@
                             </div>
                             <div class="post-share">
                                 <span>Share This Post:</span>
-                                <a class="facebook" href="#"><i class="fa fa-facebook"></i></a>
+                                <a class="facebook" href="https://www.facebook.com/dialog/feed?app_id=876049622442009&display=popup&caption=<?php echo $news['title'];?>&link=http://www.siamits.dev/news/40&redirect_uri=http://www.siamits.dev/news/40"><i class="fa fa-facebook"></i></a>
                                 <a class="twitter" href="#"><i class="fa fa-twitter"></i></a>
                                 <a class="gplus" href="#"><i class="fa fa-google-plus"></i></a>
                                 <a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a>
                                 <a class="mail" href="#"><i class="fa fa-envelope"></i></a>
+                                <div 
+                                class="fb-share-button" 
+                                data-href="http://www.siamits.com/news/1" 
+                                data-layout="button_count"
+                                data-caption="<?php echo $news['title'];?>">
+                                </div>
                             </div>
                         </div>
                         <div class="author-info clearfix">

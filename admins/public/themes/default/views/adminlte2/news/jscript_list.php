@@ -49,7 +49,6 @@ Theme::asset()->container('footer')->add('bootbox', 'public/themes/adminlte2/plu
                 newClass = 'sorting_desc';
             }
 
-            //$('#table-sort th').attr('class', 'sorting');
             $('#order').val(order);
             $('#sort').val(orderCmd);
             $(this).attr('class', newClass);

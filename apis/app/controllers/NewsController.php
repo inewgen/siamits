@@ -2,13 +2,6 @@
 
 class NewsController extends ApiController
 {
-    private $simages;
-
-    public function __construct(Simages $simages)
-    {
-        $this->simages = $simages;
-    }
-
     public function index()
     {
         $data = Input::all();
@@ -27,6 +20,14 @@ class NewsController extends ApiController
             return API::createResponse($response, 1003);
         }
 
+        // Get cache value
+        $key_cache = 'api.0.news.index.'.md5(serialize($data));
+        
+        if ($response = getCache($key_cache)) {
+            $response['cached'] = true;
+            return API::createResponse($response, 0);
+        }
+
         $user_id       = array_get($data, 'user_id', 0);
 
         // Set Pagination
@@ -37,10 +38,10 @@ class NewsController extends ApiController
 
         $filters = array(
             'user_id' => $user_id,
-            'ids_type' => '2'
         );
 
         isset($data['s']) ? $filters['s'] = $data['s'] : '';
+        isset($data['type']) ? $filters['type'] = $data['type'] : '';
 
         // Query
         $order   = array_get($data, 'order', 'updated_at');
@@ -68,7 +69,7 @@ class NewsController extends ApiController
                 foreach ($value as $key2 => $value2) {
                     if ($key2 == 'images') {
                         // Loop images
-                        $images = $this->simages->loopImages($value2, $user_id);
+                        $images = loopImages($value2, $user_id);
                         $entry[$key2] = $images;
                     } else if ($key2 == 'categories') {
                         $category['id'] = $value2['id'];
@@ -89,9 +90,13 @@ class NewsController extends ApiController
         );
 
         $response = array(
+            'cached' => false,
             'pagination' => $pagings,
             'record' => $entries
         );
+
+        // Save cache value
+        saveCache($key_cache, $response);
 
         return API::createResponse($response, 0);
     }
@@ -114,6 +119,14 @@ class NewsController extends ApiController
             );
 
             return API::createResponse($response, 1003);
+        }
+
+        // Get cache value
+        $key_cache = 'api.0.news.show.'.md5(serialize($data));
+        
+        if ($response = getCache($key_cache)) {
+            $response['cached'] = true;
+            return API::createResponse($response, 0);
         }
 
         $user_id = array_get($data, 'user_id', 0);
@@ -150,7 +163,7 @@ class NewsController extends ApiController
                 foreach ($value as $key2 => $value2) {
                     if ($key2 == 'images') {
                         // Loop images
-                        $images = $this->simages->loopImages($value2, $user_id);
+                        $images = loopImages($value2, $user_id);
                         $entry[$key2] = $images;
                     } else if ($key2 == 'categories') {
                         $category['id'] = $value2['id'];
@@ -165,8 +178,12 @@ class NewsController extends ApiController
         }
 
         $response = array(
+            'cached' => false,
             'record' => $entries
         );
+
+        // Save cache value
+        saveCache($key_cache, $response);
 
         return API::createResponse($response, 0);
     }
@@ -267,6 +284,10 @@ class NewsController extends ApiController
             'id' => $id,
             'record' => $data,
         );
+
+        // Clear cache value
+        $key_cache = 'api.0.news.index';
+        clearCache($key_cache);
 
         return API::createResponse($data, 0);
     }
@@ -369,6 +390,10 @@ class NewsController extends ApiController
             'record' => $query,
         );
 
+        // Clear cache value
+        $key_cache = 'api.0.news';
+        clearCache($key_cache);
+
         return API::createResponse($data, 0);
     }
 
@@ -435,6 +460,10 @@ class NewsController extends ApiController
         $response = array(
             'record' => $data,
         );
+
+        // Clear cache value
+        $key_cache = 'api.0.news';
+        clearCache($key_cache);
 
         return API::createResponse($response, 0);
     }

@@ -104,7 +104,7 @@
                                     <option value="2"<?php if($news['type'] == '2'):?> selected="selected"<?php endif;?>>Hightlight</option>
                                 </select>
                             </div>
-                             <div class="form-group">
+                            <div class="form-group">
                                 <label for="">Socials Share</label>
                             </div>
                             <div class="form-group">
@@ -134,7 +134,7 @@
                                     <div id="<?php echo $image['id'];?>"><ul class="ace-thumbnails">
                                         <li>
                                             <a href="javascript:void(0)">
-                                                <img alt="150x150" src="<?php echo $image['url'];?>" width="150" height="150">
+                                                <img alt="256x183" src="<?php echo getImageLink('image', array_get($image, 'user_id', ''), array_get($image, 'code', ''), array_get($image, 'extension', ''), 256, 183, array_get($image, 'name', ''));?>" width="256" height="183">
                                             </a>
                                             <div class="tools tools-bottom">
                                                 <a href="javascript:void(0)" onclick="return image_delete('<?php echo $image['id'];?>', '<?php echo $image['code'];?>', '<?php echo $news['user_id'];?>', '<?php echo $image['extension'];?>');" title="Delete">

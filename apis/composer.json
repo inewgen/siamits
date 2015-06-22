@@ -11,7 +11,8 @@
         "jenssegers/mongodb": "v1.4.1",
         "tedivm/stash": "0.12.*",
         "mlehner/gelf-php": "dev-master",
-        "facebook/php-sdk-v4" : "4.0.*"
+        "facebook/php-sdk-v4" : "4.0.*",
+        "patkruk/laravel-cached-settings": "dev-master"
 	},
 	"autoload": {
 		"classmap": [

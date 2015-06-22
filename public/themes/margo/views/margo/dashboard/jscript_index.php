@@ -1,14 +1,14 @@
 <?php
+Theme::asset()->add('style', 'public/themes/margo/assets/css/style.css');
 Theme::asset()->add('animate', 'public/themes/margo/assets/css/animate.css');
 Theme::asset()->add('mediaelement-and-player', 'public/themes/margo/assets/js/mediaelement-and-player.js');
 ?>
 
 <script type="text/javascript">
 /* ----------------- Start JS Document ----------------- */
-
 var $ = jQuery.noConflict();
 
-// Page Loader
+/* Page Loader */
 $(window).load(function () {
     "use strict";
 	$('#loader').fadeOut();
@@ -16,11 +16,8 @@ $(window).load(function () {
 
 $(document).ready(function ($) {
 	"use strict";
-	
-	/*----------------------------------------------------*/
-	/*	Hidder Header
-	/*----------------------------------------------------*/
-	
+
+	/*	Hidder Header*/
 	var headerEle = function(){
 		var $headerHeight = $('header').height();
 		$('.hidden-header').css({ 'height' : $headerHeight  + "px" });
@@ -34,38 +31,21 @@ $(document).ready(function ($) {
 	   headerEle();
 	});
 	
-    
-    /*---------------------------------------------------*/
-    /* Progress Bar
-    /*---------------------------------------------------*/
-    
-    
+    /* Progress Bar*/
     $('.skill-shortcode').appear(function() {
   		$('.progress').each(function(){ 
     		$('.progress-bar').css('width',  function(){ return ($(this).attr('data-percentage')+'%')});
   		});
 	},{accY: -100});
-	
-	
-	
-    /*--------------------------------------------------*/
-    /* Counter
-    /*--------------------------------------------------*/
-    
-    
-    
+
+    /* Counter*/   
     $('.timer').countTo();
 
     $('.counter-item').appear(function() {
         $('.timer').countTo();
     },{accY: -100});
     
-    
-	
-	/*----------------------------------------------------*/
-	/*	Nice-Scroll
-	/*----------------------------------------------------*/
-	
+	/*	Nice-Scroll*/
 	$("html").niceScroll({
 		scrollspeed: 100,
 		mousescrollstep: 38,
@@ -77,15 +57,8 @@ $(document).ready(function ($) {
 		horizrailenabled: false,
 		cursorborderradius: 0,
 	});
-		
-	
-	
-	
-	
-	/*----------------------------------------------------*/
-	/*	Nav Menu & Search
-	/*----------------------------------------------------*/
-	
+
+	/*	Nav Menu & Search*/
 	$(".nav > li:has(ul)").addClass("drop");
 	$(".nav > li.drop > ul").addClass("dropdown");
 	$(".nav > li.drop > ul.dropdown ul").addClass("sup-dropdown");
@@ -97,15 +70,8 @@ $(document).ready(function ($) {
 	$('.search-form input').blur(function() {
 		$('.search-form').fadeOut(300);
 	});
-	
-	
-	
-	
-	
-	/*----------------------------------------------------*/
-	/*	Back Top Link
-	/*----------------------------------------------------*/
-	
+
+	/*	Back Top Link*/
     var offset = 200;
     var duration = 500;
     $(window).scroll(function() {
@@ -119,47 +85,41 @@ $(document).ready(function ($) {
         event.preventDefault();
         $('html, body').animate({scrollTop: 0}, 600);
         return false;
-    })
+    });
 	
-	
-	
-	
-	/*----------------------------------------------------*/
-	/*	Sliders & Carousel
-	/*----------------------------------------------------*/
-	
-	////------- Touch Slider
-	var time = 4.4,
-		$progressBar,
-		$bar,
-		$elem,
-		isPause,
-		tick,
-		percentTime;
+	/*	Sliders & Carousel*/
+	/*------- Touch Slider*/
+	var time = 4.4;
+	var $progressBar;
+	var $bar;
+	var $elem;
+	var isPause;
+	var tick;
+	var percentTime;
 	$('.touch-slider').each(function(){
-		var owl = jQuery(this),
-			sliderNav = $(this).attr('data-slider-navigation'),
-			sliderPag = $(this).attr('data-slider-pagination'),
-			sliderProgressBar = $(this).attr('data-slider-progress-bar');
+		var owl = jQuery(this);
+		var	sliderNav = $(this).attr('data-slider-navigation');
+		var	sliderPag = $(this).attr('data-slider-pagination');
+		var	sliderProgressBar = $(this).attr('data-slider-progress-bar');
 			
 		if ( sliderNav == 'false' || sliderNav == '0' ) {
-			var returnSliderNav = false
+			var returnSliderNav = false;
 		}else {
-			var returnSliderNav = true
+			var returnSliderNav = true;
 		}
 		
 		if ( sliderPag == 'true' || sliderPag == '1' ) {
-			var returnSliderPag = true
+			var returnSliderPag = true;
 		}else {
-			var returnSliderPag = false
+			var returnSliderPag = false;
 		}
 		
 		if ( sliderProgressBar == 'true' || sliderProgressBar == '1' ) {
-			var returnSliderProgressBar = progressBar
-			var returnAutoPlay = false
+			var returnSliderProgressBar = progressBar;
+			var returnAutoPlay = false;
 		}else {
-			var returnSliderProgressBar = false
-			var returnAutoPlay = true
+			var returnSliderProgressBar = false;
+			var returnAutoPlay = true;
 		}
 		
 		owl.owlCarousel({
@@ -209,7 +169,7 @@ $(document).ready(function ($) {
 				width: percentTime+"%"
 			});
 			if(percentTime >= 100){
-				$elem.trigger('owl.next')
+				$elem.trigger('owl.next');
 			}
 		}
     }
@@ -222,10 +182,20 @@ $(document).ready(function ($) {
       clearTimeout(tick);
       start();
     }
-	
-	
-	
-	////------- Projects Carousel
+
+	/*------- Projects Carousel
+	$(".projects-carousel").owlCarousel({
+		navigation : true,
+		pagination: false,
+		slideSpeed : 400,
+		stopOnHover: true,
+    	autoPlay: 3000,
+    	items : 4,
+    	itemsDesktopSmall : [900,3],
+		itemsTablet: [600,2],
+		itemsMobile : [479, 1]
+	});*/
+	/*------- Projects Carousel*/
 	$(".projects-carousel").owlCarousel({
 		navigation : true,
 		pagination: false,
@@ -237,10 +207,8 @@ $(document).ready(function ($) {
 		itemsTablet: [600,2],
 		itemsMobile : [479, 1]
 	});
-	
-	
-	
-	////------- Testimonials Carousel
+
+	/*------- Testimonials Carousel*/
 	$(".testimonials-carousel").owlCarousel({
 		navigation : true,
 		pagination: false,
@@ -251,22 +219,17 @@ $(document).ready(function ($) {
 		autoHeight : true,
 		transitionStyle : "fade"
 	});
-	
-	
-	
-	
-	
-	
-	////------- Custom Carousel hightlight news
+
+	/*------- Custom Carousel hightlight news*/
 	$('.custom-carousel').each(function(){
-		var owl = jQuery(this),
-			itemsNum = $(this).attr('data-appeared-items'),
-			sliderNavigation = $(this).attr('data-navigation');
+		var owl = jQuery(this);
+		var	itemsNum = $(this).attr('data-appeared-items');
+		var	sliderNavigation = $(this).attr('data-navigation');
 			
 		if ( sliderNavigation == 'false' || sliderNavigation == '0' ) {
-			var returnSliderNavigation = false
+			var returnSliderNavigation = false;
 		}else {
-			var returnSliderNavigation = true
+			var returnSliderNavigation = true;
 		}
 		if( itemsNum == 1) {
 			var deskitemsNum = 1;
@@ -303,10 +266,8 @@ $(document).ready(function ($) {
 			transitionStyle : "goDown",
 		});
 	});
-	
-    
-    
-    ////------- Testimonials Carousel
+
+    /*------- Testimonials Carousel*/
 	$(".fullwidth-projects-carousel").owlCarousel({
 		navigation : false,
 		pagination: false,
@@ -318,54 +279,36 @@ $(document).ready(function ($) {
 		itemsTablet: [600,2],
 		itemsMobile : [479, 1]
 	});
-	
-	
-	
-	
-	/*----------------------------------------------------*/
-	/*	Tabs
-	/*----------------------------------------------------*/
-	
+
+	/*	Tabs*/
 	$('#myTab a').click(function (e) {
-		e.preventDefault()
-		$(this).tab('show')
-	})
-	
-	
-	
-	
-	/*----------------------------------------------------*/
-	/*	Css3 Transition
-	/*----------------------------------------------------*/
-	
+		e.preventDefault();
+		$(this).tab('show');
+	});
+
+	/*	Css3 Transition*/
 	$('*').each(function(){
 		if($(this).attr('data-animation')) {
-			var $animationName = $(this).attr('data-animation'),
-				$animationDelay = "delay-"+$(this).attr('data-animation-delay');
+			var $animationName = $(this).attr('data-animation');
+			var	$animationDelay = "delay-"+$(this).attr('data-animation-delay');
 			$(this).appear(function() {
 				$(this).addClass('animated').addClass($animationName);
 				$(this).addClass('animated').addClass($animationDelay);
 			});
 		}
 	});
-	
-	
-	
-	
-	/*----------------------------------------------------*/
-	/*	Pie Charts
-	/*----------------------------------------------------*/
-	
-	var pieChartClass = 'pieChart',
-        pieChartLoadedClass = 'pie-chart-loaded';
+
+	/*	Pie Charts*/
+	var pieChartClass = 'pieChart';
+    var pieChartLoadedClass = 'pie-chart-loaded';
 		
 	function initPieCharts() {
 		var chart = $('.' + pieChartClass);
 		chart.each(function() {
 			$(this).appear(function() {
-				var $this = $(this),
-					chartBarColor = ($this.data('bar-color')) ? $this.data('bar-color') : "#F54F36",
-					chartBarWidth = ($this.data('bar-width')) ? ($this.data('bar-width')) : 150
+				var $this = $(this);
+				var	chartBarColor = ($this.data('bar-color')) ? $this.data('bar-color') : "#F54F36";
+				var	chartBarWidth = ($this.data('bar-width')) ? ($this.data('bar-width')) : 150;
 				if( !$this.hasClass(pieChartLoadedClass) ) {
 					$this.easyPieChart({
 						animate: 2000,
@@ -380,39 +323,20 @@ $(document).ready(function ($) {
 		});
 	}
 	initPieCharts();
-	
-	
-	
-	
-	
-	/*----------------------------------------------------*/
-	/*	Animation Progress Bars
-	/*----------------------------------------------------*/
-	
-	$("[data-progress-animation]").each(function() {
-		
-		var $this = $(this);
-		
-		$this.appear(function() {
-			
-			var delay = ($this.attr("data-appear-animation-delay") ? $this.attr("data-appear-animation-delay") : 1);
-			
-			if(delay > 1) $this.css("animation-delay", delay + "ms");
-			
-			setTimeout(function() { $this.animate({width: $this.attr("data-progress-animation")}, 800);}, delay);
 
+	/*	Animation Progress Bars*/
+	$("[data-progress-animation]").each(function() {
+		var $this = $(this);
+
+		$this.appear(function() {	
+			var delay = ($this.attr("data-appear-animation-delay") ? $this.attr("data-appear-animation-delay") : 1);
+			if(delay > 1) $this.css("animation-delay", delay + "ms");
+			setTimeout(function() { $this.animate({width: $this.attr("data-progress-animation")}, 800);}, delay);
 		}, {accX: 0, accY: -50});
 
 	});
-	
-	
-	
-	
-	
-	/*----------------------------------------------------*/
-	/*	Milestone Counter
-	/*----------------------------------------------------*/
-	
+
+	/*	Milestone Counter*/
 	jQuery('.milestone-block').each(function() {
 		jQuery(this).appear(function() {
 			var $endNum = parseInt(jQuery(this).find('.milestone-number').text());
@@ -424,42 +348,22 @@ $(document).ready(function ($) {
 			});
 		},{accX: 0, accY: 0});
 	});
-	
-	
-	
-	
-	
-	/*----------------------------------------------------*/
-	/*	Nivo Lightbox
-	/*----------------------------------------------------*/
-	
+
+	/*	Nivo Lightbox*/
 	$('.lightbox').nivoLightbox({
 		effect: 'fadeScale',
 		keyboardNav: true,
 		errorMessage: 'The requested content cannot be loaded. Please try again later.'
 	});
-	
-	
-	
-	
-	
-	/*----------------------------------------------------*/
-	/*	Change Slider Nav Icons
-	/*----------------------------------------------------*/
-	
+
+	/*	Change Slider Nav Icons*/
 	$('.touch-slider').find('.owl-prev').html('<i class="fa fa-angle-left"></i>');
 	$('.touch-slider').find('.owl-next').html('<i class="fa fa-angle-right"></i>');
 	$('.touch-carousel, .testimonials-carousel').find('.owl-prev').html('<i class="fa fa-angle-left"></i>');
 	$('.touch-carousel, .testimonials-carousel').find('.owl-next').html('<i class="fa fa-angle-right"></i>');
 	$('.read-more').append('<i class="fa fa-angle-right"></i>');
-	
-	
-	
-	
-	/*----------------------------------------------------*/
-	/*	Tooltips & Fit Vids & Parallax & Text Animations
-	/*----------------------------------------------------*/
-	
+
+	/*	Tooltips & Fit Vids & Parallax & Text Animations*/
 	$("body").fitVids();
 	
 	$('.itl-tooltip').tooltip();
@@ -488,19 +392,12 @@ $(document).ready(function ($) {
 		},
 	});
 	
-	
-	
-	
-	
-	/*----------------------------------------------------*/
-	/*	Sticky Header
-	/*----------------------------------------------------*/
-	
+	/*	Sticky Header*/
 	(function() {
 		
-		var docElem = document.documentElement,
-			didScroll = false,
-			changeHeaderOn = 100;
+		var docElem = document.documentElement;
+		var	didScroll = false;
+		var	changeHeaderOn = 100;
 			document.querySelector( 'header' );
 			
 		function init() {
@@ -520,9 +417,9 @@ $(document).ready(function ($) {
 				$('.navbar-brand').css({ 'padding-top' : 19 + "px", 'padding-bottom' : 19 + "px" });
 				
 				if (/iPhone|iPod|BlackBerry/i.test(navigator.userAgent) || $(window).width() < 479 ){
-					$('.navbar-default .navbar-nav > li > a').css({ 'padding-top' : 0 + "px", 'padding-bottom' : 0 + "px" })
+					$('.navbar-default .navbar-nav > li > a').css({ 'padding-top' : 0 + "px", 'padding-bottom' : 0 + "px" });
 				}else{
-					$('.navbar-default .navbar-nav > li > a').css({ 'padding-top' : 20 + "px", 'padding-bottom' : 20 + "px" })
+					$('.navbar-default .navbar-nav > li > a').css({ 'padding-top' : 20 + "px", 'padding-bottom' : 20 + "px" });
 					$('.search-side').css({ 'margin-top' : -7 + "px" });
 				};
 				
@@ -533,9 +430,9 @@ $(document).ready(function ($) {
 				$('.navbar-brand').css({ 'padding-top' : 27 + "px", 'padding-bottom' : 27 + "px" });
 				
 				if (/iPhone|iPod|BlackBerry/i.test(navigator.userAgent) || $(window).width() < 479 ){
-					$('.navbar-default .navbar-nav > li > a').css({ 'padding-top' : 0 + "px", 'padding-bottom' : 0 + "px" })
+					$('.navbar-default .navbar-nav > li > a').css({ 'padding-top' : 0 + "px", 'padding-bottom' : 0 + "px" });
 				}else{
-					$('.navbar-default .navbar-nav > li > a').css({ 'padding-top' : 28 + "px", 'padding-bottom' : 28 + "px" })
+					$('.navbar-default .navbar-nav > li > a').css({ 'padding-top' : 28 + "px", 'padding-bottom' : 28 + "px" });
 					$('.search-side').css({ 'margin-top' : 0  + "px" });
 				};
 				
@@ -549,18 +446,10 @@ $(document).ready(function ($) {
 		
 		init();
 		
-		
-		
 	})();
 });
 
-
-
-
-/*----------------------------------------------------*/
-/*	Portfolio Isotope
-/*----------------------------------------------------*/
-
+/*	Portfolio Isotope*/
 jQuery(window).load(function(){
 	
 	var $container = $('#portfolio');
@@ -587,8 +476,8 @@ jQuery(window).load(function(){
 	  return false;
 	});
 
-	var $optionSets = $('.portfolio-filter ul'),
-	    $optionLinks = $optionSets.find('a');
+	var $optionSets = $('.portfolio-filter ul');
+	var $optionLinks = $optionSets.find('a');
 	$optionLinks.click(function(){
 		var $this = $(this);
 		if ( $this.hasClass('selected') ) { return false; }

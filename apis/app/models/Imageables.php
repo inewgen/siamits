@@ -19,4 +19,10 @@ class Imageables extends Eloquent
 
         return $query;
     }
+
+    public function images()
+    {
+        return $this->belongsTo('Images');
+    }
+
 }

@@ -1,5 +1,9 @@
 <?php
-// Theme::asset()->add('animate', 'public/themes/margo/assets/css/animate.css');
+Theme::asset()->add('style', 'public/themes/margo/assets/css/style.css');
+Theme::asset()->add('dataTables-bootstrap', 'public/themes/margo/assets/plugins/datatables/dataTables.bootstrap.css');
+
+Theme::asset()->container('footer')->add('jquery.dataTables', 'public/themes/margo/assets/plugins/datatables/jquery.dataTables.js');
+Theme::asset()->container('footer')->add('dataTables.bootstrap', 'public/themes/margo/assets/plugins/datatables/dataTables.bootstrap.js');
 // Theme::asset()->add('mediaelement-and-player', 'public/themes/margo/assets/js/mediaelement-and-player.js');
 ?>
 

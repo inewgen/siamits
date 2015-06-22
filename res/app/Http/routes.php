@@ -24,7 +24,15 @@ Route::get('/image/{user_id}/{code}', 'ImageController@getImage');
 Route::get('/image/{user_id}/{code}/{extension}', 'ImageController@getImage');
 Route::get('/image/{user_id}/{code}/{extension}/{w}', 'ImageController@getImage');
 Route::get('/image/{user_id}/{code}/{extension}/{w}/{h}', 'ImageController@getImage');
-Route::get('/image/{user_id}/{code}/{extension}/{w}/{h}/{name}', 'ImageController@getImage');
+Route::get('/image/{user_id}/{code}/{extension}/{w}/{h}/{name}', 'ImageController@getImage');// User images
+
+Route::get('/image2', 'ImageController@getImage2');
+Route::get('/image2/{user_id}', 'ImageController@getImage2');
+Route::get('/image2/{user_id}/{code}', 'ImageController@getImage2');
+Route::get('/image2/{user_id}/{code}/{extension}', 'ImageController@getImage2');
+Route::get('/image2/{user_id}/{code}/{extension}/{w}', 'ImageController@getImage2');
+Route::get('/image2/{user_id}/{code}/{extension}/{w}/{h}', 'ImageController@getImage2');
+Route::get('/image2/{user_id}/{code}/{extension}/{w}/{h}/{name}', 'ImageController@getImage2');
 
 // Web images
 Route::get('/img', 'ImageController@getImg');

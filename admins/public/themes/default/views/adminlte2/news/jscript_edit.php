@@ -11,7 +11,7 @@ Theme::asset()->container('footer')->add('bootbox', 'public/themes/adminlte2/plu
 Theme::asset()->container('footer')->add('validate', 'public/themes/adminlte2/plugins/jQuery/jquery.validate.min.js');
 Theme::asset()->container('footer')->add('uploadify', 'public/themes/adminlte2/plugins/uploadify/jquery.uploadify.min.js');
 Theme::asset()->container('footer')->add('ckeditor', 'public/themes/adminlte2/plugins/ckeditor2/ckeditor.js');
-// Theme::asset()->container('footer')->add('zclip', 'public/themes/adminlte2/plugins/zclip/jquery.zclip.js');
+/*Theme::asset()->container('footer')->add('zclip', 'public/themes/adminlte2/plugins/zclip/jquery.zclip.js');*/
 Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/plugins/jQuery-Tags-Input-master/src/jquery.tagsinput.js');
 Theme::asset()->container('footer')->add('icheck', 'public/themes/adminlte2/plugins/iCheck/icheck.min.js');
 Theme::asset()->container('footer')->add('fastclick', 'public/themes/adminlte2/plugins/fastclick/fastclick.min.js');
@@ -22,7 +22,7 @@ Theme::asset()->container('footer')->add('fastclick', 'public/themes/adminlte2/p
 
     $(function () {
 
-        //iCheck for checkbox and radio inputs
+        /*iCheck for checkbox and radio inputs*/
         $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
           checkboxClass: 'icheckbox_minimal-blue',
           radioClass: 'iradio_minimal-blue'
@@ -39,13 +39,13 @@ Theme::asset()->container('footer')->add('fastclick', 'public/themes/adminlte2/p
             'delimiter': [','],
             'removeWithBackspace' : true,
             'minChars' : 0,
-            'maxChars' : 0, //if not provided there is no limit
+            'maxChars' : 0, /*if not provided there is no limit*/
             'placeholderColor' : '#666666'
         });
 
         CKEDITOR.config.extraPlugins = 'toolbar';
         CKEDITOR.replace( 'description', {
-            // Reset toolbar settings, so full toolbar will be generated automatically.
+            /* Reset toolbar settings, so full toolbar will be generated automatically.*/
             toolbar: null,
             toolbarGroups: null,
             removeButtons: null,
@@ -84,14 +84,15 @@ Theme::asset()->container('footer')->add('fastclick', 'public/themes/adminlte2/p
         <?php $timestamp = time();?>
         $('#file_upload').uploadify({
             'formData'     : {
-                'w': '150',
+                'w': '200',
+                'h': '143',
                 'section': 'news',
                 'user_id': '<?php echo $user->id;?>',
                 'timestamp': '<?php echo $timestamp;?>',
                 'token':     '<?php echo md5(Config::get("web.siamits-keys") . $timestamp);?>'
             },
             'removeCompleted' : true,
-            //'debug'    : true,
+            /*'debug'    : true,*/
             'multi'    : true,
             'swf'      : '<?php echo URL::to("public/themes/adminlte2");?>/plugins/uploadify/uploadify.swf',
             'uploader' : '<?php echo URL::to("images/uploads");?>',
@@ -115,12 +116,13 @@ Theme::asset()->container('footer')->add('fastclick', 'public/themes/adminlte2/p
                 }else if(status_code == '0'){
                     var id        = data.data.id;
                     var url       = data.data.url;
-                    var url_real       = data.data.url_real;
+                    var url_real  = data.data.url_real;
                     var code      = data.data.code;
                     var user_id   = data.data.user_id;
                     var extension = data.data.extension;
 
-                    var w = 150;
+                    var w = 200;
+                    var h = 143;
                     var show_hover_button = true;
 
                     $('#images_code').val(code);
@@ -129,7 +131,7 @@ Theme::asset()->container('footer')->add('fastclick', 'public/themes/adminlte2/p
                     '<div id="'+id+'" align="center"><ul class="ace-thumbnails">'+
                         '<li>'+
                             '<a href="javascript:void(0)">'+
-                                '<img alt="'+w+'" src="'+ url +'" width="'+w+'" height="">'+
+                                '<img alt="'+w+'x'+h+'" src="'+ url +'" width="'+w+'" height="'+h+'">'+
                             '</a>';
                     if(show_hover_button){
                         img_upload_tag = img_upload_tag +
@@ -204,7 +206,7 @@ Theme::asset()->container('footer')->add('fastclick', 'public/themes/adminlte2/p
                 num_images--;
                 console.log("Success");
                 $('#'+id).remove();
-                // $.ajax({
+                /* $.ajax({
                 //     type: "GET",
                 //     url: "<?php echo URL::to('images/delete');?>",
                 //     data: 'id='+id+'&code='+code+'&user_id='+user_id+'&extension='+extension,
@@ -247,7 +249,7 @@ Theme::asset()->container('footer')->add('fastclick', 'public/themes/adminlte2/p
                 //         });
                 //         console.log("Unsuccess");
                 //     }
-                // });
+                // });*/
             }
         });
     }

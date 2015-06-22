@@ -66,4 +66,6 @@ if (in_array($req_path, $path_processing)) {
     Route::get($req_path, 'ProcessingController@Index');
 }
 
+Route::get('clear/cache', 'CacheController@clearCache');
+
 Route::get('/', 'DashboardController@Index');

@@ -123,6 +123,8 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		'Teepluss\Theme\ThemeServiceProvider',
 		'Teepluss\Api\ApiServiceProvider',
+
+		'Patkruk\LaravelCachedSettings\LaravelCachedSettingsServiceProvider',
 	),
 
 	/*
@@ -190,6 +192,8 @@ return array(
 		'URL'               => 'Illuminate\Support\Facades\URL',
 		'Validator'         => 'Illuminate\Support\Facades\Validator',
 		'View'              => 'Illuminate\Support\Facades\View',
+
+		'CachedSettings' => 'Patkruk\LaravelCachedSettings\Facades\CachedSettings',
 
 	),
 

@@ -1,5 +1,8 @@
 <?php
-
+use Facebook\FacebookRequest;
+        use Facebook\GraphObject;
+        use Facebook\FacebookRequestException;
+        use Facebook\FacebookSession;
 class NewsController extends BaseController
 {
     /**
@@ -11,6 +14,12 @@ class NewsController extends BaseController
     public function getIndex()
     {
         $data = Input::all();
+
+        // Get cache value
+        $key_cache = 'admin.0.news.getindex.0.'.md5(serialize($data));
+        if ($render = getCache($key_cache)) {
+            return $render;
+        }
 
         $theme = Theme::uses('default')->layout('adminlte2');
         $theme->setTitle('Admin SiamiTs :: News');
@@ -63,7 +72,7 @@ class NewsController extends BaseController
                         $ent = array();
                         foreach ($value3 as $key4 => $value4) {
                             if ($key4 == 'url') {
-                                $w = 150;
+                                $w = 200;
                                 $width = array_get($value3, 'width', 200);
                                 $height = array_get($value3, 'height', 200);
                                 $user_id = array_get($value3, 'user_id', '');
@@ -122,11 +131,27 @@ class NewsController extends BaseController
         $script = $theme->scopeWithLayout('news.jscript_list', $view)->content();
         $theme->asset()->container('inline_script')->usePath()->writeContent('custom-inline-script', $script);
 
-        return $theme->scopeWithLayout('news.list', $view)->render();
+        $render = $theme->scopeWithLayout('news.list', $view)->render();
+
+        // Save cache value
+        if (!Session::has('success') && !Session::has('error') && !Session::has('warning')) {
+            $contents = sanitize_output($render->original);
+            saveCache($key_cache, $contents);
+        }
+
+        return $render;
     }
 
     public function getAdd()
     {
+        $data = Input::all();
+
+        // Get cache value
+        $key_cache = 'admin.0.news.getadd.0.'.md5(serialize($data));
+        if ($render = getCache($key_cache)) {
+            return $render;
+        }
+
         $theme = Theme::uses('default')->layout('adminlte2');
         $theme->setTitle('Admin SiamiTs :: Add News');
         $theme->setDescription('Add News description');
@@ -134,7 +159,7 @@ class NewsController extends BaseController
 
         $parameters = array(
             'user_id' => '1',
-            'type'      => '2' //1=banners,2=news
+            'type'    => '2' //1=banners,2=news
         );
 
         $client = new Client(Config::get('url.siamits-api'));
@@ -142,6 +167,8 @@ class NewsController extends BaseController
         $results = json_decode($results, true);
 
         if (array_get($results, 'status_code', false) != '0') {
+            // Clear cache value
+            clearCache('admin.0.news.getindex');
             $message = array_get($results, 'status_txt', false);
 
             return Redirect::to('news')->with('error', $message);
@@ -177,7 +204,15 @@ class NewsController extends BaseController
         $script = $theme->scopeWithLayout('news.jscript_add', $view)->content();
         $theme->asset()->container('inline_script')->usePath()->writeContent('custom-inline-script', $script);
 
-        return $theme->scopeWithLayout('news.add', $view)->render();
+        $render = $theme->scopeWithLayout('news.add', $view)->render();
+
+        // Save cache value
+        if (!Session::has('success') && !Session::has('error') && !Session::has('warning')) {
+            $contents = sanitize_output($render->original);
+            saveCache($key_cache, $contents);
+        }
+
+        return $render;
     }
 
     public function postAdd()
@@ -200,6 +235,8 @@ class NewsController extends BaseController
 
         $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
+            // Clear cache value
+            clearCache('admin.0.news.getadd');
             $message = $validator->messages()->first();
 
             return Redirect::to('news/add')->with('error', $message);
@@ -228,10 +265,16 @@ class NewsController extends BaseController
         $results = json_decode($results, true);
 
         if (array_get($results, 'status_code', false) != '0') {
+            // Clear cache value
+            clearCache('admin.0.news.getadd');
             $message = array_get($results, 'status_txt', 'Can not created news');
 
             return Redirect::to('news/add')->with('error', $message);
         }
+
+        // Clear cache value
+        clearCache('admin.0.news.getindex');
+        clearCache('admin.0.news.getadd');
 
         $message = 'You successfully created';
         return Redirect::to('news')->with('success', $message);
@@ -241,8 +284,14 @@ class NewsController extends BaseController
     {
         $data = Input::all();
         $data['id'] = $id;
-        $client = new Client(Config::get('url.siamits-api'));
 
+        // Get cache value
+        $key_cache = 'admin.0.news.getedit.'.$id.'.'.md5(serialize($data));
+        if ($render = getCache($key_cache)) {
+            return $render;
+        }
+
+        $client = new Client(Config::get('url.siamits-api'));
         $theme = Theme::uses('default')->layout('adminlte2');
         $theme->setTitle('Admin SiamiTs :: Edit News');
         $theme->setDescription('Edit News description');
@@ -252,7 +301,10 @@ class NewsController extends BaseController
         $results = json_decode($results, true);
 
         if (array_get($results, 'status_code', false) != '0') {
-            $message = array_get($results, 'status_txt', 'Can not created news');
+            // Clear cache value
+            clearCache('admin.0.news.getindex');
+
+            $message = array_get($results, 'status_txt', 'Can not get news');
 
             return Redirect::to('news')->with('error', $message);
         }
@@ -268,7 +320,7 @@ class NewsController extends BaseController
                     $entry2 = array();
                     foreach ($value2 as $key3 => $value3) {
                         if ($key3 == 'url') {
-                            $w = 150;
+                            $w = 200;
                             $width = array_get($value2, 'width', 200);
                             $height = array_get($value2, 'height', 200);
                             $user_id = array_get($value2, 'user_id', '');
@@ -350,7 +402,15 @@ class NewsController extends BaseController
         $script = $theme->scopeWithLayout('news.jscript_edit', $view)->content();
         $theme->asset()->container('inline_script')->usePath()->writeContent('custom-inline-script', $script);
 
-        return $theme->scopeWithLayout('news.edit', $view)->render();
+        $render = $theme->scopeWithLayout('news.edit', $view)->render();
+
+        // Save cache value
+        if (!Session::has('success') && !Session::has('error') && !Session::has('warning')) {
+            $contents = sanitize_output($render->original);
+            saveCache($key_cache, $contents);
+        }
+
+        return $render;
     }
 
     public function postEdit()
@@ -364,6 +424,8 @@ class NewsController extends BaseController
 
         $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
+            // Clear cache value
+            clearCache('admin.0.news.getindex');
             $message = $validator->messages()->first();
 
             return Redirect::to('news')->with('error', $message);
@@ -383,6 +445,8 @@ class NewsController extends BaseController
 
             $validator = Validator::make($data, $rules);
             if ($validator->fails()) {
+                // Clear cache value
+                clearCache('admin.0.news.getindex');
                 $message = $validator->messages()->first();
 
                 return Redirect::to('news')->with('error', $message);
@@ -403,56 +467,18 @@ class NewsController extends BaseController
             $results = json_decode($results, true);
 
             if (array_get($results, 'status_code', false) != '0') {
+                // Clear cache value
+                clearCache('admin.0.news.getindex');
                 $message = array_get($results, 'status_txt', 'Can not delete news');
 
                 return Redirect::to('news')->with('error', $message);
             }
 
+            // Clear cache value
+            clearCache('admin.0.news.getindex');
             $message = 'You successfully delete';
 
-            // Order
-        } else if ($action == 'order') {
-            // Validator request
-            $rules = array(
-                'id_sel' => 'required',
-                'user_id' => 'required',
-            );
-
-            $validator = Validator::make($data, $rules);
-            if ($validator->fails()) {
-                $message = $validator->messages()->first();
-
-                return Redirect::to('news')->with('error', $message);
-            }
-
-            $user_id = array_get($data, 'user_id', 0);
-
-            if ($id_sel = array_get($data, 'id_sel', false)) {
-                $i = 1;
-                foreach ($id_sel as $value) {
-                    $id = $value;
-                    $parameters2 = array(
-                        'user_id' => $user_id,
-                        'position' => $i,
-                    );
-
-                    $client = new Client(Config::get('url.siamits-api'));
-                    $results = $client->put('news/' . $id, $parameters2);
-                    $results = json_decode($results, true);
-
-                    $i++;
-                }
-            }
-
-            if (array_get($results, 'status_code', false) != '0') {
-                $message = array_get($results, 'status_txt', 'Can not order news');
-
-                return Redirect::to('news')->with('error', $message);
-            }
-
-            $message = 'You successfully order';
-
-            // Edit
+        // Edit
         } else {
             // Validator request
             $rules = array(
@@ -475,6 +501,8 @@ class NewsController extends BaseController
 
             $validator = Validator::make($data, $rules);
             if ($validator->fails()) {
+                // Clear cache value
+                clearCache('admin.0.news.getindex');
                 $message = $validator->messages()->first();
 
                 return Redirect::to('news/'.array_get($data, 'id', ''))->with('error', $message);
@@ -506,182 +534,24 @@ class NewsController extends BaseController
             $results = json_decode($results, true);
 
             if (array_get($results, 'status_code', false) != '0') {
+                // Clear cache value
+                clearCache('admin.0.news.getindex');
                 $message = array_get($results, 'status_txt', 'Can not updated news');
 
                 return Redirect::to('news')->with('error', $message);
             }
 
+            // Clear cache value
+            clearCache('admin.0.news.getindex');
+            clearCache('admin.0.news.getedit.'.$id);
+
             $message = 'You successfully updated';
             return Redirect::to('news')->with('success', $message);
         }
 
+        // Clear cache value
+        clearCache('admin.0.news.getindex');
         return Redirect::to('news')->with('success', $message);
-    }
-
-    public function postUploads()
-    {
-        $data = Input::all();
-
-        // Define a destination
-        $ids = isset($data['ids']) ? $data['ids'] : '0';
-        $user_id = isset($data['user_id']) ? $data['user_id'] : '1';
-        $cate = isset($data['cate']) ? $data['cate'] : '';
-        $cate_id = isset($data['cate_id']) ? $data['cate_id'] : '';
-        $targetFolder = 'public/uploads/' . $user_id . '/' . $cate; // Relative to the root
-
-        $verifyToken = md5('unique_salt' . $data['timestamp']);
-
-        if (!empty($_FILES) && $data['token'] == $verifyToken) {
-            $random = rand(0, 9);
-            $datetime = date("YmdHis");
-            $image_code = $user_id . $cate_id . $datetime . $random;
-            //$image_code = base64_encode($image_code);
-
-            $tempFile = $_FILES['Filedata']['tmp_name'];
-            $targetPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $targetFolder;
-
-            // Validate the file type
-            $fileTypes   = array('jpg', 'jpeg', 'gif', 'png'); // File extensions
-            $fileParts   = pathinfo($_FILES['Filedata']['name']);
-            $fileNameOld = $_FILES['Filedata']['name'];
-
-            $fileExtension = $fileParts['extension'];
-            $fileName      = $image_code . '.' . $fileExtension; // renameing image
-            $targetFile    = rtrim($targetPath, '/') . '/' . $fileName;
-            
-
-            if (in_array($fileParts['extension'], $fileTypes)) {
-                if (move_uploaded_file($tempFile, $targetFile)) {
-                    // Add images
-                    $parameters = array(
-                        'user_id' => $user_id,
-                        'ids' => $ids,
-                        'ids_type' => $cate_id,
-                        'code' => $image_code,
-                        'name' => $fileNameOld,
-                        'extension' => $fileExtension,
-                        'url' => '',
-                        'type' => '0',
-                        'size' => '0',
-                        'width' => '0',
-                        'height' => '0',
-                        'position' => '0',
-                        'status' => '1',
-                    );
-
-                    $client = new Client(Config::get('url.siamits-api'));
-                    $results = $client->post('images', $parameters);
-                    $results = json_decode($results, true);
-
-                    if (array_get($results, 'status_code', false) != '0') {
-                        echo 'Errors uploded.';
-                    } else {
-                        $url_img = Config::get('url.siamits-admin').'/'.$targetFolder.'/'.$image_code.'.'.$fileExtension;
-                        
-                        $jsons_return = array(
-                            'code'      => $image_code,
-                            'url'       => $url_img,
-                            'extension' => $fileExtension,
-                            'user_id' => $user_id,
-                        );
-                        echo json_encode($jsons_return);
-                    }
-                } else {
-                    echo 'Errors uploded.';
-                }
-            } else {
-                echo 'Invalid file type.';
-            }
-        }
-    }
-
-    public function getDeleteImage()
-    {
-        $data = Input::all();
-        $client = new Client(Config::get('url.siamits-api'));
-
-        $response = array(
-            'data' => $data,
-        );
-
-        // Validator request
-        $rules = array(
-            'code'      => 'required',
-            'user_id' => 'required',
-            'extension' => 'required',
-        );
-
-        $validator = Validator::make($data, $rules);
-        if ($validator->fails()) {
-            $message = $validator->messages()->first();
-
-            return $client->createResponse($response, 1003);
-        }
-
-        $code      = array_get($data, 'code', 0);
-        $extension = array_get($data, 'extension', 0);
-        $user_id = array_get($data, 'user_id', 0);
-        $cate      = 'news';
-        $path      = 'public/uploads/' . $user_id . '/' . $cate; // upload path
-        $file_path = $path . '/' . $code .'.'. $extension;
-
-        // Delete image
-        $delete_file = File::delete($file_path);
-  
-        $parameters = array();
-        $results    = $client->delete('images/'.$code, $parameters);
-        $results    = json_decode($results, true);
-
-        if ($status_code = array_get($results, 'status_code', false) != '0') {
-            $status_txt = array_get($results, 'status_txt', '');
-            return $client->createResponse($status_txt, $status_code);
-        }
-
-
-        return $client->createResponse($response, 0);
-    }
-
-    public function getTags()
-    {
-        $data = Input::all();
-        $client = new Client(Config::get('url.siamits-api'));
-
-        // Validator request
-        $rules = array(
-            'term' => 'required',
-        );
-
-        $validator = Validator::make($data, $rules);
-        if ($validator->fails()) {
-            $message = $validator->messages()->first();
-
-            return json_encode(false);
-        }
-
-        $search = array_get($data, 'term', 0);
-  
-        $parameters = array(
-            'search' => urlencode($search),
-        );
-        $results    = $client->get('tags', $parameters);
-        $results    = json_decode($results, true);
-
-        if ($status_code = array_get($results, 'status_code', false) != '0') {
-            return json_encode(false);
-        }
-
-        $results = array_get($results, 'data.record', array());
-
-        $entry = array();
-        foreach ($results as $key => $value) {
-            foreach ($value as $key2 => $value2) {
-                if ($key2 == 'title') {
-                    $entry[] = $value2;
-                }
-            }
-        }
-
-        return json_encode($entry);
     }
 
     private function getPaginationsMake($pagination, $record)

@@ -1,4 +1,5 @@
 <?php
+Theme::asset()->add('style', 'public/themes/margo/assets/css/style.css');
 // Theme::asset()->add('animate', 'public/themes/margo/assets/css/animate.css');
 // Theme::asset()->add('mediaelement-and-player', 'public/themes/margo/assets/js/mediaelement-and-player.js');
 ?>

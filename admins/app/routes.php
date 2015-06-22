@@ -31,6 +31,7 @@ Route::get('mail/sendmail', array('uses' => 'MailController@sendMail'));
 
 Route::post('images/uploads', 'ImagesController@uploads');
 Route::get('images/delete', 'ImagesController@getDeleteImage');
+Route::get('images/clear', 'ImagesController@getClearImage');
 
 Route::get('forgot', array('uses' => 'UsersController@forgot'));
 Route::post('forgot', array('uses' => 'UsersController@postForgot'));
@@ -38,6 +39,7 @@ Route::get('forgot/password', array('uses' => 'UsersController@setPassword'));
 Route::post('forgot/password', array('uses' => 'UsersController@postForgotPassword'));
 
 Route::get('tags/check', 'TagsController@checkTags');
+Route::get('clear/cache', 'CacheController@clearCache');
 
 Route::group(array('before' => 'auth'), function () {
     $prefix = '';

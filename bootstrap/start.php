@@ -24,11 +24,20 @@ $app = new Illuminate\Foundation\Application;
 |
 */
 
-$env = $app->detectEnvironment(array(
+$envMapping = [
+    'apis.siamits.dev'   => 'local',
+    'admins.siamits.dev' => 'local',
+    'www.siamits.dev'    => 'local',
+    'res.siamits.dev'    => 'local',
+];
 
-	'local' => array('homestead'),
+$env = $app->detectEnvironment(function () use ($envMapping) {
+    return isset($_SERVER['HTTP_HOST']) && isset($envMapping[$_SERVER['HTTP_HOST']])
+        ? $envMapping[$_SERVER['HTTP_HOST']]
+        : 'production';
+});
 
-));
+$_SERVER['MY_LARAVEL_ENV'] = $env;
 
 /*
 |--------------------------------------------------------------------------

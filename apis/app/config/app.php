@@ -123,7 +123,8 @@ return array(
         'Illuminate\Workbench\WorkbenchServiceProvider',
 
         'Extended\Api\ApiServiceProvider',
-        'Jenssegers\Mongodb\MongodbServiceProvider'
+        'Jenssegers\Mongodb\MongodbServiceProvider',
+        'Patkruk\LaravelCachedSettings\LaravelCachedSettingsServiceProvider'
     ),
 
     /*
@@ -191,7 +192,8 @@ return array(
         'Validator'         => 'Illuminate\Support\Facades\Validator',
         'View'              => 'Illuminate\Support\Facades\View',
 
-        'API'             => 'Teepluss\Api\Facades\Api'
+        'API'             => 'Teepluss\Api\Facades\Api',
+        'CachedSettings' => 'Patkruk\LaravelCachedSettings\Facades\CachedSettings'
     ),
 
 );

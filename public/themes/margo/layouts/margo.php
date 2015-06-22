@@ -10,7 +10,7 @@
 
     <!-- <link rel="icon" type="image/png" sizes="32x32" href="//www.siamits.com/favicons/favicon-32x32.png?v=1">
     <link rel="icon" type="image/png" sizes="16x16" href="//www.siamits.com/favicons/favicon-16x16.png?v=1"> -->
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="<?php echo URL::to('');?>/favicon.ico" type="image/x-icon" />
 
     <!-- Define Charset -->
     <meta charset="utf-8">
@@ -27,9 +27,6 @@
 
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="<?php echo URL::to('public/themes/margo');?>/assets/css/font-awesome.min.css" type="text/css" media="screen">
-
-    <!-- Margo CSS Styles  -->
-    <link rel="stylesheet" type="text/css" href="<?php echo URL::to('public/themes/margo');?>/assets/css/style.css" media="screen">
 
     <!-- Responsive CSS Styles  -->
     <link rel="stylesheet" type="text/css" href="<?php echo URL::to('public/themes/margo');?>/assets/css/responsive.css" media="screen">
@@ -84,6 +81,33 @@
   ga('create', 'UA-63483372-1', 'auto');
   ga('send', 'pageview');
 </script>
+
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '876049622442009',
+      xfbml      : true,
+      version    : 'v2.3'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<!-- <div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/th_TH/sdk.js#xfbml=1&version=v2.3&appId=876049622442009";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script> -->
 
     <!-- Full Body Container -->
     <div id="container">

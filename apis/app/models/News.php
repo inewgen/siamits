@@ -23,6 +23,10 @@ class News extends Eloquent
             $query->where('id', '=', $val);
         }
 
+        if ($val = array_get($filters, 'type')) {
+            $query->where('type', '=', $val);
+        }
+
         if ($val = array_get($filters, 'user_id')) {
             $query->where('user_id', '=', $val);
         }

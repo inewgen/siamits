@@ -24,7 +24,7 @@
                             <a class="twitter" href="<?php echo URL::to('public/themes/margo');?>/#"><i class="fa fa-twitter"></i></a>
                         </li> -->
                         <li>
-                            <a class="google" href="https://plus.google.com/u/0/103098765144574170914/posts" target="_blank"><i class="fa fa-google-plus"></i></a>
+                            <a class="google" href="https://plus.google.com/103098765144574170914" target="_blank"><i class="fa fa-google-plus"></i></a>
                         </li>
                         <!-- <li>
                             <a class="dribbble" href="<?php echo URL::to('public/themes/margo');?>/#"><i class="fa fa-dribbble"></i></a>

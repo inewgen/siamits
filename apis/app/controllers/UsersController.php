@@ -2,13 +2,6 @@
 
 class UsersController extends ApiController
 {
-    private $simages;
-
-    public function __construct(Simages $simages)
-    {
-        $this->simages = $simages;
-    }
-
     public function index()
     {
         $data = Input::all();
@@ -53,7 +46,7 @@ class UsersController extends ApiController
                     $user_id = array_get($value, 'id', 0);
                     foreach ($value as $key2 => $value2) {
                         if ($key2 == 'images') {
-                            $images = $this->simages->loopImages($value2, $user_id);
+                            $images = loopImages($value2, $user_id);
                             $entry[$key2] = $images;
                         } else if ($key2 == 'categories') {
                             $category['id'] = $value2['id'];
@@ -126,7 +119,7 @@ class UsersController extends ApiController
                     $user_id = array_get($value, 'id', 0);
                     foreach ($value as $key2 => $value2) {
                         if ($key2 == 'images') {
-                            $images = $this->simages->loopImages($value2, $user_id);
+                            $images = loopImages($value2, $user_id);
                             $entry[$key2] = $images;
                         } else if ($key2 == 'categories') {
                             $category['id'] = $value2['id'];

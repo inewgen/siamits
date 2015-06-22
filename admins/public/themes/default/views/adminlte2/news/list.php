@@ -112,11 +112,11 @@
                     <?php       if ($key2 == 'images'):?>
                     <?php           if($url = array_get($value, 'images.0.url', false)): ?>
                                         <td>
-                                            <img src="<?php echo $url;?>" width="150px">
+                                            <img src="<?php echo getImageLink('image', array_get($value, 'images.0.user_id', ''), array_get($value, 'images.0.code', ''), array_get($value, 'images.0.extension', ''), 200, 143, array_get($value, 'images.0.name', ''));?>" width="200" height="143">
                                         </td>
                     <?php           else: ?>
                                         <td>
-                                            <img src="<?php echo getImageLink('img', 'news', 'siamts', 'png', 200, 70, 'banner.jpg');?>" width="200px">
+                                            <img src="<?php echo getImageLink('img', 'news', 'siamts', 'png', 200, 143, 'news.jpg');?>" width="200" height="143">
                                         </td>
                     <?php           endif;?>
                     <?php       elseif ($key2 == 'manage'): ?>

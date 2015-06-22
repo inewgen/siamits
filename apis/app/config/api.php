@@ -22,8 +22,12 @@ return array(
         '1016' => 'Cannot return some stocks',
         '1017' => 'Duplicate category name',
         '1018' => 'No data to update',
+
         '2001' => 'Error upload file',
         '2002' => 'File in used another',
+
+        '3001' => 'Error clear cache',
+        '3002' => 'Cache not found',
     ),
     'apikey'=>array(
        '444bcb3a3fcf8389296c49467f27e1d6'=>'SIT Dev'

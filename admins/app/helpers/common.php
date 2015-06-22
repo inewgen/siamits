@@ -54,3 +54,80 @@ if (!function_exists('getLogo')) {
         return $siamits_res . '/img/default/siamits_logo/png/' . $w . '/' . $h.'/'.$name;
     }
 }
+
+if (!function_exists('saveCache')) {
+    function saveCache($key_cache, $value_cache)
+    {
+        $value_cache .= '<!-- Cached at ' . date('Y-m-d H:i:s') . $key_cache . ' -->';
+        //$value_cache = serialize($value_cache);
+        return CachedSettings::set($key_cache, $value_cache);
+    }
+}
+
+if (!function_exists('getCache')) {
+    function getCache($key_cache)
+    {
+        if (Input::get('nocache')) {
+            return false;
+        }
+
+        $value = false;
+        if ($value = CachedSettings::get($key_cache, false)) {
+            // $value = unserialize($value);
+        }
+
+        return $value;
+    }
+}
+
+if (!function_exists('clearCache')) {
+    function clearCache($key_cache)
+    {
+        if (!empty($key_cache)) {
+            $get_keys_all = CachedSettings::getKeys();
+            $i = 0;
+
+            foreach ($get_keys_all as $key => $value) {
+                if (strpos($value, $key_cache) === 0) {
+                    $keys[] = $value;
+                    if (!CachedSettings::has($value)) {
+                        //return false;
+                    }
+
+                    CachedSettings::delete($value);
+                    Cache::forget($value);
+                    $i++;
+                }
+            }
+
+            if ($i == 0) {
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+}
+
+if (!function_exists('sanitize_output')) {
+    function sanitize_output($buffer)
+    {
+        $search = array(
+            '/\>[^\S ]+/s',  // strip whitespaces after tags, except space
+            '/[^\S ]+\</s',  // strip whitespaces before tags, except space
+            '/(\s)+/s'       // shorten multiple whitespace sequences
+        );
+
+        $replace = array(
+            '>',
+            '<',
+            '\\1'
+        );
+
+        $buffer = preg_replace($search, $replace, $buffer);
+
+        return $buffer;
+    }
+}

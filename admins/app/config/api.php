@@ -1,6 +1,6 @@
 <?php
 return array(
-    'base_url' => 'http://apis.siamits.dev/api/',
+    'base_url' => 'http://apis.siaits.com/api/',
     'error_code'=>array(
         '0'    => 'Success',
         '1000' => 'Invalid token',
@@ -21,6 +21,7 @@ return array(
         '1015' => 'Out of stock',
         '1016' => 'Cannot return some stocks',
         '1017' => 'Duplicate category name',
+        '1018' => 'No data to update',
 
         '2000' => 'Debug value',
         '2001' => 'Error upload file',
@@ -28,5 +29,12 @@ return array(
         '2003' => 'Invalid token',
         '2004' => 'Invalid parameter',
         '2005' => 'File not found',
+
+        '3001' => 'Error clear cache',
+        '3002' => 'Cache not found',
     ),
+    'apikey'=>array(
+       '444bcb3a3fcf8389296c49467f27e1d6'=>'SIT Dev'
+    ),
+    'apikey_payment' => '467f27e1d63',
 );

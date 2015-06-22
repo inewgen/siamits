@@ -30,6 +30,7 @@ if (routeLoad($prefix . 'categories', $req_path, $route_conf)) {
 }
 
 if (routeLoad($prefix . 'images', $req_path, $route_conf)) {
+    Route::get($prefix . 'images/clear', 'ImagesController@clear');
     Route::resource($prefix . 'images', 'ImagesController');
 }
 
@@ -51,6 +52,10 @@ if (routeLoad($prefix . 'tags', $req_path, $route_conf)) {
 
 if (routeLoad($prefix . 'users', $req_path, $route_conf)) {
     Route::resource($prefix . 'users', 'UsersController');
+}
+
+if (routeLoad($prefix . 'clear', $req_path, $route_conf)) {
+    Route::get($prefix . 'clear/cache', 'CacheController@clearCache');
 }
 
 if (preg_match('/^api$/', $req_path)) {

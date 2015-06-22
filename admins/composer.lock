@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c3e8b6a31cecea6a69c48ef4fc12aa4b",
+    "hash": "46bb12de7e6291d377a06e075670081a",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -1027,6 +1027,57 @@
                 "utf8"
             ],
             "time": "2015-04-26 09:51:43"
+        },
+        {
+            "name": "patkruk/laravel-cached-settings",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/patkruk/Laravel-Cached-Settings.git",
+                "reference": "a1d3fe278919bef25ba7418a1e7c94db4e8d9fad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/patkruk/Laravel-Cached-Settings/zipball/a1d3fe278919bef25ba7418a1e7c94db4e8d9fad",
+                "reference": "a1d3fe278919bef25ba7418a1e7c94db4e8d9fad",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "4.*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "illuminate/cache": "4.*@dev",
+                "mockery/mockery": "0.9.*@dev",
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/migrations"
+                ],
+                "psr-0": {
+                    "Patkruk\\LaravelCachedSettings\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Patryk Kruk",
+                    "email": "patkruk@gmail.com"
+                }
+            ],
+            "description": "A simple cached config container for Laravel 4",
+            "keywords": [
+                "cached configs",
+                "cached settings",
+                "config container",
+                "laravel"
+            ],
+            "time": "2014-10-01 01:56:57"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -3048,7 +3099,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "teepluss/api": 20,
-        "hybridauth/hybridauth": 20
+        "hybridauth/hybridauth": 20,
+        "patkruk/laravel-cached-settings": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

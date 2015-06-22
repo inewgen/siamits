@@ -2,13 +2,6 @@
 
 class BannersController extends ApiController
 {
-    private $simages;
-
-    public function __construct(Simages $simages)
-    {
-        $this->simages = $simages;
-    }
-
     public function index()
     {
         $data = Input::all();
@@ -76,7 +69,7 @@ class BannersController extends ApiController
                     foreach ($value as $key2 => $value2) {
                         if ($key2 == 'images') {
                             // Loop images
-                            $images = $this->simages->loopImages($value2, $user_id, 'banners');
+                            $images = loopImages($value2, $user_id, 'banners');
                             $entry[$key2] = $images;
                         } else if ($key2 == 'categories') {
                             $category['id'] = $value2['id'];
@@ -147,7 +140,7 @@ class BannersController extends ApiController
                     foreach ($value as $key2 => $value2) {
                         if ($key2 == 'images') {
                             // Loop images
-                            $images = $this->simages->loopImages($value2, $user_id);
+                            $images = loopImages($value2, $user_id);
                             $entry[$key2] = $images;
                         } else if ($key2 == 'categories') {
                             $category['id'] = $value2['id'];

@@ -3,14 +3,14 @@ Theme::asset()->add('dataTables-bootstrap', 'public/themes/adminlte2/plugins/iCh
 Theme::asset()->add('uploadify-css', 'public/themes/adminlte2/plugins/uploadify/uploadify.css');
 Theme::asset()->add('ace-css', 'public/themes/adminlte2/plugins/css/ace.thumbnails.css');
 Theme::asset()->add('tagsinput-css', 'public/themes/adminlte2/plugins/jQuery-Tags-Input-master/src/jquery.tagsinput.css');
-Theme::asset()->add('tagsinput-css2', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css');
+Theme::asset()->add('tagsinput-css2', 'public/themes/adminlte2/dist/css/jquery-ui.css');
 
-Theme::asset()->container('footer')->add('jquery-ui.min', 'http://code.jquery.com/ui/1.11.2/jquery-ui.min.js');
+Theme::asset()->container('footer')->add('jquery-ui.min', 'public/themes/adminlte2/dist/js/jquery-ui.min.js');
 Theme::asset()->container('footer')->add('bootbox', 'public/themes/adminlte2/plugins/bootbox/bootbox.min.js');
 Theme::asset()->container('footer')->add('validate', 'public/themes/adminlte2/plugins/jQuery/jquery.validate.min.js');
 Theme::asset()->container('footer')->add('uploadify', 'public/themes/adminlte2/plugins/uploadify/jquery.uploadify.min.js');
 Theme::asset()->container('footer')->add('ckeditor', 'public/themes/adminlte2/plugins/ckeditor2/ckeditor.js');
-// Theme::asset()->container('footer')->add('zclip', 'public/themes/adminlte2/plugins/zclip/jquery.zclip.js');
+/* Theme::asset()->container('footer')->add('zclip', 'public/themes/adminlte2/plugins/zclip/jquery.zclip.js');*/
 Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/plugins/jQuery-Tags-Input-master/src/jquery.tagsinput.js');
 ?>
 
@@ -30,14 +30,14 @@ Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/p
             'delimiter': [','],
             'removeWithBackspace' : true,
             'minChars' : 0,
-            'maxChars' : 0, //if not provided there is no limit
+            'maxChars' : 0, /*if not provided there is no limit*/
             'placeholderColor' : '#666666'
         });
 
-        //bootstrap WYSIHTML5 - text editor
+        /*bootstrap WYSIHTML5 - text editor*/
         CKEDITOR.config.extraPlugins = 'toolbar';
         CKEDITOR.replace( 'description', {
-            // Reset toolbar settings, so full toolbar will be generated automatically.
+            /* Reset toolbar settings, so full toolbar will be generated automatically.*/
             toolbar: null,
             toolbarGroups: null,
             removeButtons: null,
@@ -76,14 +76,15 @@ Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/p
         <?php $timestamp = time();?>
         $('#file_upload').uploadify({
             'formData'     : {
-                'w': '150',
+                'w': '200',
+                'h': '143',
                 'section': 'news',
                 'user_id': '<?php echo $user->id;?>',
                 'timestamp': '<?php echo $timestamp;?>',
                 'token':     '<?php echo md5(Config::get("web.siamits-keys") . $timestamp);?>'
             },
             'removeCompleted' : true,
-            //'debug'    : true,
+            /*'debug'    : true,*/
             'multi'    : true,
             'swf'      : '<?php echo URL::to("public/themes/adminlte2");?>/plugins/uploadify/uploadify.swf',
             'uploader' : '<?php echo URL::to("images/uploads");?>',
@@ -107,12 +108,13 @@ Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/p
                 }else if(status_code == '0'){
                     var id        = data.data.id;
                     var url       = data.data.url;
-                    var url_real       = data.data.url_real;
+                    var url_real  = data.data.url_real;
                     var code      = data.data.code;
                     var user_id   = data.data.user_id;
                     var extension = data.data.extension;
 
-                    var w = 150;
+                    var w = 200;
+                    var h = 143;
                     var show_hover_button = true;
 
                     $('#images_code').val(code);
@@ -121,7 +123,7 @@ Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/p
                     '<div id="'+id+'" align="center"><ul class="ace-thumbnails">'+
                         '<li>'+
                             '<a href="javascript:void(0)">'+
-                                '<img alt="'+w+'" src="'+ url +'" width="'+w+'" height="">'+
+                                '<img alt="'+w+'x'+h+'" src="'+ url +'" width="'+w+'" height="'+h+'">'+
                             '</a>';
                     if(show_hover_button){
                         img_upload_tag = img_upload_tag +
@@ -236,7 +238,7 @@ Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/p
         });
     }
 
-    // function onAddTag(tag) {
+    /* function onAddTag(tag) {
     //     alert("Added a tag: " + tag);
     // }
     // function onRemoveTag(tag) {
@@ -245,5 +247,5 @@ Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/p
 
     // function onChangeTag(input,tag) {
     //     alert("Changed a tag: " + tag);
-    // }
+    // }*/
 </script>
