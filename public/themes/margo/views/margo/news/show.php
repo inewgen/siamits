@@ -4,13 +4,13 @@
         <div class="row">
             <div class="col-md-6">
                 <h2>News</h2>
-                <p><?php echo $news['title'];?></p>
+                <p><?php echo array_get($news, 'title', '');?></p>
             </div>
             <div class="col-md-6">
                 <ul class="breadcrumbs">
                     <li><a href="<?php echo URL::to('');?>">Home</a></li>
                     <li><a href="<?php echo URL::to('news');?>">News</a></li>
-                    <li><?php echo $news['title'];?></li>
+                    <li><?php echo array_get($news, 'title', '');?></li>
                 </ul>
             </div>
         </div>
@@ -195,86 +195,80 @@
 
             </div>
 
-
-
-            <!-- Sidebar -->
+            <!--Sidebar-->
             <div class="col-md-3 sidebar right-sidebar">
-
                 <!-- Search Widget -->
                 <div class="widget widget-search">
-                    <form action="#">
-                        <input type="search" placeholder="Enter Keywords..." />
-                        <button class="search-btn" type="submit"><i class="fa fa-search"></i></button>
+                    <form action="<?php echo URL::to('news');?>" method="get">
+                        <input type="search" placeholder="Enter Keywords..." name="s" value="<?php echo array_get($param, 's'. '');?>" />
+                        <button class="search-btn" type="submit">
+                            <i class="fa fa-search"></i>
+                        </button>
                     </form>
                 </div>
-
                 <!-- Categories Widget -->
                 <div class="widget widget-categories">
-                    <h4>Categories <span class="head-line"></span></h4>
+                    <h4>Categories 
+                        <span class="head-line"></span>
+                    </h4>
                     <ul>
                         <li>
-                            <a href="#">Brandign</a>
+                            <a href="<?php echo URL::to('news');?>">All</a>
                         </li>
+<?php if (isset($categories) && is_array($categories)) :?>
+<?php foreach ($categories as $key => $value) : ?>
                         <li>
-                            <a href="#">Design</a>
+                            <a href="<?php echo URL::to('news/category');?>/<?php echo $key;?>"><?php echo $value;?></a>
                         </li>
-                        <li>
-                            <a href="#">Development</a>
-                        </li>
-                        <li>
-                            <a href="#">Graphic</a>
-                        </li>
+<?php endforeach;?>
+<?php endif;?>
                     </ul>
                 </div>
-
                 <!-- Popular Posts widget -->
                 <div class="widget widget-popular-posts">
-                    <h4>Popular Post <span class="head-line"></span></h4>
+                    <h4>Popular News 
+                        <span class="head-line"></span>
+                    </h4>
                     <ul>
+<?php if (isset($pnews) && is_array($pnews)) :?>
+<?php foreach ($pnews as $key => $value) :?>
                         <li>
                             <div class="widget-thumb">
-                                <a href="#"><img src="<?php echo URL::to('public/themes/margo');?>/assets/img/blog-mini-01.jpg" alt="" /></a>
+                                <a href="<?php echo URL::to('news/'.$value['id']);?>">
+                                    <img src="<?php echo getImageLink('image', array_get($value, 'images.0.user_id', ''), array_get($value, 'images.0.code', ''), array_get($value, 'images.0.extension', ''), 65, 65, array_get($value, 'images.0.name', ''));?>" alt="" />
+                                </a>
                             </div>
                             <div class="widget-content">
-                                <h5><a href="#">How To Download The Google Fonts Catalog</a></h5>
-                                <span>Jul 29 2013</span>
+                                <h5>
+                                    <a href="<?php echo URL::to('news/'.$value['id']);?>"><?php echo htmlspecialchars($value['title']); ?></a>
+                                </h5>
+                                <span>View (<?php echo array_get($value, 'views', '0'); ?>)</span>
                             </div>
                             <div class="clearfix"></div>
                         </li>
-                        <li>
-                            <div class="widget-thumb">
-                                <a href="#"><img src="<?php echo URL::to('public/themes/margo');?>/assets/img/blog-mini-02.jpg" alt="" /></a>
-                            </div>
-                            <div class="widget-content">
-                                <h5><a href="#">How To Download The Google Fonts Catalog</a></h5>
-                                <span>Jul 29 2013</span>
-                            </div>
-                            <div class="clearfix"></div>
-                        </li>
-                        <li>
-                            <div class="widget-thumb">
-                                <a href="#"><img src="<?php echo URL::to('public/themes/margo');?>/assets/img/blog-mini-03.jpg" alt="" /></a>
-                            </div>
-                            <div class="widget-content">
-                                <h5><a href="#">How To Download The Google Fonts Catalog</a></h5>
-                                <span>Jul 29 2013</span>
-                            </div>
-                            <div class="clearfix"></div>
-                        </li>
+<?php endforeach;?>
+<?php endif;?>
                     </ul>
                 </div>
-
                 <!-- Video Widget -->
                 <div class="widget">
-                    <h4>Video <span class="head-line"></span></h4>
+                    <h4>Video 
+                        <span class="head-line"></span>
+                    </h4>
                     <div>
-                        <!-- <iframe src="http://www.youtube.com/embed/GQRjWxfz-PQ" id="fitvid942516"></iframe> -->
+
+<?php if(isset($youtube) && is_array($youtube)): ?>
+<?php foreach ($youtube as $key => $value): ?>
+                        <iframe src="https://www.youtube.com/embed/<?php echo array_get($value, 'id', '');?>" width="800" height="450"></iframe>
+<?php endforeach;?>
+<?php endif;?>
                     </div>
                 </div>
-
                 <!-- Tags Widget -->
-                <div class="widget widget-tags">
-                    <h4>Tags <span class="head-line"></span></h4>
+                <!--<div class="widget widget-tags">
+                    <h4>Tags 
+                        <span class="head-line"></span>
+                    </h4>
                     <div class="tagcloud">
                         <a href="#">Portfolio</a>
                         <a href="#">Theme</a>
@@ -288,14 +282,11 @@
                         <a href="#">Icons</a>
                         <a href="#">Google</a>
                     </div>
-                </div>
+                </div>-->
 
             </div>
             <!--End sidebar-->
-
-
         </div>
-
     </div>
 </div>
-<!-- End content -->
+<!-- End Content

@@ -32,7 +32,7 @@ class DashboardController extends BaseController
         $client = new Client(Config::get('url.siamits-api'));
         $results = $client->get('banners', $parameters);
         $results = json_decode($results, true);
-        sdebug($results,true);
+        
         $banners = array_get($results, 'data.record', array());
 
         // Get hightlight news

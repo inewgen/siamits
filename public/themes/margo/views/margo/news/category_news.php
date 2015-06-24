@@ -156,67 +156,37 @@
                         </li>
 <?php if (isset($categories) && is_array($categories)) :?>
 <?php foreach ($categories as $key => $value) : ?>
-<?php if($id == $key): ?>
-                        <li>
-                            <font color="red"><a href="<?php echo URL::to('news/category');?>/<?php echo $key;?>"><?php echo $value;?></a></font>
-                        </li>
-<?php else: ?>
                         <li>
                             <a href="<?php echo URL::to('news/category');?>/<?php echo $key;?>"><?php echo $value;?></a>
                         </li>
-<?php endif;?>
 <?php endforeach;?>
 <?php endif;?>
                     </ul>
                 </div>
                 <!-- Popular Posts widget -->
                 <div class="widget widget-popular-posts">
-                    <h4>Popular Post 
+                    <h4>Popular News 
                         <span class="head-line"></span>
                     </h4>
                     <ul>
+<?php if (isset($pnews) && is_array($pnews)) :?>
+<?php foreach ($pnews as $key => $value) :?>
                         <li>
                             <div class="widget-thumb">
-                                <a href="#">
-                                    <img src="images/blog-mini-01.jpg" alt="" />
+                                <a href="<?php echo URL::to('news/'.$value['id']);?>">
+                                    <img src="<?php echo getImageLink('image', array_get($value, 'images.0.user_id', ''), array_get($value, 'images.0.code', ''), array_get($value, 'images.0.extension', ''), 65, 65, array_get($value, 'images.0.name', ''));?>" alt="" />
                                 </a>
                             </div>
                             <div class="widget-content">
                                 <h5>
-                                    <a href="#">How To Download The Google Fonts Catalog</a>
+                                    <a href="<?php echo URL::to('news/'.$value['id']);?>"><?php echo htmlspecialchars($value['title']); ?></a>
                                 </h5>
-                                <span>Jul 29 2013</span>
+                                <span>View (<?php echo array_get($value, 'views', '0'); ?>)</span>
                             </div>
                             <div class="clearfix"></div>
                         </li>
-                        <li>
-                            <div class="widget-thumb">
-                                <a href="#">
-                                    <img src="images/blog-mini-02.jpg" alt="" />
-                                </a>
-                            </div>
-                            <div class="widget-content">
-                                <h5>
-                                    <a href="#">How To Download The Google Fonts Catalog</a>
-                                </h5>
-                                <span>Jul 29 2013</span>
-                            </div>
-                            <div class="clearfix"></div>
-                        </li>
-                        <li>
-                            <div class="widget-thumb">
-                                <a href="#">
-                                    <img src="images/blog-mini-03.jpg" alt="" />
-                                </a>
-                            </div>
-                            <div class="widget-content">
-                                <h5>
-                                    <a href="#">How To Download The Google Fonts Catalog</a>
-                                </h5>
-                                <span>Jul 29 2013</span>
-                            </div>
-                            <div class="clearfix"></div>
-                        </li>
+<?php endforeach;?>
+<?php endif;?>
                     </ul>
                 </div>
                 <!-- Video Widget -->
@@ -225,11 +195,16 @@
                         <span class="head-line"></span>
                     </h4>
                     <div>
-                        <iframe src="http://player.vimeo.com/video/63322694?byline=0&amp;portrait=0&amp;badge=0" width="800" height="450"></iframe>
+
+<?php if(isset($youtube) && is_array($youtube)): ?>
+<?php foreach ($youtube as $key => $value): ?>
+                        <iframe src="https://www.youtube.com/embed/<?php echo array_get($value, 'id', '');?>" width="800" height="450"></iframe>
+<?php endforeach;?>
+<?php endif;?>
                     </div>
                 </div>
                 <!-- Tags Widget -->
-                <div class="widget widget-tags">
+                <!--<div class="widget widget-tags">
                     <h4>Tags 
                         <span class="head-line"></span>
                     </h4>
@@ -246,7 +221,8 @@
                         <a href="#">Icons</a>
                         <a href="#">Google</a>
                     </div>
-                </div>
+                </div>-->
+
             </div>
             <!--End sidebar-->
         </div>

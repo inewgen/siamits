@@ -28,7 +28,7 @@ return array(
             'write' => array(
                 'host' => '127.0.0.1' // 61.91.1.146
             ),
-            'database'  => 'siamits', //authen
+            'database'  => 'u693496674_siami', //authen
             'username'  => 'root', // dev
             'password'  => '1234', // dev!          'password'  => 'secret',
             'charset'   => 'utf8',

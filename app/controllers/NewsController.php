@@ -21,7 +21,6 @@ class NewsController extends BaseController
         $theme->setTitle('SiamiTs :: News');
         $theme->setDescription('News description');
 
-        // Get hightlight news
         $client = new Client(Config::get('url.siamits-api'));
         $page    = array_get($data, 'page', '1');
         $perpage = array_get($data, 'perpage', '15');
@@ -125,6 +124,22 @@ class NewsController extends BaseController
         $results = $client->get('news/'.$id);
         $results = json_decode($results, true);
         $news = array_get($results, 'data.record.0', array());
+        sdebug($news, true);
+        // Popular News
+        $parameters = array(
+            'page'    => '1',
+            'perpage' => '5',
+            'order'   => 'views',
+            'sort'    => 'desc',
+        );
+
+        $client = new Client(Config::get('url.siamits-api'));
+        $pnews = $client->get('news', $parameters);
+        $pnews = json_decode($pnews, true);
+        $pnews = array_get($pnews, 'data.record', array());
+
+        $param = '';
+        isset($data['s']) ? $param['s'] = $data['s'] : '';
 
         // Category
         $parameters = array(
@@ -132,16 +147,27 @@ class NewsController extends BaseController
         );
 
         $client = new Client(Config::get('url.siamits-api'));
-        $results = $client->get('categories', $parameters);
-        $results = json_decode($results, true);
-        $category = array_get($results, 'data.record', array());
+        $category = $client->get('categories', $parameters);
+        $category = json_decode($category, true);
+        $category = array_get($category, 'data.record', array());
+
+        $categories = array();
+        foreach ($category as $key => $value) {
+            $categories[array_get($value, 'id', '')] = array_get($value, 'title', '');
+        }
+
+        // Youtube feed
+        $youtube = self::getYoutubeSearch();
 
         $view = array(
-            'news' => $news,
-            'categories' => $category,
+            'news'  => $news,
+            'pnews'  => $pnews,
+            'param' => $param,
+            'categories' => $categories,
+            'youtube'    => $youtube,
         );
 
-        sdebug($view);
+        sdebug($view, true);
 
         $script = $theme->scopeWithLayout('news.jscript_show', $view)->content();
         $theme->asset()->container('inline_script')->usePath()->writeContent('custom-inline-script', $script);
@@ -179,6 +205,22 @@ class NewsController extends BaseController
         $news = array_get($results, 'data.record', array());
         $param = '';
 
+        // Popular News
+        $parameters = array(
+            'page'    => '1',
+            'perpage' => '5',
+            'order'   => 'views',
+            'sort'    => 'desc',
+        );
+
+        $client = new Client(Config::get('url.siamits-api'));
+        $pnews = $client->get('news', $parameters);
+        $pnews = json_decode($pnews, true);
+        $pnews = array_get($pnews, 'data.record', array());
+
+        $param = '';
+        isset($data['s']) ? $param['s'] = $data['s'] : '';
+
         // Category
         $parameters = array(
             'type' => '2',
@@ -194,11 +236,16 @@ class NewsController extends BaseController
             $categories[array_get($value, 'id', '')] = array_get($value, 'title', '');
         }
 
+        // Youtube feed
+        $youtube = self::getYoutubeSearch();
+
         $view = array(
             'id'  => $id,
             'news'  => $news,
+            'pnews'  => $pnews,
             'param' => $param,
             'categories' => $categories,
+            'youtube'    => $youtube,
         );
 
         sdebug($view, true);
@@ -248,11 +295,31 @@ class NewsController extends BaseController
             $categories[array_get($value, 'id', '')] = array_get($value, 'title', '');
         }
 
+        // Popular News
+        $parameters = array(
+            'page'    => '1',
+            'perpage' => '5',
+            'order'   => 'views',
+            'sort'    => 'desc',
+        );
+
+        $client = new Client(Config::get('url.siamits-api'));
+        $pnews = $client->get('news', $parameters);
+        $pnews = json_decode($pnews, true);
+        $pnews = array_get($pnews, 'data.record', array());
+
         $param = '';
+        isset($data['s']) ? $param['s'] = $data['s'] : '';
+
+        // Youtube feed
+        $youtube = self::getYoutubeSearch();
+
         $view = array(
+            'news'  => $news,
+            'pnews'  => $pnews,
             'param' => $param,
-            'category' => $category,
             'categories' => $categories,
+            'youtube'    => $youtube,
         );
 
         sdebug($view, true);
