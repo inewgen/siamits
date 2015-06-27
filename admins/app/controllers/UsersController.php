@@ -12,19 +12,6 @@ class UsersController extends BaseController
 
     public function login()
     {
-        // $client = new Client(Config::get('url.siamits-api'));
-        // $results = $client->get('users');
-        // $results = json_decode($results, true);
-        $client = new GuzzleHttp\Client();
-        $res = $client->get(Config::get('url.siamits-api').'/users');
-        echo $res->getStatusCode();
-        // "200"
-        echo $res->getHeader('content-type');
-        // 'application/json; charset=utf8'
-        echo $res->getBody();
-
-        sdebug($res,true);
-
         $theme = Theme::uses('default')->layout('default2');
         $theme->setTitle('Admin SiamiTs :: Login');
         $theme->setDescription('Login description');

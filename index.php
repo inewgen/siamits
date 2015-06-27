@@ -25,11 +25,14 @@ $server_allow = array(
     '110.168.232.211',
     '171.96.167.123',
     '110.168.231.207',
+	'110.170.201.178',
+	'171.96.168.30',
+	'171.96.168.61',
 );
 
 if ($env == 'com' && !in_array($_SERVER['REMOTE_ADDR'], $server_allow)) {
-    //require __DIR__ . '/comingsoon.php';
-    //die();
+    require __DIR__ . '/comingsoon.php';
+    die();
 }
 
 /**

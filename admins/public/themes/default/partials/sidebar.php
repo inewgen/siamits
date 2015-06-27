@@ -70,6 +70,15 @@
                 </ul>
             </li>
 <?php //endif;?>
+			<li class="<?php echo Request::is('caegories*') ? 'active ' : '';?>treeview">
+                <a href="<?php echo URL::to('categories');?>">
+                    <i class="fa fa-files-o"></i> <span>Category</span> <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="<?php echo Request::is('categories') ? 'active ' : '';?>"><a href="<?php echo URL::to('categories');?>"><i class="fa fa-circle-o"></i> List Category</a></li>
+                    <li class="<?php echo Request::is('categories/add*') ? 'active ' : '';?>"><a href="<?php echo URL::to('categories/add');?>"><i class="fa fa-circle-o"></i> Add Category</a></li>
+                </ul>
+            </li>
             <li class="treeview">
                 <a href="<?php echo URL::to('public/themes/adminlte2');?>/#">
                     <i class="fa fa-files-o"></i>

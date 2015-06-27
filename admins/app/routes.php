@@ -57,6 +57,14 @@ Route::group(array('before' => 'auth'), function () {
         Route::get('banners/{id}', 'BannersController@getEdit');
         Route::post('banners', 'BannersController@postEdit');
     }
+	
+	if (routeLoad($prefix . 'categories', $req_path)) {
+        Route::get('categories', 'CategoriesController@getIndex');
+        Route::get('categories/add', 'CategoriesController@getAdd');
+        Route::post('categories/add', 'CategoriesController@postAdd');
+        Route::get('categories/{id}', 'CategoriesController@getEdit');
+        Route::post('categories', 'CategoriesController@postEdit');
+    }
 
     if (routeLoad($prefix . 'contact', $req_path)) {
         Route::get('contact', 'ContactController@Index');

@@ -33,13 +33,16 @@ class CategoriesController extends ApiController
         $take = $take == 0 ? 20 : $take;
         $page = (int) (isset($data['page']) && $data['page'] > 0) ? $data['page'] : 1;
         $skip = ($page - 1) * $take;
-
-        $filters = array(
-            // 'user_id' => $data['user_id'],
-        );
-
-        isset($data['type']) ? $filters['type'] = $data['type']:'';
-        isset($data['s']) ? $filters['s'] = $data['s']:'';
+		
+		// Filter
+		$fild_arr = array(
+			'id', 'title', 'description', 'parent_id', 'user_id', 'position', 'type', 'status', 's'
+		);
+        
+		$filters = array();
+		foreach ($fild_arr as $value) {
+        	isset($data[$value]) ? $filters[$value] = array_get($data, $value, ''):'';
+		}
 
         $query = Categories::filters($filters)
                 ->with('images')
@@ -51,16 +54,95 @@ class CategoriesController extends ApiController
         if (!$results) {
             return API::createResponse($response, 1004);
         }
+		
+		//Loop data
+        $entries = array();
+        if (isset($results) && is_array($results)) {
+            foreach ($results as $key => $value) {
+                $entry = array();
+                if (isset($value) && is_array($value)) {
+                    $user_id = 0;
+                    foreach ($value as $key2 => $value2) {
+                       if ($key2 == 'images') {
+                            // Loop images
+                            $images = loopImages($value2, $user_id, 'categories');
+                            $entry[$key2] = $images;
+                        } else {
+                            $entry[$key2] = $value2;
+                        }
+                    }
+                }
+                $entries[] = $entry;
+            }
+        }
 
         $pagings = array(
             'page'    => $page,
             'perpage' => $take,
-            'total'   => $count
+            'total'   => $count,
         );
 
         $response = array(
             'pagination' => $pagings,
-            'record' => $results
+            'record' => $entries
+        );
+
+        return API::createResponse($response, 0);
+    }
+	
+	public function show($id = null)
+    {
+        $data = Input::all();
+        $data['id'] = $id;
+
+        // Validator
+        $rules = array(
+            'id'        => 'required|integer|min:1',
+        );
+
+        $validator = Validator::make($data, $rules);
+        if ($validator->fails()) {
+            $response = array(
+                'message' => $validator->messages()->first(),
+            );
+
+            return API::createResponse($response, 1003);
+        }
+
+        // Query
+        $query   = Categories::find($id);
+        $results = json_decode($query, true);
+		$results[] = $results;
+
+        if (!$results) {
+            $response = array();
+
+            return API::createResponse($response, 1004);
+        }
+
+		//Loop data
+        $entries = array();
+        if (isset($results) && is_array($results)) {
+            foreach ($results as $value) {	alert($value);die();
+                $entry = array();
+                if (isset($value) && is_array($value)) {
+                    $user_id = 0;
+                    foreach ($value as $key2 => $value2) {
+                       if ($key2 == 'images') {
+                            // Loop images
+                            $images = loopImages($value2, $user_id, 'categories');
+                            $entry[$key2] = $images;
+                        } else {
+                            $entry[$key2] = $value2;
+                        }
+                    }
+                }
+                $entries[] = $entry;
+            }
+        }
+
+        $response = array(
+            'record' => $entries
         );
 
         return API::createResponse($response, 0);
@@ -126,50 +208,6 @@ class CategoriesController extends ApiController
         );
 
         return API::createResponse($data, 0);
-    }
-
-    public function show($id = null)
-    {
-        $data = Input::all();
-        $data['id'] = $id;
-
-        // Validator
-        $rules = array(
-            'id'        => 'required|integer|min:1',
-            'user_id' => 'required|integer|min:1',
-        );
-
-        $validator = Validator::make($data, $rules);
-        if ($validator->fails()) {
-            $response = array(
-                'message' => $validator->messages()->first(),
-            );
-
-            return API::createResponse($response, 1003);
-        }
-
-        $user_id = array_get($data, 'user_id', 0);
-
-        $filters = array(
-            'id'        => $id,
-            'user_id' => $user_id,
-        );
-
-        // Query
-        $query   = Categories::find($id);
-        $results = json_decode($query, true);
-
-        if (!$results) {
-            $response = array();
-
-            return API::createResponse($response, 1004);
-        }
-
-        $response = array(
-            'record' => $results
-        );
-
-        return API::createResponse($response, 0);
     }
 
     public function update($id = null)

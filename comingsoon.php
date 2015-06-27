@@ -12,7 +12,7 @@
     </script>
     <center>
     	<div style="margin-top:100px;">
-    		<img src="comingsoon.png" width="500" height="500" />
+    		<img src="http://www.siamits.com/comingsoon.png" width="500" height="500" />
     	</div>
       <div><font color="#666">Your IP : <?php echo $_SERVER['REMOTE_ADDR'];?></font></div>
     </center>

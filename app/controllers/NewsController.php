@@ -315,9 +315,10 @@ class NewsController extends BaseController
         $youtube = self::getYoutubeSearch();
 
         $view = array(
-            'news'  => $news,
+            //'news'  => $news,
             'pnews'  => $pnews,
             'param' => $param,
+			'category' => $category,
             'categories' => $categories,
             'youtube'    => $youtube,
         );

@@ -23,8 +23,6 @@ class BaseController extends Controller
             $user = $client->get('users/' . $id);
             $user = json_decode($user);
 
-            sdebug($user, true);
-
             if (!isset($user->data->record)) {
                 return Redirect::to('/login')->with('error', 'Sorry, Please try to login again (' . $id . ')');
             }
