@@ -9,7 +9,7 @@ class SystemsController extends BaseController
      * @return Response
      */
     public function getFileNotFound()
-    { die('Error 404');
+    {
         $theme = Theme::uses('margo')->layout('margo');
         $theme->setTitle('SiamiTs :: Home');
         $theme->setDescription('Home description');
