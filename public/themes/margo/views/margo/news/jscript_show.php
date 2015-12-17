@@ -1,29 +1,93 @@
 <?php
 Theme::asset()->add('style', 'public/themes/margo/assets/css/style.css');
-// Theme::asset()->add('animate', 'public/themes/margo/assets/css/animate.css');
-// Theme::asset()->add('mediaelement-and-player', 'public/themes/margo/assets/js/mediaelement-and-player.js');
+Theme::asset()->add('dataTables-bootstrap', 'public/themes/margo/assets/plugins/datatables/dataTables.bootstrap.css');
+//Theme::asset()->add('animate', 'public/themes/demo/adminlte2_demo/bootstrap/css/bootstrap.min.css');
+Theme::asset()->add('recaptcha', 'https://www.google.com/recaptcha/api.js');
+Theme::asset()->add('validate', 'public/themes/margo/assets/plugins/jQuery/jquery.validate.min.js');
 ?>
 
 <script type="text/javascript">
 /* ----------------- Start JS Document ----------------- */
 
+<?php $id = array_get($news, 'id', '');?>
 var $ = jQuery.noConflict();
+var likes_news_<?php echo $id;?> = '';
 
 // Page Loader
 $(window).load(function () {
     "use strict";
 	$('#loader').fadeOut();
+
+	toastr.options = {
+	  "closeButton": true,
+	  "debug": false,
+	  "newestOnTop": false,
+	  "progressBar": true,
+	  "positionClass": "toast-bottom-center",
+	  "preventDuplicates": true,
+	  "onclick": null,
+	  "showDuration": "300",
+	  "hideDuration": "1000",
+	  "timeOut": "5000",
+	  "extendedTimeOut": "1000",
+	  "showEasing": "swing",
+	  "hideEasing": "linear",
+	  "showMethod": "fadeIn",
+	  "hideMethod": "fadeOut"
+	}
+	<?php checkAlertMessageFlash();?>
+
+	$.ajax({
+		type: "GET",
+		url: "<?php echo URL::to('news/update/stat');?>",
+		data: "type=views&id=<?php echo $id;?>&action=1",
+		dataType: "json",
+		success: function(data) {
+			console.log(data);
+			//var obj = jQuery.parseJSON(data);
+			//if the dataType is not specified as json uncomment this
+			// do what ever you want with the server response
+			if(data.status_code=='0')
+			{
+				likes_news_<?php echo $id;?> = data.cookies;
+				updateStat(data);
+				console.log(data.data);
+			}else{
+				console.log(data);
+			}
+		},
+		error: function(data){
+			console.log(data);
+		}
+	});
+
+<?php 	if (isset($_COOKIE['likes_news_'.$id])) :
+			if ($_COOKIE['likes_news_'.$id] == 'likes') : ?>
+				$(".disp_likes").css( "color", "#428bca" );
+				$("#btn_likes i").css( "color", "#428bca" );
+				$("#btn_likes i").attr( "class", "fa fa-thumbs-up");
+
+				$("#btn_likes").addClass("active");
+				//$("#btn_likes").addClass("disabled");
+				// $("#btn_unlikes").removeClass("disabled");
+<?php		elseif ($_COOKIE['likes_news_'.$id] == 'unlikes') : ?>
+				$(".btn_unlikes").css( "color", "#428bca" );
+				$("#btn_unlikes i").css( "color", "#428bca" );
+				$("#btn_unlikes i").attr( "class", "fa fa-thumbs-down");
+
+				$("#btn_unlikes").addClass("active");
+				// $("#btn_likes").removeClass("disabled");
+				//$("#btn_unlikes").addClass("disabled");
+<?php 		endif;
+		endif; ?>
 });
 
 $(document).ready(function ($) {
 	"use strict";
 	
-	
-	
 	/*----------------------------------------------------*/
 	/*	Hidder Header
 	/*----------------------------------------------------*/
-	
 	var headerEle = function(){
 		var $headerHeight = $('header').height();
 		$('.hidden-header').css({ 'height' : $headerHeight  + "px" });
@@ -37,38 +101,211 @@ $(document).ready(function ($) {
 	   headerEle();
 	});
 	
-    
+	$("#frm_main").validate({
+		ignore: [],
+		errorElement: 'span',
+		errorClass: 'text-red',
+		focusInvalid: true,
+		rules: {
+			name: "required",
+			email: "required",
+			message: "required",
+			"g-recaptcha-response": "required"
+		},
+		messages: {
+			name: "This field is required",
+			email: "This field is required",
+			message: "This field is required",
+			"g-recaptcha-response": "This field is required"
+		}
+	});
+
+	/*$("#btn_likes").click(function() {
+		$("#btn_likes").addClass("disabled");
+
+		if (likes_news_<?php echo $id;?> == 'likes') {
+			var param_likes = "type=likes&id=<?php echo $id;?>&action=3";
+		} else if (likes_news_<?php echo $id;?> == 'unlikes') {
+			var param_likes = "type=likes&id=<?php echo $id;?>&action=3";
+		} else {
+			var param_likes = "type=likes&id=<?php echo $id;?>&action=1";
+		}
+
+		$.ajax({
+			type: "GET",
+			url: "<?php echo URL::to('news/update/stat');?>",
+			data: param_likes,
+			dataType: "json",
+			success: function(data) {
+				console.log(data);
+				//var obj = jQuery.parseJSON(data);
+				//if the dataType is not specified as json uncomment this
+				// do what ever you want with the server response
+				if(data.status_code=='0')
+				{
+					likes_news_<?php echo $id;?> = 'likes';
+					$("#btn_likes").addClass("disabled");
+					$("#btn_unlikes").removeClass("disabled");
+					updateStat(data);
+					console.log(data.data);
+				}else{
+					console.log(data);
+				}
+			},
+			error: function(data){
+				console.log(data);
+			}
+		});
+	});*/
+	$("#btn_likes").click(function() {
+		$("#btn_likes").addClass("disabled");
+
+		if (likes_news_<?php echo $id;?> == 'likes') {
+			var param_likes = "type=likes&id=<?php echo $id;?>&action=2";
+		} else if (likes_news_<?php echo $id;?> == 'unlikes') {
+			var param_likes = "type=likes&id=<?php echo $id;?>&action=3";
+		} else {
+			var param_likes = "type=likes&id=<?php echo $id;?>&action=1";
+		}
+
+		$.ajax({
+			type: "GET",
+			url: "<?php echo URL::to('news/update/stat');?>",
+			data: param_likes,
+			dataType: "json",
+			success: function(data) {
+				console.log(data);
+				//var obj = jQuery.parseJSON(data);
+				//if the dataType is not specified as json uncomment this
+				// do what ever you want with the server response
+				if(data.status_code=='0')
+				{
+
+					if (likes_news_<?php echo $id;?> == 'likes') {
+						likes_news_<?php echo $id;?> = '';
+						$(".disp_likes").css( "color", "" );
+						$("#btn_likes i").css( "color", "" );
+						$("#btn_likes i").attr( "class", "fa fa-thumbs-o-up");
+						$("#btn_likes").removeClass("active");
+					} else if (likes_news_<?php echo $id;?> == 'unlikes') {
+						likes_news_<?php echo $id;?> = 'likes';
+						$(".disp_likes").css( "color", "#428bca" );
+						$("#btn_likes i").css( "color", "#428bca" );
+						$("#btn_likes i").attr( "class", "fa fa-thumbs-up");
+						$("#btn_likes").addClass("active");
+
+						$(".disp_unlikes").css( "color", "" );
+						$("#btn_unlikes i").css( "color", "" );
+						$("#btn_unlikes i").attr( "class", "fa fa-thumbs-o-up");
+						$("#btn_unlikes").removeClass("active");
+					} else {
+						likes_news_<?php echo $id;?> = 'likes';
+						$(".disp_likes").css( "color", "#428bca" );
+						$("#btn_likes i").css( "color", "#428bca" );
+						$("#btn_likes i").attr( "class", "fa fa-thumbs-up");
+						$("#btn_likes").addClass("active");
+					}
+
+					updateStat(data);
+					console.log(data.data);
+				}else{
+					console.log(data);
+				}
+				$("#btn_likes").removeClass("disabled");
+			},
+			error: function(data){
+				$("#btn_likes").removeClass("disabled");
+				console.log(data);
+			}
+		});
+		
+	});
+
+	$("#btn_unlikes").click(function() {
+		$("#btn_unlikes").addClass("disabled");
+
+		if (likes_news_<?php echo $id;?> == 'likes') {
+			var param_likes = "type=unlikes&id=<?php echo $id;?>&action=3";
+		} else if (likes_news_<?php echo $id;?> == 'unlikes') {
+			var param_likes = "type=unlikes&id=<?php echo $id;?>&action=2";
+		} else {
+			var param_likes = "type=unlikes&id=<?php echo $id;?>&action=1";
+		}
+
+		$.ajax({
+			type: "GET",
+			url: "<?php echo URL::to('news/update/stat');?>",
+			data: param_likes,
+			dataType: "json",
+			success: function(data) {
+				console.log(data);
+				//var obj = jQuery.parseJSON(data);
+				//if the dataType is not specified as json uncomment this
+				// do what ever you want with the server response
+				if(data.status_code=='0')
+				{
+
+					if (likes_news_<?php echo $id;?> == 'unlikes') {
+						likes_news_<?php echo $id;?> = '';
+						$(".disp_unlikes").css( "color", "" );
+						$("#btn_unlikes i").css( "color", "" );
+						$("#btn_unlikes i").attr( "class", "fa fa-thumbs-o-up");
+						$("#btn_unlikes").removeClass("active");
+					} else if (likes_news_<?php echo $id;?> == 'likes') {
+						likes_news_<?php echo $id;?> = 'unlikes';
+						$(".disp_unlikes").css( "color", "#428bca" );
+						$("#btn_unlikes i").css( "color", "#428bca" );
+						$("#btn_unlikes i").attr( "class", "fa fa-thumbs-up");
+						$("#btn_unlikes").addClass("active");
+
+						$(".disp_likes").css( "color", "" );
+						$("#btn_likes i").css( "color", "" );
+						$("#btn_likes i").attr( "class", "fa fa-thumbs-o-up");
+						$("#btn_likes").removeClass("active");
+					} else {
+						likes_news_<?php echo $id;?> = 'unlikes';
+						$(".disp_unlikes").css( "color", "#428bca" );
+						$("#btn_unlikes i").css( "color", "#428bca" );
+						$("#btn_unlikes i").attr( "class", "fa fa-thumbs-up");
+						$("#btn_unlikes").addClass("active");
+					}
+					
+					updateStat(data);
+					console.log(data.data);
+				}else{
+					console.log(data);
+				}
+				$("#btn_unlikes").removeClass("disabled");
+			},
+			error: function(data){
+				$("#btn_unlikes").removeClass("disabled");
+				console.log(data);
+			}
+		});
+	});
+	
     /*---------------------------------------------------*/
     /* Progress Bar
-    /*---------------------------------------------------*/
-    
-    
+    /*---------------------------------------------------*/  
     $('.skill-shortcode').appear(function() {
   		$('.progress').each(function(){ 
     		$('.progress-bar').css('width',  function(){ return ($(this).attr('data-percentage')+'%')});
   		});
 	},{accY: -100});
-	
-	
-	
+
     /*--------------------------------------------------*/
     /* Counter
     /*--------------------------------------------------*/
-    
-    
-    
+
     $('.timer').countTo();
 
     $('.counter-item').appear(function() {
         $('.timer').countTo();
     },{accY: -100});
     
-    
-	
 	/*----------------------------------------------------*/
 	/*	Nice-Scroll
 	/*----------------------------------------------------*/
-	
 	$("html").niceScroll({
 		scrollspeed: 100,
 		mousescrollstep: 38,
@@ -81,14 +318,9 @@ $(document).ready(function ($) {
 		cursorborderradius: 0,
 	});
 		
-	
-	
-	
-	
 	/*----------------------------------------------------*/
 	/*	Nav Menu & Search
 	/*----------------------------------------------------*/
-	
 	$(".nav > li:has(ul)").addClass("drop");
 	$(".nav > li.drop > ul").addClass("dropdown");
 	$(".nav > li.drop > ul.dropdown ul").addClass("sup-dropdown");
@@ -101,14 +333,9 @@ $(document).ready(function ($) {
 		$('.search-form').fadeOut(300);
 	});
 	
-	
-	
-	
-	
 	/*----------------------------------------------------*/
 	/*	Back Top Link
 	/*----------------------------------------------------*/
-	
     var offset = 200;
     var duration = 500;
     $(window).scroll(function() {
@@ -123,14 +350,10 @@ $(document).ready(function ($) {
         $('html, body').animate({scrollTop: 0}, 600);
         return false;
     })
-	
-	
-	
-	
+
 	/*----------------------------------------------------*/
 	/*	Sliders & Carousel
 	/*----------------------------------------------------*/
-	
 	////------- Touch Slider
 	var time = 4.4,
 		$progressBar,
@@ -225,9 +448,7 @@ $(document).ready(function ($) {
       clearTimeout(tick);
       start();
     }
-	
-	
-	
+
 	////------- Projects Carousel
 	$(".projects-carousel").owlCarousel({
 		navigation : true,
@@ -240,9 +461,7 @@ $(document).ready(function ($) {
 		itemsTablet: [600,2],
 		itemsMobile : [479, 1]
 	});
-	
-	
-	
+
 	////------- Testimonials Carousel
 	$(".testimonials-carousel").owlCarousel({
 		navigation : true,
@@ -254,12 +473,7 @@ $(document).ready(function ($) {
 		autoHeight : true,
 		transitionStyle : "fade"
 	});
-	
-	
-	
-	
-	
-	
+
 	////------- Custom Carousel
 	$('.custom-carousel').each(function(){
 		var owl = jQuery(this),
@@ -306,9 +520,7 @@ $(document).ready(function ($) {
 			transitionStyle : "goDown",
 		});
 	});
-	
-    
-    
+ 
     ////------- Testimonials Carousel
 	$(".fullwidth-projects-carousel").owlCarousel({
 		navigation : false,
@@ -321,26 +533,18 @@ $(document).ready(function ($) {
 		itemsTablet: [600,2],
 		itemsMobile : [479, 1]
 	});
-	
-	
-	
-	
+
 	/*----------------------------------------------------*/
 	/*	Tabs
 	/*----------------------------------------------------*/
-	
 	$('#myTab a').click(function (e) {
 		e.preventDefault()
 		$(this).tab('show')
 	})
-	
-	
-	
-	
+
 	/*----------------------------------------------------*/
 	/*	Css3 Transition
 	/*----------------------------------------------------*/
-	
 	$('*').each(function(){
 		if($(this).attr('data-animation')) {
 			var $animationName = $(this).attr('data-animation'),
@@ -351,14 +555,10 @@ $(document).ready(function ($) {
 			});
 		}
 	});
-	
-	
-	
-	
+
 	/*----------------------------------------------------*/
 	/*	Pie Charts
 	/*----------------------------------------------------*/
-	
 	var pieChartClass = 'pieChart',
         pieChartLoadedClass = 'pie-chart-loaded';
 		
@@ -383,15 +583,10 @@ $(document).ready(function ($) {
 		});
 	}
 	initPieCharts();
-	
-	
-	
-	
-	
+
 	/*----------------------------------------------------*/
 	/*	Animation Progress Bars
 	/*----------------------------------------------------*/
-	
 	$("[data-progress-animation]").each(function() {
 		
 		var $this = $(this);
@@ -407,15 +602,10 @@ $(document).ready(function ($) {
 		}, {accX: 0, accY: -50});
 
 	});
-	
-	
-	
-	
-	
+
 	/*----------------------------------------------------*/
 	/*	Milestone Counter
 	/*----------------------------------------------------*/
-	
 	jQuery('.milestone-block').each(function() {
 		jQuery(this).appear(function() {
 			var $endNum = parseInt(jQuery(this).find('.milestone-number').text());
@@ -427,42 +617,28 @@ $(document).ready(function ($) {
 			});
 		},{accX: 0, accY: 0});
 	});
-	
-	
-	
-	
-	
+
 	/*----------------------------------------------------*/
 	/*	Nivo Lightbox
 	/*----------------------------------------------------*/
-	
 	$('.lightbox').nivoLightbox({
 		effect: 'fadeScale',
 		keyboardNav: true,
 		errorMessage: 'The requested content cannot be loaded. Please try again later.'
 	});
-	
-	
-	
-	
-	
+
 	/*----------------------------------------------------*/
 	/*	Change Slider Nav Icons
 	/*----------------------------------------------------*/
-	
 	$('.touch-slider').find('.owl-prev').html('<i class="fa fa-angle-left"></i>');
 	$('.touch-slider').find('.owl-next').html('<i class="fa fa-angle-right"></i>');
 	$('.touch-carousel, .testimonials-carousel').find('.owl-prev').html('<i class="fa fa-angle-left"></i>');
 	$('.touch-carousel, .testimonials-carousel').find('.owl-next').html('<i class="fa fa-angle-right"></i>');
 	$('.read-more').append('<i class="fa fa-angle-right"></i>');
-	
-	
-	
-	
+
 	/*----------------------------------------------------*/
 	/*	Tooltips & Fit Vids & Parallax & Text Animations
 	/*----------------------------------------------------*/
-	
 	$("body").fitVids();
 	
 	$('.itl-tooltip').tooltip();
@@ -490,15 +666,10 @@ $(document).ready(function ($) {
 			reverse: true,
 		},
 	});
-	
-	
-	
-	
-	
+
 	/*----------------------------------------------------*/
 	/*	Sticky Header
 	/*----------------------------------------------------*/
-	
 	(function() {
 		
 		var docElem = document.documentElement,
@@ -550,20 +721,13 @@ $(document).ready(function ($) {
 			return window.pageYOffset || docElem.scrollTop;
 		}
 		
-		init();
-		
-		
-		
+		init();	
 	})();
 });
-
-
-
 
 /*----------------------------------------------------*/
 /*	Portfolio Isotope
 /*----------------------------------------------------*/
-
 jQuery(window).load(function(){
 	
 	var $container = $('#portfolio');
@@ -601,6 +765,12 @@ jQuery(window).load(function(){
 	});
 	
 });
+
+function updateStat(data){
+	$(".disp_views").html(data.data.views);
+	$(".disp_likes").html(data.data.likes);
+	$(".disp_unlikes").html(data.data.unlikes);
+}
 /* ----------------- End JS Document ----------------- */
 
 </script>

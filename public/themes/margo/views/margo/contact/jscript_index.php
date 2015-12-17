@@ -1,7 +1,12 @@
 <?php
 Theme::asset()->add('style', 'public/themes/margo/assets/css/style.css');
-// Theme::asset()->add('contact-form', 'public/themes/margo/assets/js/contact.form.js');
+Theme::asset()->add('dataTables-bootstrap', 'public/themes/margo/assets/plugins/datatables/dataTables.bootstrap.css');
+
+Theme::asset()->container('footer')->add('jquery.dataTables', 'public/themes/margo/assets/plugins/datatables/jquery.dataTables.js');
+Theme::asset()->container('footer')->add('dataTables.bootstrap', 'public/themes/margo/assets/plugins/datatables/dataTables.bootstrap.js');
 Theme::asset()->add('googleapis', 'http://maps.googleapis.com/maps/api/js?sensor=false');
+Theme::asset()->add('recaptcha', 'https://www.google.com/recaptcha/api.js');
+Theme::asset()->add('validate', 'public/themes/margo/assets/plugins/jQuery/jquery.validate.min.js');
 ?>
 
 <script type="text/javascript">
@@ -13,12 +18,99 @@ var $ = jQuery.noConflict();
 $(window).load(function () {
     "use strict";
 	$('#loader').fadeOut();
+
+	toastr.options = {
+	  "closeButton": true,
+	  "debug": false,
+	  "newestOnTop": false,
+	  "progressBar": true,
+	  "positionClass": "toast-bottom-center",
+	  "preventDuplicates": true,
+	  "onclick": null,
+	  "showDuration": "300",
+	  "hideDuration": "1000",
+	  "timeOut": "5000",
+	  "extendedTimeOut": "1000",
+	  "showEasing": "swing",
+	  "hideEasing": "linear",
+	  "showMethod": "fadeIn",
+	  "hideMethod": "fadeOut"
+	}
+	<?php checkAlertMessageFlash();?>
 });
 
 $(document).ready(function ($) {
 	"use strict";
 	
-	
+	$("#frm_main").validate({
+		ignore: [],
+		errorElement: 'span',
+		errorClass: 'text-red',
+		focusInvalid: true,
+		rules: {
+			name: "required",
+			email: "required",
+			message: "required",
+			"g-recaptcha-response": "required"
+		},
+		messages: {
+			name: "This field is required",
+			email: "This field is required",
+			message: "This field is required",
+			"g-recaptcha-response": "This field is required"
+		},
+		submitHandler: function(form) {
+			// submit the form 
+			var queryString = $('#frm_main').serialize();
+			$.ajax({
+				type: "GET",
+				url: "<?php echo URL::to('contact/add');?>",
+				data: queryString,
+				dataType: "json",
+				success: function(data) {
+					console.log(data);
+					//var obj = jQuery.parseJSON(data);
+					//if the dataType is not specified as json uncomment this
+					// do what ever you want with the server response
+					if(data.status_code=='0')
+					{
+						$("input[type=text], textarea").val("");
+
+						// Message
+						var msg = data.data.message;
+						swal("Successful!", msg, "success");
+						toastr["success"](msg);			
+					}else{
+						// Message
+						var msg = data.data.message;
+						swal("Error!", msg, "error");
+						toastr["error"](msg);
+					}
+				},
+				error: function(data){
+					$("input[type=text], textarea").val("");
+					console.log(data);
+
+					// Message
+					var msg = "Not Available at this time.";
+					swal("Sorry!", msg, "error");
+					toastr["error"](msg);
+				}
+			});
+		    // return false to prevent normal browser submit and page navigation 
+		    grecaptcha.reset();
+		    return false; 
+		},
+		success: function (e) {
+		},
+		invalidHandler: function(event, validator) {
+			grecaptcha.reset();
+			// Message
+			var msg = "Please insert valid data";
+			swal("Error!", msg, "error");
+			toastr["error"](msg);
+		}
+	});
 	
 	/*----------------------------------------------------*/
 	/*	Hidder Header
@@ -36,7 +128,6 @@ $(document).ready(function ($) {
 	$(window).resize(function () {
 	   headerEle();
 	});
-	
     
     /*---------------------------------------------------*/
     /* Progress Bar

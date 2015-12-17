@@ -71,14 +71,14 @@
                         </div>
                         <div class="team-member modern">
                             <!-- Memebr Social Links -->
-                            <div class="member-socail">
+                            <!-- <div class="member-socail">
                                 <a class="facebook" href="#" alt="Share facebook"><i class="fa fa-facebook"></i></a>
                                 <a class="twitter" href="#" alt="Share facebook"><i class="fa fa-twitter"></i></a>
                                 <a class="gplus" href="#" alt="Share google plus"><i class="fa fa-google-plus"></i></a>
                                 <a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a>
                                 <a class="flickr" href="#"><i class="fa fa-flickr"></i></a>
                                 <a class="mail" href="#"><i class="fa fa-envelope"></i></a>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
 <?php endforeach;?>
@@ -90,13 +90,13 @@
 
 <?php if(isset($pagination)): ?>
                 <div class="row">
-                    <div class="col-xs-6">
+                    <div class="col-xs-4">
                         <div class="dataTables_info" id="tb_news_info">Showing <?php echo $pagination->getFrom();?>
                         to <?php echo $pagination->getTo();?>
                         of <?php echo $pagination->getTotal();?> entries
                         </div>
                     </div>
-                    <div class="col-xs-6">
+                    <div class="col-xs-8">
                         <div class="dataTables_paginate paging_bootstrap">
                             <ul class="pagination">
                                 <?php if(isset($param) && !empty($param)): ?>
@@ -200,6 +200,13 @@
                         <a href="#">Google</a>
                     </div>
                 </div>-->
+
+                <div class="widget widget-tags">
+                    <h4>Follow us
+                        <span class="head-line"></span>
+                    </h4>
+                    <div class="fb-follow" data-href="https://www.facebook.com/siamits" data-width="200" data-height="200" data-layout="standard" data-show-faces="true"></div>
+                </div>
 
             </div>
             <!--End sidebar-->

@@ -18,7 +18,7 @@ Theme::asset()->container('footer')->add('uploadify', 'public/themes/adminlte2/p
         $('#file_upload').uploadify({
             'formData'     : {
                 'w': '200',
-                'section': 'banners',
+                'section': 'categories',
                 'user_id': '<?php echo $user->id;?>',
                 'timestamp': '<?php echo $timestamp;?>',
                 'token':     '<?php echo md5(Config::get("web.siamits-keys") . $timestamp);?>'
@@ -53,7 +53,7 @@ Theme::asset()->container('footer')->add('uploadify', 'public/themes/adminlte2/p
                     var user_id   = data.data.user_id;
                     var extension = data.data.extension;
 
-                    var w = '100%';
+                    var w = '200';
                     var show_hover_button = false;
 
                     $('#images_code').val(code);
@@ -116,11 +116,19 @@ Theme::asset()->container('footer')->add('uploadify', 'public/themes/adminlte2/p
             errorClass: 'text-red',
             focusInvalid: true,
             rules: {
+				title: "required",
+				parent_id: "required",
+				position: "required",
                 type: "required",
+				status: "required",
                 images: "required",
             },
             messages: {
+				title: "This field is required",
+				parent_id: "This field is required",
+				position: "This field is required",
                 type: "This field is required",
+				status: "This field is required",
                 images: "This field is required",
             }
         });

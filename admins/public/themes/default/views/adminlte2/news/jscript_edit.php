@@ -194,7 +194,161 @@ Theme::asset()->container('footer')->add('fastclick', 'public/themes/adminlte2/p
                 $(this).select();
             });
         });
+
+        // $('.position-left').click(function() {console.log('aaaa');
+        //     var position = $(this).data('pos');
+        //     var id = $(this).data('id');
+
+        //     if (position > 0) {
+        //         var position_left = position - 1;
+        //         var id_left = $('.image-position-' + position_left).attr('id');
+
+        //         var images_box = $('.image-position-' + position).html();
+        //         images_box = '<div id="'+id+'" class="image-position-' + position_left + '">' + images_box + '</div>';
+        //         $(images_box).insertBefore('.image-position-' + position_left);
+        //         $('.image-position-' + position).remove();
+
+        //         $('#' + id_left).attr('class', 'image-position-'+position);
+        //         $('#image-position-left-' + id_left).attr('data-pos', position);
+        //         //positionLeft();
+        //     } else {
+        //         bootbox.dialog({
+        //           message: "ตำแหน่งนี้ไม่สามารถย้ายได้",
+        //           buttons: {
+        //             success: {
+        //               label: "ตกลง",
+        //               className: "btn-small btn-primary"
+        //             }
+        //           }
+        //         });
+        //     }
+        // });
+
+        $('.position-left-1').click(function() {console.log('aaaa');
+            var position = $(this).data('pos');
+            var id = $(this).data('id');
+
+            if (position > 0) {
+                var position_left = position - 1;
+                var id_left = $('.image-position-' + position_left).attr('id');
+
+                var images_box = $('.image-position-' + position).html();
+                images_box = '<div id="'+id+'" class="image-position-' + position_left + '">' + images_box + '</div>';
+                $(images_box).insertBefore('.image-position-' + position_left);
+                $('.image-position-' + position).remove();
+                $('#image-position-left-'+id).attr('class', 'image-position-'+position_left);
+                $('#image-position-left-' + id).attr('data-pos', position_left);
+
+                $('#' + id_left).attr('class', 'image-position-'+position);
+                $('#image-position-left-' + id_left).attr('data-pos', position);
+                positionLeft(position_left);
+            } else {
+                bootbox.dialog({
+                  message: "ตำแหน่งนี้ไม่สามารถย้ายได้",
+                  buttons: {
+                    success: {
+                      label: "ตกลง",
+                      className: "btn-small btn-primary"
+                    }
+                  }
+                });
+            }
+        });
     });
+
+    function positionLeft(position)
+    {
+        $('.position-left-'+position).click(function() {
+            var position = $(this).data('pos');
+            var id = $(this).data('id');
+
+            if (position > 0) {
+                var position_left = position - 1;
+                var id_left = $('.image-position-' + position_left).attr('id');
+
+                var images_box = $('.image-position-' + position).html();
+                images_box = '<div id="'+id+'" class="image-position-' + position_left + '">' + images_box + '</div>';
+                $(images_box).insertBefore('.image-position-' + position_left);
+                $('.image-position-' + position).remove();
+                $('#image-position-left-'+id).attr('class', 'image-position-'+position_left);
+                $('#image-position-left-' + id).attr('data-pos', position_left);
+
+                $('#' + id_left).attr('class', 'image-position-'+position);
+                $('#image-position-left-' + id_left).attr('data-pos', position);
+                positionLeft(position_left);
+            } else {
+                bootbox.dialog({
+                  message: "ตำแหน่งนี้ไม่สามารถย้ายได้",
+                  buttons: {
+                    success: {
+                      label: "ตกลง",
+                      className: "btn-small btn-primary"
+                    }
+                  }
+                });
+            }
+        });
+//         $('.position-left').click(function() {
+//             var position = $(this).data('pos');
+//             var id = $(this).data('id');
+// console.log('aaaa');
+//             if (position > 0) {
+//                 var position_left = position - 1;
+//                 var id_left = $('.image-position-' + position_left).attr('id');
+
+//                 var images_box = $('.image-position-' + position).html();
+//                 images_box = '<div id="'+id+'" class="image-position-' + position_left + '">' + images_box + '</div>';
+//                 $(images_box).insertBefore('.image-position-' + position_left);
+//                 $('.image-position-' + position).remove();
+
+//                 $('#' + id_left).attr('class', 'image-position-'+position);
+//                 $('#image-position-left-' + id_left).attr('data-pos', position);
+//                 positionLeft2();
+//             } else {
+//                 bootbox.dialog({
+//                   message: "ตำแหน่งนี้ไม่สามารถย้ายได้",
+//                   buttons: {
+//                     success: {
+//                       label: "ตกลง",
+//                       className: "btn-small btn-primary"
+//                     }
+//                   }
+//                 });
+//             }
+//         });
+    }
+
+    function positionLeft2()
+    {
+        $('.position-left').click(function() {
+            var position = $(this).data('pos');
+            var id = $(this).data('id');
+console.log('bbbb');
+            if (position > 0) {
+                var position_left = position - 1;
+                var id_left = $('.image-position-' + position_left).attr('id');
+
+                var images_box = $('.image-position-' + position).html();
+                images_box = '<div id="'+id+'" class="image-position-' + position_left + '">' + images_box + '</div>';
+                $(images_box).insertBefore('.image-position-' + position_left);
+                $('.image-position-' + position).remove();
+
+                $('#' + id_left).attr('class', 'image-position-'+position);
+                $('#image-position-left-' + id_left).attr('data-pos', position);
+                positionLeft();
+            } else {
+                bootbox.dialog({
+                  message: "ตำแหน่งนี้ไม่สามารถย้ายได้",
+                  buttons: {
+                    success: {
+                      label: "ตกลง",
+                      className: "btn-small btn-primary"
+                    }
+                  }
+                });
+            }
+        });
+    }
 
     function image_delete(id, code, user_id, extension){
         bootbox.confirm("คุณต้องการลบหรือไม่", function(result) {

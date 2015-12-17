@@ -1,6 +1,7 @@
 <?php
 
-class BaseController extends Controller {
+class BaseController extends Controller
+{
 
     protected $user;
 
@@ -25,7 +26,7 @@ class BaseController extends Controller {
             //sdebug($user, true);
 
             if (!isset($user->data->record)) {
-                return Redirect::to('/login')->with('error', 'Sorry, Please try to login again ('.$id.')');
+                return Redirect::to('/login')->with('error', 'Sorry, Please try to login again (' . $id . ')');
             }
 
             $this->user = $user->data->record;
@@ -49,12 +50,9 @@ class BaseController extends Controller {
     protected function check()
     {
         if (isset($_COOKIE[Config::get('web.siamits-cookie_name')]) && isset($_COOKIE['access_token'])) {
-
             try {
                 $user = unserialize(base64_decode($_COOKIE[Config::get('web.siamits-cookie_name')]));
                 if (isset($user['id']) && is_numeric($user['id']) && $user['id'] > 0) {
-                    //self::$user_id = $user['id'];
-
                     return $user['id'];
                 }
             } catch (Exception $e) {
@@ -65,5 +63,4 @@ class BaseController extends Controller {
 
         return false;
     }
-
 }

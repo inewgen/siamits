@@ -38,10 +38,10 @@ class TagsController extends ApiController
         );
 
         isset($data['type']) ? $filters['type'] = $data['type']:'';
-        isset($data['search']) ? $filters['search'] = $data['search']:'';
+        isset($data['s']) ? $filters['s'] = $data['s']:'';
 
         $query = Tags::filters($filters)
-                ->with('tagsLinks')
+                ->with('tagables')
                 ->orderBy($order, $sort);
         $count   = (int) $query->count();
         $results = $query->skip($skip)->take($take)->get();
@@ -92,7 +92,7 @@ class TagsController extends ApiController
 
         // Query
         $query = Tags::filters($filters)
-                ->with('tagsLinks')
+                ->with('tagables')
                 ->get();
         $results = json_decode($query, true);
 
@@ -321,6 +321,95 @@ class TagsController extends ApiController
 
         $response = array(
             'record' => $data,
+        );
+
+        return API::createResponse($response, 0);
+    }
+
+    public function search()
+    {
+        $data = Input::all();
+
+        $response = array(
+            'data' => $data,
+        );
+
+        // Validator
+        $rules = array(
+            //'type'      => 'integer|min:1',
+        );
+
+        $validator = Validator::make($data, $rules);
+        if ($validator->fails()) {
+            $response = array(
+                'message' => $validator->messages()->first()
+            );
+
+            return API::createResponse($response, 1003);
+        }
+
+        $order = array_get($data, 'order', 'tagables.updated_at');
+        $sort  = array_get($data, 'sort', 'desc');
+        $s     = array_get($data, 's', '');
+
+        // Set Pagination
+        $take = (int) (isset($data['perpage'])) ? $data['perpage'] : 20;
+        $take = $take == 0 ? 20 : $take;
+        $page = (int) (isset($data['page']) && $data['page'] > 0) ? $data['page'] : 1;
+        $skip = ($page - 1) * $take;
+        
+        // Filter
+        $fild_arr = array(
+            'tags_id', 'tagable_id', 'tagable_type', 'id', 'title', 'status'
+        );
+        
+        $filters = array();
+        foreach ($fild_arr as $value) {
+            isset($data[$value]) ? $filters[$value] = array_get($data, $value, ''):'';
+        }
+
+        $query = Tagables::filters($filters)
+                ->leftjoin('tags',
+                    function ($join) {
+                        $join->on('tags.id', '=', 'tagables.tags_id');
+                    }
+                )
+                ->where('tags.title', 'LIKE', '%'.$s.'%')
+                ->orderBy($order, $sort);
+        $count   = (int) $query->count();
+        $results = $query->skip($skip)->take($take)->get();
+        $results = json_decode($results, true);
+        
+        if (!$results) {
+            return API::createResponse($response, 1004);
+        }
+        
+        //Loop data
+        $tagable_allow = array('News', 'Pages');
+        $entries = array();
+        foreach ($results as $key => $value) {
+            $entry = $value;
+            $tagable_id = array_get($value, 'tagable_id', '');
+
+            foreach ($tagable_allow as $value2) {
+                if (array_get($value, 'tagable_type', '') == strtolower($value2)) {
+                    $query = $value2::find($tagable_id);
+                }
+            }
+
+            $entry['content'] = $query;
+            $entries[$key] = $entry;
+        }
+
+        $pagings = array(
+            'page'    => $page,
+            'perpage' => $take,
+            'total'   => $count,
+        );
+
+        $response = array(
+            'pagination' => $pagings,
+            'record' => $entries
         );
 
         return API::createResponse($response, 0);

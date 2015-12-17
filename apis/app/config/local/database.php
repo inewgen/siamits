@@ -23,10 +23,10 @@ return array(
          'mysql' => array(
             'driver'    => 'mysql',
             'read' => array(
-                'host' => '127.0.0.1', //61.91.1.146
+                'host' => 'localhost', //61.91.1.146
             ),
             'write' => array(
-                'host' => '127.0.0.1' // 61.91.1.146
+                'host' => 'localhost' // 61.91.1.146
             ),
             'database'  => 'siamits', //authen
             'username'  => 'homestead', // dev

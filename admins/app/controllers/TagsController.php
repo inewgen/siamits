@@ -22,8 +22,9 @@ class TagsController extends BaseController
         $search = array_get($data, 'term', 0);
   
         $parameters = array(
-            'search' => urlencode($search),
+            's' => urlencode($search),
         );
+        $client = new Client(Config::get('url.siamits-api'));
         $results    = $client->get('tags', $parameters);
         $results    = json_decode($results, true);
 

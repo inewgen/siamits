@@ -5644,3 +5644,7 @@ ul.footer-nav li a:hover {
 .navbar-collapse {
 	max-height: 340px;
 }
+
+.text-red {
+  color: #dd4b39 !important;
+}

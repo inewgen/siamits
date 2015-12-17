@@ -300,18 +300,15 @@ class NewsController extends ApiController
 
         // Validator request
         $rules = array(
-            'title'            => 'required',
+            'id' => 'required|integer',
+            /*'title'            => 'required',
             'sub_description'  => 'required',
             'description'      => 'required',
-            // 'images'           => 'required',
             'position'         => 'required|integer',
             'status'           => 'required|integer|in:0,1',
             'type'             => 'required|integer',
             'user_id'        => 'required|integer|min:1',
-            // 'tags'             => 'required',
-            // 'reference'     => 'min:1|max:150',
-            // 'reference_url' => 'min:1|max:150',
-            'category_id'      => 'required|min:1',
+            'category_id'      => 'required|min:1',*/
         );
 
         $validator = Validator::make($data, $rules);
@@ -343,7 +340,8 @@ class NewsController extends ApiController
         isset($data['views']) ? $parameters['views'] = $data['views']: '';
         isset($data['likes']) ? $parameters['likes'] = $data['likes']: '';
         isset($data['share']) ? $parameters['share'] = $data['share']: '';
-        $parameters['updated_at'] = date("Y-m-d H:i:s");
+        isset($data['updated_at']) ? $parameters['updated_at'] = $data['updated_at']: '';
+        //$parameters['updated_at'] = date("Y-m-d H:i:s");
 
         // Update news
         $query = News::where('id', '=', $id);
@@ -356,35 +354,37 @@ class NewsController extends ApiController
             return API::createResponse($response, 1004);
         }
 
-        $images = array_get($data, 'images', '');
+        if ($images = array_get($data, 'images', false)) {
+            // Add Images
+            $parameters = array(
+                'images'         => $images,
+                'imageable_id'   => $id,
+                'imageable_type' => 'news',
+            );
+            $images_i = $this->addImages($parameters);
 
-        // Add Images
-        $parameters = array(
-            'images'         => $images,
-            'imageable_id'   => $id,
-            'imageable_type' => 'news',
-        );
-        $images_i = $this->addImages($parameters);
+            if (!$images_i) {
+                $response = array();
 
-        if (!$images_i) {
-            $response = array();
-
-            return API::createResponse($response, 1001);
+                return API::createResponse($response, 1001);
+            }
         }
 
-        // Add Tags
-        $parameters = array(
-            'title'        => array_get($data, 'tags', ''),
-            'tagable_id'   => $id,
-            'tagable_type' => 'news',
-        );
+        if ($tags = array_get($data, 'tags', false)) {
+            // Add Tags
+            $parameters = array(
+                'title'        => $tags,
+                'tagable_id'   => $id,
+                'tagable_type' => 'news',
+            );
 
-        $tags_i = $this->addTags($parameters);
+            $tags_i = $this->addTags($parameters);
 
-        if (!$tags_i) {
-            $response = array();
+            if (!$tags_i) {
+                $response = array();
 
-            return API::createResponse($response, 1001);
+                return API::createResponse($response, 1001);
+            }
         }
 
         $response = array(
@@ -634,5 +634,109 @@ class NewsController extends ApiController
         }
 
         return true;
+    }
+
+    public function updateStat()
+    {
+        $data = Input::all();
+
+        // Validator request
+        $rules = array(
+            'type' => 'required|in:views,likes,unlikes,share',
+            'id' => 'required|integer|min:1',
+        );
+
+        $validator = Validator::make($data, $rules);
+        if ($validator->fails()) {
+            $response = array(
+                'message' => $validator->messages()->first(),
+            );
+
+            return API::createResponse($response, 1003);
+        }
+
+        $id = array_get($data, 'id', '');
+        $type = array_get($data, 'type', '');
+        $action = array_get($data, 'action', '1');
+
+        $filters = array(
+            'id' => $id,
+        );
+
+        // Query
+        $query   = News::filters($filters);
+        $results = $query->get(array('views','likes','unlikes','share'));
+        $count   = (int) $query->count();
+        $results = json_decode($results, true);
+
+        if ($count == 0) {
+            $response = array();
+
+            return API::createResponse($response, 1004);
+        }
+
+        $type_num = '';
+        if ($type_num = array_get($results, '0', false)) {
+            // 2 = Decrease
+            if ($action == '2') {
+                if ($type_num[$type] > 0) {
+                    $num = $type_num[$type] - 1;
+                } else {
+                    $num = 0;
+                }
+
+                $parameters[$type] = $num;
+                $type_num[$type] = $num;
+
+            // 3 = Increase and Decrease
+            } else if ($action == '3') {
+                if ($type == 'likes') {
+                    $num = $type_num['likes'] + 1;
+                    $parameters['likes'] = $num;
+                    $type_num['likes'] = $num;
+
+                    if ($type_num['unlikes'] > 0) {
+                        $num2 = $type_num['unlikes'] - 1;
+                    } else {
+                        $num2 = 0;
+                    }
+                    $parameters['unlikes'] = $num2;
+                    $type_num['unlikes'] = $num2;
+                } else if ($type == 'unlikes') {
+                    if ($type_num['likes'] > 0) {
+                        $num = $type_num['likes'] - 1;
+                    } else {
+                        $num = 0;
+                    }
+                    $parameters['likes'] = $num;
+                    $type_num['likes'] = $num;
+
+                    $num2 = $type_num['unlikes'] + 1;
+                    $parameters['unlikes'] = $num2;
+                    $type_num['unlikes'] = $num2;
+                }
+
+            // 1 = Increase
+            } else {
+                $num = $type_num[$type]  + 1;
+                $parameters[$type] = $num;
+                $type_num[$type] = $num;
+            }
+
+            // Update news
+            $query = News::where('id', '=', $id);
+
+            if ($query) {
+                $query->update($parameters);
+            } else {
+                $response = array();
+
+                return API::createResponse($response, 1004);
+            }
+        }
+
+        $response = $type_num;
+
+        return API::createResponse($response, 0);
     }
 }

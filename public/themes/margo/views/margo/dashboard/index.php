@@ -1,36 +1,60 @@
-<!--Start Banners Page Slider -->
-<?php getBanners($banners); ?>
-<!-- End Banners Page Slider -->
 
-<!-- Start Services Section -->
-<?php getServices();?>
-<!-- End Services Section -->
+<?php
+if (isset($layout) && is_array($layout)) {
+    foreach ($layout as $key => $value) {
+        // Banners
+        if ($value == 'banners') {
+            getBanners($banners);
+        }
 
-<!-- Start Subbanners Section -->
-<?php getSubbanners();?>
-<!-- End Subbanners Section -->
+        // Services
+        if ($value == 'service') {
+            getServices();
+        }
 
-<!-- Start Youtube Section -->
-<?php getYoutube($youtube);?>
-<!-- End Youtube Section -->
+        // Services
+        if ($value == 'subbanners') {
+            getSubbanners();
+        }
 
-<!-- Start Highlight News Section -->
-<?php getHighlightNews($news['highlight']);?>
-<!-- End Highlight News Section -->
+        // Services
+        if ($value == 'video') {
+            getYoutube($youtube);
+        }
 
-<!-- Start News Section -->
-<?php getNews($news['general']);?>
-<!-- End News Section -->
+        // Services
+        if ($value == 'hnews') {
+            getHighlightNews($news['highlight']);
+        }
 
-<!-- Start Client/Partner Section -->
-<?php getClient();?>
-<!-- End Client/Partner Section -->
+        // Services
+        if ($value == 'news') {
+            getNews($news['general']);
+        }
 
-<?php 
+        // Services
+        if ($value == 'hpages') {
+            getHighlightPages($pages['highlight'], $quotes);
+        }
+
+        // Services
+        if ($value == 'pages') {
+            getPages($pages['general']);
+        }
+
+        // Services
+        if ($value == 'urls') {
+            getClient();
+        }
+    }
+}
+?>
+
+<?php
 
 // Banners
 function getBanners($banners)
-{ ?>
+{?>
     <!--Start Home Page Slider -->
     <section id="home">
         <!-- Carousel -->
@@ -39,7 +63,7 @@ function getBanners($banners)
             <!-- Indicators -->
             <ol class="carousel-indicators">
     <?php foreach ($banners as $key => $banner): ?>
-            <li data-target="#main-slide" data-slide-to="<?php echo $key;?>" <?php if($key == '0'):?>class="active"<?php endif;?>></li>
+            <li data-target="#main-slide" data-slide-to="<?php echo $key;?>" <?php if ($key == '0'): ?>class="active"<?php endif;?>></li>
     <?php endforeach;?>
             </ol>
             <!--/ Indicators end-->
@@ -47,7 +71,7 @@ function getBanners($banners)
             <!-- Carousel inner -->
             <div class="carousel-inner">
     <?php foreach ($banners as $key => $banner): ?>
-                <div class="item <?php if($key == '0'):?>active<?php endif;?>">
+                <div class="item <?php if ($key == '0'): ?>active<?php endif;?>">
                     <img class="img-responsive" src="<?php echo array_get($banner, 'images.0.url', '');?>" alt="slider" width="1440" height="500">
                     <div class="slider-content">
                         <div class="col-md-12 text-center">
@@ -57,16 +81,16 @@ function getBanners($banners)
                             <h3 class="animated3">
                                 <span><?php echo $banner['subtitle'];?></span>
                             </h3>
-    <?php       if($banner['button'] == '1' && !empty($banner['button_title'])):?>
+    <?php if ($banner['button'] == '1' && !empty($banner['button_title'])): ?>
                             <p class="animated4"><a href="<?php echo $banner['button_url'];?>" class="slider btn btn-primary"><?php echo $banner['button_title'];?></a>
                             </p>
-    <?php       endif;?>
+    <?php endif;?>
                         </div>
                     </div>
                 </div>
     <?php endforeach;?>
                 <!--/ Carousel item end -->
-                
+
             </div>
             <!-- Carousel inner end-->
 
@@ -86,7 +110,7 @@ function getBanners($banners)
 
 // Services
 function getServices()
-{ ?>
+{?>
     <!-- Start Services Section -->
     <div class="section service">
         <div class="container">
@@ -94,7 +118,7 @@ function getServices()
 
                 <!-- Start Service Icon 1 -->
                 <div class="col-md-3 col-sm-6 service-box service-center" data-animation="fadeIn" data-animation-delay="01">
-                    <a href="<?php echo URL::to('health');?>">
+                    <a href="<?php echo URL::to('pages/category/4');?>">
                         <div class="service-icon">
                             <i class="fa fa-leaf icon-large"></i>
                         </div>
@@ -109,7 +133,7 @@ function getServices()
 
                 <!-- Start Service Icon 2 -->
                 <div class="col-md-3 col-sm-6 service-box service-center" data-animation="fadeIn" data-animation-delay="02">
-                    <a href="<?php echo URL::to('technology');?>">
+                    <a href="<?php echo URL::to('pages/category/1');?>">
                         <div class="service-icon">
                             <i class="fa fa-desktop icon-large"></i>
                         </div>
@@ -123,7 +147,7 @@ function getServices()
 
                 <!-- Start Service Icon 3 -->
                 <div class="col-md-3 col-sm-6 service-box service-center" data-animation="fadeIn" data-animation-delay="03">
-                    <a href="<?php echo URL::to('photography');?>">
+                    <a href="<?php echo URL::to('pages/category/6');?>">
                         <div class="service-icon">
                             <i class="fa fa-eye icon-large"></i>
                         </div>
@@ -137,7 +161,7 @@ function getServices()
 
                 <!-- Start Service Icon 4 -->
                 <div class="col-md-3 col-sm-6 service-box service-center" data-animation="fadeIn" data-animation-delay="04">
-                    <a href="<?php echo URL::to('programming');?>">
+                    <a href="<?php echo URL::to('pages/category/5');?>">
                         <div class="service-icon">
                             <i class="fa fa-code icon-large"></i>
                         </div>
@@ -179,13 +203,13 @@ function getServices()
 
                 <!-- Start Service Icon 7 -->
                 <div class="col-md-3 col-sm-6 service-box service-center" data-animation="fadeIn" data-animation-delay="07">
-                    <a href="<?php echo URL::to('gallery');?>">
+                    <a href="<?php echo URL::to('clips');?>">
                         <div class="service-icon">
                             <i class="fa fa-download icon-large"></i>
                         </div>
                         <div class="service-content">
-                            <h4>Gallery</h4>
-                            <p>แหล่งรวบรวมภาพถ่าย ภาพแต่ง และภาพต่าง ๆ ที่สวยงาม</p>
+                            <h4>Clips VDO</h4>
+                            <p>แหล่งรวบรวมคลิปวีดีโอ ต่าง ๆ จาก youtube</p>
                         </div>
                     </a>
                 </div>
@@ -216,7 +240,7 @@ function getServices()
 
 // Subbanners
 function getSubbanners()
-{ ?>
+{?>
     <!-- Start Subbanners Section -->
     <div class="section purchase" style="background: url(<?php echo getImageLink('img', 'patterns', '15', 'jpg', 1440, 500, 'bg.jpg');?>) fixed repeat;">
         <div class="container">
@@ -254,9 +278,9 @@ function getSubbanners()
 
 // Youtube
 function getYoutube($youtube)
-{ ?>
+{?>
     <!-- Start Youtube Section -->
-    <div class="project">
+    <div  class="section service">
         <div class="container">
             <!-- Start Recent Projects Carousel -->
             <div class="recent-projects">
@@ -265,24 +289,34 @@ function getYoutube($youtube)
                 </h4>
                 <div class="projects-carousel touch-carousel">
 
-    <?php if(isset($youtube) && is_array($youtube)): ?>
+    <?php if (isset($youtube) && is_array($youtube)): ?>
     <?php foreach ($youtube as $key => $value): ?>
                     <div class="portfolio-item item">
                         <div class="portfolio-border">
                             <div class="portfolio-thumb">
+
+                            <?php if (isMobile()): ?>
+                                <iframe class="video-iframe" title="" type="text/html" src="http://www.youtube.com/embed/<?php echo array_get($value, 'id', '');?>?rel=0&autohide=1&showinfo=0" frameborder=0 allowfullscreen="true"></iframe>
+                            <?php else: ?>
                                 <a class="lightbox" data-lightbox-type="ajax" href="https://www.youtube.com/watch?v=<?php echo array_get($value, 'id', '');?>">
                                     <div class="thumb-overlay">
                                         <i class="fa fa-play"></i>
                                     </div>
                                     <img alt="" src="<?php echo array_get($value, 'images.medium', '');?>" />
                                 </a>
+                            <?php endif;?>
+
                             </div>
-                            <div class="portfolio-details">
-                                <a href="#">
+                            <div class="portfolio-details youtube-details">
+                                <!-- <a class="lightbox" data-lightbox-type="ajax" href="https://www.youtube.com/watch?v=<?php echo array_get($value, 'id', '');?>"> -->
                                     <h5><?php echo array_get($value, 'title', '');?></h5>
-                                    <span><?php echo array_get($value, 'channelTitle', '');?></span>
-                                    <span><font color="color">Youtube</font><img src="<?php echo getImageLink('img', 'default', 'youtube_logo', 'jpg', 40, 30, 'youtube.jpg');?>"></span>
-                                </a>
+                            <?php if ($channelTitle = array_get($value, 'channelTitle', false)): ?>
+                                    <span><?php echo $channelTitle;?></span>
+                            <?php endif;?>
+                                    <span><font color="color">Youtube</font> <span class="hide-sm"><i class="fa fa-youtube-square fa-4"></i>&nbsp;&nbsp;</span>
+                                        <!-- <img src="<?php echo getImageLink('img', 'default', 'youtube_logo', 'jpg', 40, 30, 'youtube.jpg');?>"> -->
+                                    </span>
+                                <!-- </a> -->
                             </div>
                         </div>
                     </div>
@@ -300,8 +334,9 @@ function getYoutube($youtube)
 }
 
 // Highlight news
-function getHighlightNews($news)
-{?>
+function getHighlightNews($data)
+{
+    ?>
     <!-- Start Highlight News Section -->
     <div>
         <div class="container">
@@ -314,35 +349,35 @@ function getHighlightNews($news)
                         <h4 class="classic-title"><span>Hilight News</span></h4>
                         <div class="latest-posts-classic custom-carousel touch-carousel" data-appeared-items="2">
 
-    <?php if(isset($news) && is_array($news)):?>
-    <?php foreach ($news as $key => $value):?>
-    <?php   
-                $dt = $value['updated_at'];
-                $dt = new DateTime($dt);
+    <?php if (isset($data) && is_array($data)): ?>
+    <?php foreach ($data as $key => $value): ?>
+    <?php
+$dt = $value['updated_at'];
+    $dt = new DateTime($dt);
 
-                $d = $dt->format('d');
-                $m = $dt->format('m');
+    $d = $dt->format('d');
+    $m = $dt->format('m');
 
-                $dateObj   = DateTime::createFromFormat('!m', $m);
-                $m = $dateObj->format('M'); 
+    $dateObj = DateTime::createFromFormat('!m', $m);
+    $m = $dateObj->format('M');
     ?>
                             <div class="post-row item">
                                 <div class="left-meta-post">
                                     <div class="post-date"><span class="day"><?php echo $d;?></span><span class="month"><?php echo $m;?></span></div>
                                     <div class="post-type"><i class="fa fa-picture-o"></i></div>
                                 </div>
-                                <h4 class="post-title">
-                                    <a href="<?php echo URL::to('news/'.$value['id']);?>">
+                                <h5 class="post-title">
+                                    <a href="<?php echo URL::to('news/' . $value['id']);?>">
                                         <img width="250" src="<?php echo getImageLink('image', array_get($value, 'images.0.user_id', ''), array_get($value, 'images.0.code', ''), array_get($value, 'images.0.extension', ''), 250, 179, array_get($value, 'images.0.name', ''));?>" alt=""/>
                                         <br>
-                                        <?php echo htmlspecialchars($value['title']); ?>
+                                        <?php echo htmlspecialchars($value['title']);?>
                                     </a>
-                                </h4>
+                                </h5>
                                 <div class="post-content">
-                                    
+
                                     <p>
-                                    <?php echo htmlspecialchars($value['sub_description']); ?>
-                                    <a class="read-more" href="<?php echo URL::to('news/'.$value['id']);?>">Read More...</a>
+                                    <?php echo htmlspecialchars($value['sub_description']);?>
+                                    <a class="read-more" href="<?php echo URL::to('news/' . $value['id']);?>">Read More...</a>
                                     </p>
                                 </div>
                             </div>
@@ -357,28 +392,112 @@ function getHighlightNews($news)
 
                 <div class="col-md-4">
                     <!-- Classic Heading -->
+                    <h4 class="classic-title"><span>Weather</span></h4>
+
+                    <!-- Start Testimonials Carousel -->
+                    <div class="custom-carousel show-one-slide touch-carousel" data-appeared-items="1">
+
+                        <!-- Testimonial 1 -->
+                        <div class="classic-testimonials item">
+                            <div class="testimonial-content" id="weather_7">
+
+                            </div>
+                        </div>
+
+                        <!-- Testimonial 2 -->
+    <?php for ($i = 1; $i <= 6; $i++): ?>
+                        <div class="classic-testimonials item">
+                            <div class="testimonial-content" id="weather_<?php echo $i;?>">
+
+                            </div>
+                        </div>
+    <?php endfor;?>
+
+                    </div>
+                    <!-- End Testimonials Carousel -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Highlight News Section -->
+<?php
+}
+
+// Highlight pages
+function getHighlightPages($data, $quotes)
+{
+    ?>
+    <!-- Start Highlight News Section -->
+    <div>
+        <div class="container">
+            <div class="row">
+                <br><br>
+                <div class="col-md-8">
+
+                    <!-- Start Recent Posts Carousel -->
+                    <div class="latest-posts">
+                        <h4 class="classic-title"><span>Hilight Pages</span></h4>
+                        <div class="latest-posts-classic custom-carousel touch-carousel" data-appeared-items="2">
+
+    <?php if (isset($data) && is_array($data)): ?>
+    <?php foreach ($data as $key => $value): ?>
+    <?php
+$dt = $value['updated_at'];
+    $dt = new DateTime($dt);
+
+    $d = $dt->format('d');
+    $m = $dt->format('m');
+
+    $dateObj = DateTime::createFromFormat('!m', $m);
+    $m = $dateObj->format('M');
+    ?>
+                            <div class="post-row item">
+                                <div class="left-meta-post">
+                                    <div class="post-date"><span class="day"><?php echo $d;?></span><span class="month"><?php echo $m;?></span></div>
+                                    <div class="post-type"><i class="fa fa-picture-o"></i></div>
+                                </div>
+                                <h5 class="post-title">
+                                    <a href="<?php echo URL::to('pages/' . $value['id']);?>">
+                                        <img width="250" src="<?php echo getImageLink('image', array_get($value, 'images.0.user_id', ''), array_get($value, 'images.0.code', ''), array_get($value, 'images.0.extension', ''), 250, 179, array_get($value, 'images.0.name', ''));?>" alt=""/>
+                                        <br>
+                                        <?php echo htmlspecialchars($value['title']);?>
+                                    </a>
+                                </h5>
+                                <div class="post-content">
+
+                                    <p>
+                                    <?php echo htmlspecialchars($value['sub_description']);?>
+                                    <a class="read-more" href="<?php echo URL::to('pages/' . $value['id']);?>">Read More...</a>
+                                    </p>
+                                </div>
+                            </div>
+    <?php endforeach;?>
+    <?php endif;?>
+
+                        </div>
+                    </div>
+                    <!-- End Recent Posts Carousel -->
+
+                </div>
+                <div class="col-md-4">
+                    <!-- Classic Heading -->
                     <h4 class="classic-title"><span>Quotes</span></h4>
 
                     <!-- Start Testimonials Carousel -->
                     <div class="custom-carousel show-one-slide touch-carousel" data-appeared-items="1">
-                       
-                        <!-- Testimonial 1 -->
-                        <div class="classic-testimonials item">
-                            <div class="testimonial-content">
-                                <img src="<?php echo URL::to('public/themes/margo');?>/assets/img/steve_jobs.png" alt="" />
-                                <p>Sometimes when you innovate, you make mistakes. It is best to admit them quickly, and get on with improving your other innovations.</p>
-                                <br>
-                                <p>ในบางครั้งเมื่อคุณสร้างนวัตกรรมคุณก็สร้างสิ่งที่ผิดพลาด สิ่งที่ดีที่สุดคือคุณยอมรับความผิดพลาดนั้นอย่างรวดเร็ว และ พัฒนามันในนวัตกรรมอื่นๆของคุณ</p>
-                            </div>
-                            <div class="testimonial-author"><span>Steve Jobs</span> - Cofounder, Chairman, and CEO of Apple Inc.</div>
-                        </div>
+
+<?php foreach ($quotes as $key => $value): ?>
                         <!-- Testimonial 2 -->
                         <div class="classic-testimonials item">
                             <div class="testimonial-content">
-                                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                                <img src="<?php echo getImageLink('image', array_get($value, 'images.0.user_id', ''), array_get($value, 'images.0.code', ''), array_get($value, 'images.0.extension', ''), 320, 180, array_get($value, 'images.0.name', ''));?>" alt="" />
+                                <p>&nbsp;</p>
+                                <p><?php echo array_get($value, 'description', '');?></p>
                             </div>
-                            <div class="testimonial-author"><span>John Doe</span> - Customer</div>
+                            <div class="testimonial-author"><?php echo array_get($value, 'author', '');?></div>
                         </div>
+<?php endforeach;?>
 
                     </div>
                     <!-- End Testimonials Carousel -->
@@ -392,8 +511,9 @@ function getHighlightNews($news)
 }
 
 // News
-function getNews($news)
-{?>
+function getNews($data)
+{
+    ?>
     <!-- Start News Section -->
     <div class="project">
         <div class="container">
@@ -405,52 +525,119 @@ function getNews($news)
             </div>
 
             <!-- Start Recent Posts Carousel -->
-            <div class="row latest-posts-classic">      
+            <div class="row latest-posts-classic">
 
-    <?php if (isset($news) && is_array($news)) :?>
-    <?php foreach ($news as $key => $value) :
-                $dt = $value['updated_at'];
-                $dt = new DateTime($dt);
+    <?php if (isset($data) && is_array($data)): ?>
+    <?php foreach ($data as $key => $value):
+        $dt = $value['updated_at'];
+        $dt = new DateTime($dt);
 
-                $d = $dt->format('d');
-                $m = $dt->format('m');
-                $y = $dt->format('Y');
+        $d = $dt->format('d');
+        $m = $dt->format('m');
+        $y = $dt->format('Y');
 
-                $dateObj   = DateTime::createFromFormat('!m', $m);
-                $m = $dateObj->format('M');
-    ?>
-                <!-- Post 1 -->
-                <div class="col-md-3 post-row">
-                    <div class="left-meta-post">
-                        <div class="post-date">
-                            <span class="day">
-                                <?php echo $d;?>
-                            </span>
-                            <span class="month">
-                                <?php echo $m;?>
-                            </span>
-                        </div>
-                        <div class="post-type"><i class="fa fa-picture-o"></i></div>
-                    </div>
-                    <h3 class="post-title">
-                        <a href="<?php echo URL::to('news/'.$value['id']);?>">
-                            <img width="200" height="143" alt="" src="<?php echo getImageLink('image', array_get($value, 'images.0.user_id', ''), array_get($value, 'images.0.code', ''), array_get($value, 'images.0.extension', ''), 200, 143, array_get($value, 'images.0.name', ''));?>" />
-                            <br>
-                            <?php echo htmlspecialchars($value['title']); ?>
-                        </a>
-                    </h3>
-                    <div class="post-content">
-                        <p>
-                            <?php echo htmlspecialchars($value['sub_description']); ?> 
-                            <a class="read-more" href="<?php echo URL::to('news/'.$value['id']);?>">
-                                Read More...
-                            </a>
-                        </p>
-                    </div>
-                </div>  
-    <?php endforeach;?>
+        $dateObj = DateTime::createFromFormat('!m', $m);
+        $m = $dateObj->format('M');
+        ?>
+	                <!-- Post 1 -->
+	                <div class="col-md-3 post-row">
+	                    <div class="left-meta-post">
+	                        <div class="post-date">
+	                            <span class="day">
+	                                <?php echo $d;?>
+	                            </span>
+	                            <span class="month">
+	                                <?php echo $m;?>
+	                            </span>
+	                        </div>
+	                        <div class="post-type"><i class="fa fa-picture-o"></i></div>
+	                    </div>
+	                    <h5 class="post-title">
+	                        <a href="<?php echo URL::to('news/' . $value['id']);?>">
+	                            <img width="200" height="143" alt="" src="<?php echo getImageLink('image', array_get($value, 'images.0.user_id', ''), array_get($value, 'images.0.code', ''), array_get($value, 'images.0.extension', ''), 200, 143, array_get($value, 'images.0.name', ''));?>" />
+	                            <br>
+	                            <?php echo htmlspecialchars($value['title']);?>
+	                        </a>
+	                    </h5>
+	                    <div class="post-content">
+	                        <p>
+	                            <?php echo htmlspecialchars(mb_substr($value['sub_description'], 0, 70, 'UTF-8'));?>
+	                            <a class="read-more" href="<?php echo URL::to('news/' . $value['id']);?>">
+	                                Read More...
+	                            </a>
+	                        </p>
+	                    </div>
+	                </div>
+	    <?php endforeach;?>
     <?php endif;?>
-                    
+
+            </div>
+        </div>
+    </div>
+<?php
+}
+
+// Pages
+function getPages($data)
+{
+    ?>
+    <!-- Start News Section -->
+    <div class="project">
+        <div class="container">
+            <!-- Start Recent Projects Carousel -->
+            <div class="recent-projects">
+                <h4 class="classic-title">
+                    <span>Recent Pages</span>
+                </h4>
+            </div>
+
+            <!-- Start Recent Posts Carousel -->
+            <div class="row latest-posts-classic">
+
+    <?php if (isset($data) && is_array($data)): ?>
+    <?php foreach ($data as $key => $value):
+        $dt = $value['updated_at'];
+        $dt = new DateTime($dt);
+
+        $d = $dt->format('d');
+        $m = $dt->format('m');
+        $y = $dt->format('Y');
+
+        $dateObj = DateTime::createFromFormat('!m', $m);
+        $m = $dateObj->format('M');
+        ?>
+	                <!-- Post 1 -->
+	                <div class="col-md-3 post-row">
+	                    <div class="left-meta-post">
+	                        <div class="post-date">
+	                            <span class="day">
+	                                <?php echo $d;?>
+	                            </span>
+	                            <span class="month">
+	                                <?php echo $m;?>
+	                            </span>
+	                        </div>
+	                        <div class="post-type"><i class="fa fa-picture-o"></i></div>
+	                    </div>
+	                    <h5 class="post-title">
+	                        <a href="<?php echo URL::to('pages/' . $value['id']);?>">
+	                            <img width="200" height="143" alt="" src="<?php echo getImageLink('image', array_get($value, 'images.0.user_id', ''), array_get($value, 'images.0.code', ''), array_get($value, 'images.0.extension', ''), 200, 143, array_get($value, 'images.0.name', ''));?>" />
+	                            <br>
+	                            <?php echo htmlspecialchars($value['title']);?>
+	                        </a>
+	                    </h5>
+	                    <div class="post-content">
+	                        <p>
+	                            <?php echo htmlspecialchars(mb_substr($value['sub_description'], 0, 70, 'UTF-8'));?>
+	                            <a class="read-more" href="<?php echo URL::to('pages/' . $value['id']);?>">
+	                                Read More...
+	                            </a>
+	                        </p>
+	                    </div>
+	                </div>
+	    <?php endforeach;?>
+    <?php endif;?>
+
             </div>
         </div>
     </div>

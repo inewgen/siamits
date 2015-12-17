@@ -183,18 +183,6 @@ $(document).ready(function ($) {
       start();
     }
 
-	/*------- Projects Carousel
-	$(".projects-carousel").owlCarousel({
-		navigation : true,
-		pagination: false,
-		slideSpeed : 400,
-		stopOnHover: true,
-    	autoPlay: 3000,
-    	items : 4,
-    	itemsDesktopSmall : [900,3],
-		itemsTablet: [600,2],
-		itemsMobile : [479, 1]
-	});*/
 	/*------- Projects Carousel*/
 	$(".projects-carousel").owlCarousel({
 		navigation : true,
@@ -484,6 +472,50 @@ jQuery(window).load(function(){
 		var $optionSet = $this.parents('.portfolio-filter ul');
 		$optionSet.find('.selected').removeClass('selected');
 		$this.addClass('selected'); 
+	});
+
+	$.ajax({
+		type: "GET",
+		url: "<?php echo URL::to('weather/ajax');?>",
+		data: "",
+		dataType: "json",
+		success: function(data) {
+			//var obj = jQuery.parseJSON(data);
+			//if the dataType is not specified as json uncomment this
+			// do what ever you want with the server response
+			if(data.status_code=='0')
+			{
+				var index;
+				var a = data.data;
+				var weather_feed = '';
+				for (index = 1; index <= 7; ++index) {
+				    var title = a[index].channel.title;
+					var description = a[index].channel.item.description;
+					var link = a[index].channel.link;
+					var url = '<?php echo Config::get("url.siamits-res");?>/img/weather/'+index+'/jpg/320/180/weather.jpg';
+
+					weather_feed =
+	                '<p><b>'+title+'</b></p>'+
+                    //'<p>&nbsp;</p>'+
+                    //'<img src="'+url+'" alt="" />'+
+                    //'<p>&nbsp;</p>'+
+                    '<p>'+description+'</p>'+
+                    '<div style="float:right;">'+
+                        '<a href="'+link+'" target="_blank"><b>ข้อมูลเพิ่มเติม</b></a>'+
+                    '</div>'+
+                    '<p>&nbsp;</p>';
+
+                    $("#weather_"+index).html(weather_feed);
+				}
+
+				//console.log(data.data);
+			}else{
+				console.log(data);
+			}
+		},
+		error: function(data){
+			console.log(data);
+		}
 	});
 	
 });

@@ -360,6 +360,7 @@ class BannersController extends ApiController
             return API::createResponse($response, 1004);
         }
 
+		// Delete images
         if ($images_id = array_get($data, 'images_id', false)) {
             // Delete imageables
             $filters = array(

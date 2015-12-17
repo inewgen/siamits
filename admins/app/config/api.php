@@ -25,7 +25,7 @@ return array(
 
         '2000' => 'Debug value',
         '2001' => 'Error upload file',
-        '2002' => 'No finle to upload',
+        '2002' => 'No file to upload',
         '2003' => 'Invalid token',
         '2004' => 'Invalid parameter',
         '2005' => 'File not found',

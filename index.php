@@ -2,37 +2,45 @@
 
 // Environtment
 $envMapping = array(
-    'apis.siamits.com'   => 'com',
+    'apis.siamits.com' => 'com',
     'siamits.besaba.com' => 'com',
-    'www.siamits.com'    => 'com',
+    'www.siamits.com' => 'com',
 
-    'apis.siamits.dev'   => 'dev',
+    'apis.siamits.dev' => 'dev',
     'admins.siamits.dev' => 'dev',
-    'www.siamits.dev'    => 'dev',
+    'www.siamits.dev' => 'dev',
 );
 
 $env = isset($_SERVER['HTTP_HOST']) && isset($envMapping[$_SERVER['HTTP_HOST']])
-        ? $envMapping[$_SERVER['HTTP_HOST']]
-        : '';
+? $envMapping[$_SERVER['HTTP_HOST']]
+: '';
 
 define('ENV_MODE', $env);
 
+function containsIP($str, $arr)
+{
+    foreach ($arr as $a) {
+        $a = explode('*', $a);
+        if (stripos($str, $a[0]) !== false) {
+            return true;
+        }
+    }
+    return false;
+}
+
 $server_allow = array(
-    '110.170.201.185',
-    '110.170.201.178',
-    '171.96.168.94',
-    '110.168.232.254',
-    '110.168.232.211',
-    '171.96.167.123',
-    '110.168.231.207',
-	'110.170.201.178',
-	'171.96.168.30',
-	'171.96.168.61',
+    '110.168.*',
+    '110.170.*',
+    '171.96.*',
+    '27.55.*',
+    '58.11.*',
 );
 
-if ($env == 'com' && !in_array($_SERVER['REMOTE_ADDR'], $server_allow)) {
-    require __DIR__ . '/comingsoon.php';
-    die();
+if ($env == 'com') {
+    if (!containsIP($_SERVER['REMOTE_ADDR'], $server_allow)) {
+        require __DIR__ . '/comingsoon.php';
+        die();
+    }
 }
 
 /**

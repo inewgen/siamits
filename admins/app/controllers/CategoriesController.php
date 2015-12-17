@@ -95,22 +95,7 @@ class CategoriesController extends BaseController
         $theme->setDescription('Add Category description');
         $theme->share('user', $this->user);
 
-        $parameters = array(
-            'user_id' => '1',
-            'perpage'   => '100',
-            'order'     => 'id',
-            'sort'      => 'desc'
-        );
-
-        $client = new Client(Config::get('url.siamits-api'));
-        $results = $client->get('categories', $parameters);
-        $results = json_decode($results, true);
-
-        $id_max = array_get($results, 'data.record.0.id', '0');
-
-        $view = array(
-            'id_max' => $id_max
-        );
+        $view = array();
 
         $script = $theme->scopeWithLayout('categories.jscript_add', $view)->content();
         $theme->asset()->container('inline_script')->usePath()->writeContent('custom-inline-script', $script);
@@ -135,18 +120,21 @@ class CategoriesController extends BaseController
             return Redirect::to('categories/add')->with('error', $message);
         }
 
-        // Add banner
-        $parameters = array(
-            'user_id'    => array_get($data, 'user_id', ''),
-            'title'      => array_get($data, 'title', ''),
-            'subtitle'   => array_get($data, 'subtitle', ''),
-            'button'     => array_get($data, 'button', ''),
-            'button_url' => array_get($data, 'button_url', ''),
-            'images'     => array_get($data, 'images', ''),
-            'position'   => array_get($data, 'positon', '0'),
-            'type'       => array_get($data, 'user_id', '1'),
-            'status'     => array_get($data, 'status', '1'),
-        );
+		// Parameters
+		$parameters_allow = array(
+			'title' => '', 
+			'description' => '', 
+			'parent_id' => '0', 
+			'user_id' => '1', 
+			'position' => '0', 
+			'images' => '0', 
+			'type' => '0', 
+			'status' => '1',
+		);
+		$parameters = array();
+		foreach ($parameters_allow as $key => $val) {
+			$parameters[$key] = array_get($data, $key, $val);
+		}
 
         $client = new Client(Config::get('url.siamits-api'));
         $results = $client->post('categories', $parameters);
@@ -172,26 +160,20 @@ class CategoriesController extends BaseController
         $theme->setDescription('Edit Category description');
         $theme->share('user', $this->user);
 
-        $parameters = array(
-            'user_id' => '1'
-        );
-
         $client = new Client(Config::get('url.siamits-api'));
-        $results = $client->get('categories/'.$id, $parameters);
+        $results = $client->get('categories/'.$id);
         $results = json_decode($results, true);
 
         if (array_get($results, 'status_code', false) != '0') {
-            $message = array_get($results, 'status_txt', 'Can not created categories');
+            $message = array_get($results, 'status_txt', 'Can not show categories');
 
             return Redirect::to('categories')->with('error', $message);
         }
 
-        $categories = array_get($results, 'data.record', array());
-        $id_max  = array_get($categories, 'id', '0');
+        $categories = array_get($results, 'data.record.0', array());
 
         $view = array(
-            'id_max'  => $id_max,
-            'categories' => $categories,
+            'data' => $categories,
         );
 
         $script = $theme->scopeWithLayout('categories.jscript_edit', $view)->content();
@@ -208,7 +190,7 @@ class CategoriesController extends BaseController
             'action' => 'required',
         );
 
-        $referer = array_get($data, 'referer', 'members');
+        $referer = array_get($data, 'referer', 'categories');
         $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
             $message = $validator->messages()->first();
@@ -223,7 +205,7 @@ class CategoriesController extends BaseController
             // Validator request
             $rules = array(
                 'id'        => 'required',
-                // 'user_id' => 'required',
+                'images_id' => 'required',
             );
 
             $validator = Validator::make($data, $rules);
@@ -310,12 +292,12 @@ class CategoriesController extends BaseController
         // Edit
         } else {
             // Validator request
-            $rules = array();
+            $rules = array(
+				'id'     => 'required',
+			);
+			
             if (!isset($data['images_old'])) {
-                $rules = array(
-                    'id'     => 'required',
-                    'images'  => 'required',
-                );
+                $rules['images'] = 'required';
             }
 
             $id = array_get($data, 'id', 0);
@@ -324,7 +306,7 @@ class CategoriesController extends BaseController
             if ($validator->fails()) {
                 $message = $validator->messages()->first();
 
-                return Redirect::to('categories')->with('error', $message);
+                return Redirect::to($referer)->with('error', $message);
             }
 
             $delete_file  = true;
@@ -337,19 +319,26 @@ class CategoriesController extends BaseController
                 }
             }
        
-            $parameters = array(
-                // 'user_id'      => $data['user_id'],
-                'title'        => (isset($data['title'])?$data['title']:''),
-                'subtitle'     => (isset($data['subtitle'])?$data['subtitle']:''),
-                'button'       => (isset($data['button'])?$data['button']:'0'),
-                'button_title' => (isset($data['button_title'])?$data['button_title']:''),
-                'button_url'   => (isset($data['button_url'])?$data['button_url']:''),
-                'images'       => array_get($data, 'images', ''),
-                'images_old'   => array_get($data, 'images_old', ''),
-                'position'     => (isset($data['position'])?$data['position']:'0'),
-                'type'         => (isset($data['type'])?$data['type']:'1'),
-                'status'       => (isset($data['status'])?$data['status']:'0')
-            );
+			// Parameters
+			$parameters_allow = array(
+				'title', 
+				'description', 
+				'parent_id', 
+				'user_id', 
+				'position', 
+				'images', 
+				'images_old', 
+				'type',
+			);
+
+			$parameters = array();
+			foreach ($parameters_allow as $val) {
+				if ($val2 = array_get($data, $val, false)) {
+					$parameters[$val] = $val2;
+				}
+			}
+			
+			$parameters['status'] = array_get($data, 'status', '0');
 
             $client = new Client(Config::get('url.siamits-api'));
             $results = $client->put('categories/'.$id, $parameters);
@@ -358,13 +347,13 @@ class CategoriesController extends BaseController
             if (array_get($results, 'status_code', false) != '0') {
                 $message = array_get($results, 'status_txt', 'Can not edit categories');
 
-                return Redirect::to('categories')->with('error', $message);
+                return Redirect::to($referer)->with('error', $message);
             }
 
             $message = 'You successfully edit';
         }
 
-        return Redirect::to('categories')->with('success', $message);
+        return Redirect::to($referer)->with('success', $message);
     }
 
     private function getPaginationsMake($pagination, $record)

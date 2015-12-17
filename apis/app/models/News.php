@@ -4,7 +4,7 @@ class News extends Eloquent
 {
     public function images()
     {
-        return $this->morphToMany('Images', 'imageable');
+        return $this->morphToMany('Images', 'imageable')->orderBy('position', 'asc');
     }
 
     public function tags()
@@ -15,6 +15,11 @@ class News extends Eloquent
     public function categories()
     {
         return $this->hasOne('Categories', 'id', 'categories')->where('type', '=', '2');
+    }
+
+    public function tagables()
+    {
+        return $this->belongsTo('Tagables');
     }
 
     public function scopeFilters($query, $filters = array())

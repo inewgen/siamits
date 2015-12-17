@@ -18,8 +18,8 @@
 <!-- End Page Banner -->
 
 <!-- Start Map -->
-<!-- <div id="map" data-position-latitude="13.7674283" data-position-longitude="100.569847"></div> -->
-<!-- <script>
+<div id="map" data-position-latitude="13.7674283" data-position-longitude="100.569847" data-marker-img="http://www.siamits.com/favicon.ico"></div>
+<script>
     (function($) {
         $.fn.CustomMap = function(options) {
 
@@ -31,8 +31,9 @@
                     latitude: posLatitude,
                     longitude: posLongitude
                 },
-                text: '<div class="map-popup"><h4>Web Development | ZoOm-Arts</h4><p>A web development blog for all your HTML5 and WordPress needs.</p></div>',
+                text: '<div class="map-popup"><h4>SiamiTs.com</h4><p>The ultimate aim of education society.</p></div>',
                 icon_url: $('#map').data('marker-img'),
+                // icon_url: 'http://www.siamits.com/favicon.ico',
                 zoom: 15
             }, options);
 
@@ -166,15 +167,14 @@
     jQuery(document).ready(function() {
         jQuery('#map').CustomMap();
     });
-</script> -->
+</script>
 <!-- End Map -->
 
 <!-- Start Content -->
+<a name="contact" id="contact"></a>
 <div id="content">
     <div class="container">
-
         <div class="row">
-
             <div class="col-md-8">
 
                 <!-- Classic Heading -->
@@ -183,7 +183,7 @@
                 <!-- Start Contact Form -->
                 <div id="contact-form" class="contatct-form">
                     <div class="loader"></div>
-                    <form action="<?php echo URL::to('contact/add');?>" class="contactForm" name="cform" method="get">
+                    <form action="<?php echo URL::to('contact');?>" class="contactForm" name="frm_main" id="frm_main" method="post">
                         <div class="row">
                             <div class="col-md-4">
                                 <label for="name">Name<span class="required">*</span></label>
@@ -193,26 +193,44 @@
                             <div class="col-md-4">
                                 <label for="e-mail">Email<span class="required">*</span></label>
                                 <span class="email-missing">Please enter a valid e-mail</span>
-                                <input id="e-mail" name="email" type="text" value="" size="30">
+                                <input id="email" name="email" type="text" value="" size="30">
                             </div>
                             <div class="col-md-4">
-                                <label for="url">Website</label>
-                                <input id="url" name="url" type="text" value="" size="30">
+                                <label for="e-mail">Mobile</label>
+                                <span class="email-missing">Please enter a valid mobile</span>
+                                <input id="mobile" name="mobile" type="text" value="" size="30">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <label for="message">Add Your Comment</label>
+                                <label for="message">Add Your Comment<span class="required">*</span></label>
                                 <span class="message-missing">Say something!</span>
                                 <textarea id="message" name="message" cols="45" rows="10"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="g-recaptcha" data-theme="dark" data-sitekey="<?php echo Config::get('web.recaptch-site-key');?>"></div>
+                            </div>
+                        </div>
+                        <p>&nbsp;
+
+                        </p>
+                        <div class="row">
+                            <div class="col-md-12">
                                 <input type="submit" name="submit" class="button" id="submit_btn" value="Send Message">
                             </div>
                         </div>
+                        <input type="hidden" name="user_id" value="">
+                        <input type="hidden" name="referer" value="<?php echo URL::to('contact');?>#contact">
                     </form>
                 </div>
                 <!-- End Contact Form -->
+                <div class="hr1" style="margin-bottom:50px;"></div>
 
             </div>
+
+            <!-- <div class="hr1" style="margin-bottom:50px;"></div> -->
 
             <div class="col-md-4">
 
@@ -227,8 +245,8 @@
 
                 <!-- Info - Icons List -->
                 <ul class="icons-list">
-                    <li><i class="fa fa-globe">  </i> <strong>Address:</strong>  Rachadapisek Rd, Bangkok, Thailand</li>
-                    <li><i class="fa fa-envelope-o"></i> <strong>Email:</strong> care.siamits@gmail.com</li>
+                    <li><i class="fa fa-globe">  </i> <strong>Address:</strong>  Rachadapisek Rd, Dindang, Bangkok, Thailand</li>
+                    <li><i class="fa fa-envelope-o"></i> <strong>Email:</strong> <a href="mailto:support@siamits.com">support@siamits.com</a></li>
                     <li><i class="fa fa-mobile"></i> <strong>Phone:</strong> +662 644 2390</li>
                 </ul>
 

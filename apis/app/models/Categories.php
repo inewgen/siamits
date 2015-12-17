@@ -35,9 +35,18 @@ class Categories extends Eloquent {
         return $query;
     }
 
-    public function news()
+    /*public function news()
     {
         return $this->belongsTo('News');
+    }*/
+	public function news()
+    {
+        return $this->belongsTo('Images', 'imageable');
+    }
+
+    public function pages()
+    {
+        return $this->belongsTo('Images', 'imageable');
     }
 
     public function images()

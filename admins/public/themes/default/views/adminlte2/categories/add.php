@@ -2,7 +2,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Add Banner
+            Add Categories
             <!-- <small>advanced tables</small> -->
         </h1>
         <ol class="breadcrumb">
@@ -12,7 +12,7 @@
                 </a>
             </li>
             <li>
-                Add Banner
+                Add Categories
             </li>
         </ol>
     </section>
@@ -53,54 +53,46 @@
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">Banner Information</h3>
+                        <h3 class="box-title">Categories Information</h3>
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form id="frm_main" role="form" method="post" action="<?php echo URL::to('banners/add');?>" enctype="multipart/form-data">
+                    <form id="frm_main" role="form" method="post" action="<?php echo URL::to('categories/add');?>" enctype="multipart/form-data">
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="">Title</label>
                                 <input type="text" placeholder="" name="title" class="form-control">
                             </div>
                             <div class="form-group">
-                                <label for="">Subtitle</label>
-                                <input type="text" placeholder="" name="subtitle" class="form-control">
-                            </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" name="button" value="1" checked="checked"> <strong>Check me button status on</strong>
-                                </label>
+                                <label for="">Description</label>
+                                <input type="text" placeholder="" name="description" class="form-control">
                             </div>
                             <div class="form-group">
-                                <label for="">Button title</label>
-                                <input type="text" placeholder="" name="button_title" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="">Button url</label>
-                                <input type="text" placeholder="" name="button_url" class="form-control">
+                                <label for="">Parent level</label>
+                                <input type="text" placeholder="" name="parent_id" class="form-control" value="0">
                             </div>
                             <div class="form-group">
                                 <label for="">Position</label>
-                                <input type="text" placeholder="" name="position" class="form-control">
+                                <input type="text" placeholder="" name="position" class="form-control" value="0">
                             </div>
                             <div class="form-group">
                                 <label for="">Type</label>
                                 <select name="type" class="form-control">
-                                    <option value="1" selected="selected">Siamit web banner</option>
-                                    <option value="2">Adds banner</option>
+                                    <option value="1" selected="selected">Banners</option>
+                                    <option value="2">News</option>
+                                    <option value="3">Pages</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>
-                                    <input type="checkbox" name="status" value="1" checked="checked"> <strong>Check me banner status on</strong>
+                                    <input type="checkbox" name="status" value="1" checked="checked"> <strong>Check me categories status on</strong>
                                 </label>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputFile">Image Banner</label>
+                                <label for="exampleInputFile">Image Categories</label>
                                 <!-- <input type="file" name="image" id="image"> --> 
                                 <input placeholder="" class="form-control" id="file_upload" name="file_upload" type="file" multiple="true">
-                                <p class="help-block">Dimensions 1440 × 500 only</p>
+                                <p class="help-block"></p>
                                 <!-- <input type="hidden" name="images" id="images" value=""> -->
                                 <div id="show_image_upload" style="hight:150"><input type="hidden" name="images" value=""></div>
                             </div>

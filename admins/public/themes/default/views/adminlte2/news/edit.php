@@ -131,21 +131,28 @@
 <?php $i = 0; ?>
 <?php foreach ($news['images'] as $key => $image): ?>
 <?php $j = $i + 1; ?>
-                                    <div id="<?php echo $image['id'];?>"><ul class="ace-thumbnails">
-                                        <li>
-                                            <a href="javascript:void(0)">
-                                                <img alt="256x183" src="<?php echo getImageLink('image', array_get($image, 'user_id', ''), array_get($image, 'code', ''), array_get($image, 'extension', ''), 256, 183, array_get($image, 'name', ''));?>" width="256" height="183">
-                                            </a>
-                                            <div class="tools tools-bottom">
-                                                <a href="javascript:void(0)" onclick="return image_delete('<?php echo $image['id'];?>', '<?php echo $image['code'];?>', '<?php echo $news['user_id'];?>', '<?php echo $image['extension'];?>');" title="Delete">
-                                                    <i class="fa fa-fw fa-trash-o"></i>
+                                    <div id="<?php echo $image['id'];?>" class="image-position-<?php echo $i;?>">
+                                        <ul class="ace-thumbnails">
+                                            <li>
+                                                <a href="javascript:void(0)">
+                                                    <img alt="200" src="<?php echo getImageLink('image', array_get($image, 'user_id', ''), array_get($image, 'code', ''), array_get($image, 'extension', ''), 200, 143, array_get($image, 'name', ''));?>" width="200" height="143">
                                                 </a>
-                                                <a class="copy-link-wrap" id="copy_link_<?php echo $j;?>" href="javascript:void(0)" title="Copy Link" data="<?php echo $image['url_real'];?>">
-                                                    <i class="fa fa-fw fa-link"></i>
-                                                </a>
-                                            </div>
-                                        </li>
-                                    </ul><input type="hidden" name="images[<?php echo $i;?>]" value="<?php echo $image['id'];?>">
+                                                <div class="tools tools-bottom">
+                                                    <a class="position-left-<?php echo $i;?>" id="image-position-left-<?php echo $image['id'];?>" href="javascript:void(0)" title="Position Left" data-pos="<?php echo $i;?>" data-id="<?php echo $image['id'];?>">
+                                                        <i class="fa fa-fw fa-arrow-left"></i>
+                                                    </a>
+                                                    <a href="javascript:void(0)" onclick="return image_delete('<?php echo $image['id'];?>', '<?php echo $image['code'];?>', '<?php echo $news['user_id'];?>', '<?php echo $image['extension'];?>');" title="Delete">
+                                                        <i class="fa fa-fw fa-trash-o"></i>
+                                                    </a>
+                                                    <a class="copy-link-wrap" id="copy_link_<?php echo $i;?>" href="javascript:void(0)" title="Copy Link" data="<?php echo $image['url_real'];?>">
+                                                        <i class="fa fa-fw fa-link"></i>
+                                                    </a>
+                                                    <a class="position-right" id="" href="javascript:void(0)" title="Position Right" data="<?php echo $i;?>">
+                                                        <i class="fa fa-fw fa-arrow-right"></i>
+                                                    </a>
+                                                </div>
+                                            </li>
+                                        </ul><input type="hidden" name="images[<?php echo $i;?>]" value="<?php echo $image['id'];?>">
                                     </div>
 <?php $i++; ?>
 <?php endforeach;?>

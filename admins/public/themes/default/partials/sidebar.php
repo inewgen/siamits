@@ -59,6 +59,15 @@
                     <li class="<?php echo Request::is('news/add*') ? 'active ' : '';?>"><a href="<?php echo URL::to('news/add');?>"><i class="fa fa-circle-o"></i> Add News</a></li>
                 </ul>
             </li>
+            <li class="<?php echo Request::is('pages*') ? 'active ' : '';?>treeview">
+                <a href="<?php echo URL::to('pages');?>">
+                    <i class="fa fa-files-o"></i> <span>Pages</span> <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="<?php echo Request::is('pages') ? 'active ' : '';?>"><a href="<?php echo URL::to('pages');?>"><i class="fa fa-circle-o"></i> List Pages</a></li>
+                    <li class="<?php echo Request::is('pages/add*') ? 'active ' : '';?>"><a href="<?php echo URL::to('pages/add');?>"><i class="fa fa-circle-o"></i> Add Pages</a></li>
+                </ul>
+            </li>
 <?php //if(isset($user->roles[0]->id) && ($user->roles[0]->id == '1')): ?>
             <li class="<?php echo Request::is('members*') ? 'active ' : '';?>treeview">
                 <a href="<?php echo URL::to('members');?>">
@@ -70,13 +79,59 @@
                 </ul>
             </li>
 <?php //endif;?>
-			<li class="<?php echo Request::is('caegories*') ? 'active ' : '';?>treeview">
+			<li class="<?php echo Request::is('categories*') ? 'active ' : '';?>treeview">
                 <a href="<?php echo URL::to('categories');?>">
                     <i class="fa fa-files-o"></i> <span>Category</span> <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <li class="<?php echo Request::is('categories') ? 'active ' : '';?>"><a href="<?php echo URL::to('categories');?>"><i class="fa fa-circle-o"></i> List Category</a></li>
                     <li class="<?php echo Request::is('categories/add*') ? 'active ' : '';?>"><a href="<?php echo URL::to('categories/add');?>"><i class="fa fa-circle-o"></i> Add Category</a></li>
+                </ul>
+            </li>
+            <li class="<?php echo Request::is('blockwords*') ? 'active ' : '';?>treeview">
+                <a href="<?php echo URL::to('blockwords');?>">
+                    <i class="fa fa-files-o"></i> <span>Blockwords</span> <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="<?php echo Request::is('blockwords') ? 'active ' : '';?>"><a href="<?php echo URL::to('blockwords');?>"><i class="fa fa-circle-o"></i> List Blockwords</a></li>
+                    <li class="<?php echo Request::is('blockwords/add*') ? 'active ' : '';?>"><a href="<?php echo URL::to('blockwords/add');?>"><i class="fa fa-circle-o"></i> Add Blockwords</a></li>
+                </ul>
+            </li>
+            <li class="<?php echo Request::is('comments*') ? 'active ' : '';?>treeview">
+                <a href="<?php echo URL::to('comments');?>">
+                    <i class="fa fa-files-o"></i> <span>Comments</span> <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="<?php echo Request::is('comments') ? 'active ' : '';?>"><a href="<?php echo URL::to('comments');?>"><i class="fa fa-circle-o"></i> List Comments</a></li>
+                    <li class="<?php echo Request::is('comments/add*') ? 'active ' : '';?>"><a href="<?php echo URL::to('comments/add');?>"><i class="fa fa-circle-o"></i> Add Comments</a></li>
+                    <li class="<?php echo Request::is('comments/blockwords*') ? 'active ' : '';?>"><a href="<?php echo URL::to('comments/blockwords');?>"><i class="fa fa-circle-o"></i> Blockwords Comments</a></li>
+                </ul>
+            </li>
+            <li class="<?php echo Request::is('contacts*') ? 'active ' : '';?>treeview">
+                <a href="<?php echo URL::to('contacts');?>">
+                    <i class="fa fa-files-o"></i> <span>Contacts</span> <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="<?php echo Request::is('contacts') ? 'active ' : '';?>"><a href="<?php echo URL::to('contacts');?>"><i class="fa fa-circle-o"></i> List Contacts</a></li>
+                    <!-- <li class="<?php echo Request::is('contacts/add*') ? 'active ' : '';?>"><a href="<?php echo URL::to('contacts/add');?>"><i class="fa fa-circle-o"></i> Add Contacts</a></li> -->
+                </ul>
+            </li>
+            <li class="<?php echo Request::is('quotes*') ? 'active ' : '';?>treeview">
+                <a href="<?php echo URL::to('quotes');?>">
+                    <i class="fa fa-files-o"></i> <span>Quotes</span> <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="<?php echo Request::is('quotes') ? 'active ' : '';?>"><a href="<?php echo URL::to('quotes');?>"><i class="fa fa-circle-o"></i> List Quotes</a></li>
+                    <li class="<?php echo Request::is('quotes/add*') ? 'active ' : '';?>"><a href="<?php echo URL::to('quotes/add');?>"><i class="fa fa-circle-o"></i> Add Quotes</a></li>
+                </ul>
+            </li>
+            <li class="<?php echo Request::is('layouts*') ? 'active ' : '';?>treeview">
+                <a href="<?php echo URL::to('layouts');?>">
+                    <i class="fa fa-files-o"></i> <span>Layouts</span> <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="<?php echo Request::is('layouts') ? 'active ' : '';?>"><a href="<?php echo URL::to('layouts');?>"><i class="fa fa-circle-o"></i> List Layouts</a></li>
+                    <li class="<?php echo Request::is('layouts/add*') ? 'active ' : '';?>"><a href="<?php echo URL::to('layouts/add');?>"><i class="fa fa-circle-o"></i> Add Layouts</a></li>
                 </ul>
             </li>
             <li class="treeview">

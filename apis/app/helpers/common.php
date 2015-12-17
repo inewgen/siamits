@@ -6,6 +6,67 @@
  * @param  [type] $bytes [description]
  * @return [type]        [description]
  */
+if (!function_exists('checkBlockwords')) {
+    function checkBlockwords($message = null, $type = null)
+    {
+        if (!isset($message) || !isset($type)) {
+            return false;
+        }
+
+        // Get Blockwords
+        $filters = array(
+            'type' => $type
+        );
+        $query = Blockwords::filters($filters)
+                ->get();
+        $results = json_decode($query, true);
+        
+        if (!$results) {
+            $response = array();
+
+            return false;
+        }
+
+        // Loop
+        foreach ($results as $key => $value) {
+            $search = $value['title'];
+            $results = strpos($message, $search);
+            if ($results > -1) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+if (!function_exists('replaceBlockwords')) {
+    function replaceBlockwords($message, $type = '1', $replace = '***')
+    {
+        // Get Blockwords
+        $filters = array(
+            'type' => $type
+        );
+        $query = Blockwords::filters($filters)
+                ->get();
+        $results = json_decode($query, true);
+        
+        if (!$results) {
+            $response = array();
+
+            return false;
+        }
+
+        // Loop
+        foreach ($results as $key => $value) {
+            $search = $value['title'];
+            $message = str_replace($search, $replace, $message);
+        }
+
+        return $message;
+    }
+}
+
 if (!function_exists('loopImages')) {
     function loopImages($data = array(), $user_id = '', $section = '')
     {
@@ -42,6 +103,34 @@ if (!function_exists('loopImages')) {
         }
 
         return $images;
+    }
+}
+
+if (!function_exists('insertImageable')) {
+    function insertImageable($image_id = null, $banner_id = null, $section = null)
+    {
+        if (!isset($image_id) || !isset($banner_id) || !isset($section)) {
+            return false;
+        }
+
+        // Insert imageables
+        $parameters = array(
+            'images_id' => $image_id,
+            'imageable_id' => $banner_id,
+            'imageable_type' => $section,
+        );
+
+        $query = new Imageables();
+        foreach ($parameters as $key => $value) {
+            $query->$key = $value;
+        }
+        $query->save();
+
+        if (!$query) {
+            return false;
+        }
+
+        return true;
     }
 }
 
@@ -103,7 +192,7 @@ if (!function_exists('saveCache')) {
 
 if (!function_exists('getCache')) {
     function getCache($key_cache)
-    {
+    {return false;
         if (Input::get('nocache')) {
             return false;
         }

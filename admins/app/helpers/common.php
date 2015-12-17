@@ -6,6 +6,73 @@
  * @param  mixed  $value
  * @return void
  */
+if (!function_exists('getPaginationsMake')) {
+    function getPaginationsMake($pagination, $record)
+    {
+        $total = array_get($pagination, 'total', 0);
+        $limit = array_get($pagination, 'perpage', 0);
+        $paginations = Paginator::make($record, $total, $limit);
+        return isset($paginations) ? $paginations : '';
+    }
+}
+
+if (!function_exists('getDataArray')) {
+    function getDataArray($data, $key)
+    {
+        return array_get($data, $key, false);
+    }
+}
+
+if (!function_exists('checkAlertMessage')) {
+	function checkAlertMessage() { ?>
+        <!-- Message Success -->
+        <?php if($success = Session::has('success')): ?>
+        <div class="alert alert-success alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">*</button>
+            <i class="icon fa fa-check"></i>
+            <?php echo (null !== Session::get('success')) ? Session::get('success') : '';?>       
+        </div>
+        <?php endif; ?>
+
+        <!-- Message Error -->
+        <?php if($error = Session::has('error')): ?>
+        <div class="alert alert-danger alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">*</button>
+            <i class="icon fa fa-ban"></i>
+            <?php echo (null !== Session::get('error')) ? Session::get('error') : '';?>
+        </div>
+        <?php endif; ?>
+
+        <!-- Message Warning -->
+        <?php if($error = Session::has('warning')): ?>
+        <div class="alert alert-warning alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">*</button>
+            <i class="icon fa fa-warning"></i>
+            <?php echo (null !== Session::get('warning')) ? Session::get('warning') : '';?>
+        </div>
+        <?php endif; ?>
+<?php }
+} 
+
+if (!function_exists('checkAlertMessageFlash')) {
+    function checkAlertMessageFlash() { ?>
+        <!-- Message Success -->
+        <?php if($success = Session::has('success')): ?>
+        toastr["success"]('<?php echo (null !== Session::get('success')) ? Session::get('success') : '';?>');
+        <?php endif; ?>
+
+        <!-- Message Error -->
+        <?php if($error = Session::has('error')): ?>
+        toastr["error"]('<?php echo (null !== Session::get('error')) ? Session::get('error') : '';?>');
+        <?php endif; ?>
+
+        <!-- Message Warning -->
+        <?php if($error = Session::has('warning')): ?>
+        toastr["warning"]('<?php echo (null !== Session::get('warning')) ? Session::get('warning') : '';?>');
+        <?php endif; ?>
+<?php }
+}
+
 if (!function_exists('getImageLink')) {
     // img|image, default|user_id, array(), 100, 100
     function getImageLink($type, $section, $code, $extension, $w, $h, $name = 'siamits.jpg')
@@ -66,7 +133,7 @@ if (!function_exists('saveCache')) {
 
 if (!function_exists('getCache')) {
     function getCache($key_cache)
-    {
+    {return false;
         if (Input::get('nocache')) {
             return false;
         }

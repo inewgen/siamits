@@ -22,10 +22,19 @@ $prefix = '';
 
 if (routeLoad($prefix . 'contact', $req_path)) {
     Route::get('contact', 'ContactController@Index');
+    Route::get('contact/add', 'ContactController@postAddContact');
 }
 
-if (routeLoad($prefix . 'gallery', $req_path)) {
-    Route::get('gallery', 'GalleryController@Index');
+if (routeLoad($prefix . 'clips', $req_path)) {
+    Route::get('clips', 'ClipsController@Index');
+}
+
+if (routeLoad($prefix . 'comments', $req_path)) {
+    Route::get('comments/ajax', 'CommentsController@ajaxComments');
+}
+
+if (routeLoad($prefix . 'weather', $req_path)) {
+    Route::get('weather/ajax', 'DashboardController@ajaxWeather');
 }
 
 if (routeLoad($prefix . 'members', $req_path)) {
@@ -37,10 +46,19 @@ if (routeLoad($prefix . 'news', $req_path)) {
     Route::get('news/category', 'NewsController@listCategory');
     Route::get('news/{id}', 'NewsController@Show');
     Route::get('news/category/{id}', 'NewsController@listNewsCategory');
+    Route::post('news/addcomment', 'NewsController@postAddComment');
+    Route::get('news/update/ajax', 'NewsController@ajaxUpdateNews');
+    Route::get('news/update/stat', 'NewsController@ajaxUpdateNewsStat');
 }
 
 if (routeLoad($prefix . 'pages', $req_path)) {
     Route::get('pages', 'PagesController@Index');
+    Route::get('pages/category', 'PagesController@listCategory');
+    Route::get('pages/{id}', 'PagesController@Show');
+    Route::get('pages/category/{id}', 'PagesController@listPagesCategory');
+    Route::post('pages/addcomment', 'PagesController@postAddComment');
+    Route::get('pages/update/ajax', 'PagesController@ajaxUpdatPages');
+    Route::get('pages/update/stat', 'PagesController@ajaxUpdatePagesStat');
 }
 
 if (routeLoad($prefix . 'policy', $req_path)) {

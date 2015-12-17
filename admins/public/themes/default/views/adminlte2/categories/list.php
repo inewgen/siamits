@@ -3,7 +3,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            List Banners
+            List Categories
             <!-- <small>advanced tables</small> -->
         </h1>
         <ol class="breadcrumb">
@@ -13,7 +13,7 @@
                 </a>
             </li>
             <li>
-                List Banners
+                List Categories
             </li>
         </ol>
     </section>
@@ -51,23 +51,23 @@
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <!-- <h3 class="box-title">List Banner</h3> -->
-                        <a href="<?php echo URL::to('banners/add');?>">
-                            <button class="btn btn-success" id="new_banners">
+                        <!-- <h3 class="box-title">List Categories</h3> -->
+                        <a href="<?php echo URL::to('categories/add');?>">
+                            <button class="btn btn-success" id="new_categories">
                                 <i class="fa fa-plus"></i>
-                                New banners
+                                New categories
                             </button>
                         </a>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <form id="frm_main" role="form" method="get" action="<?php echo URL::to('banners');?>" enctype="multipart/form-data">
+                        <form id="frm_main" role="form" method="get" action="<?php echo URL::to('categories');?>" enctype="multipart/form-data">
                             
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <div id="tb_banners_length" class="dataTables_length">
+                                    <div id="tb_categories_length" class="dataTables_length">
                                         <label>
-                                            <select id="perpage" name="perpage" size="1" aria-controls="tb_banners">
+                                            <select id="perpage" name="perpage" size="1" aria-controls="tb_categories">
 
                                     <?php   $perpage_arr = array('5', '10', '25', '50', '100'); 
                                             foreach ($perpage_arr as $value) { ?>
@@ -116,12 +116,12 @@
                                         </td>
                     <?php           else: ?>
                                         <td>
-                                            <img src="<?php echo getImageLink('img', 'banners', 'siamts', 'png', 200, 143, 'banner.jpg');?>" width="200px">
+                                            <img src="<?php echo getImageLink('img', 'categories', 'siamts', 'png', 200, 143, 'banner.jpg');?>" width="200px">
                                         </td>
                     <?php           endif;?>
                     <?php       elseif ($key2 == 'manage'): ?>
                                         <td>
-                                            <a title="Edit" href="<?php echo URL::to('banners');?>/<?php echo array_get($value, 'id', '');?>"><span class="glyphicon glyphicon-pencil"></span></a>
+                                            <a title="Edit" href="<?php echo URL::to('categories');?>/<?php echo array_get($value, 'id', '');?>"><span class="glyphicon glyphicon-pencil"></span></a>
                                             <a class="del_rows" data-id="<?php echo array_get($value, 'id', '');?>" data-iid="<?php echo array_get($value, 'images.0.id', '');?>" data-code="<?php echo array_get($value, 'images.0.code', '');?>" data-uid="<?php echo array_get($value, 'images.0.user_id', '');?>" title="Delete" href="javascript:void(0)"><span class="glyphicon glyphicon-remove-sign danger"></span></a>
                                         </td>
                     <?php       else: ?>
@@ -152,7 +152,7 @@
                             <?php if(isset($pagination)): ?>
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <div class="dataTables_info" id="tb_banners_info">Showing <?php echo $pagination->getFrom();?>
+                                    <div class="dataTables_info" id="tb_categories_info">Showing <?php echo $pagination->getFrom();?>
                                     to <?php echo $pagination->getTo();?>
                                     of <?php echo $pagination->getTotal();?> entries
                                     </div>
@@ -175,7 +175,7 @@
                             <input name="sort" id="sort" value="<?php echo $param['sort'];?>" type="hidden">
                         </form>
 
-                        <form id="frm_main2" role="form" method="post" action="<?php echo URL::to('banners');?>" enctype="multipart/form-data">
+                        <form id="frm_main2" role="form" method="post" action="<?php echo URL::to('categories');?>" enctype="multipart/form-data">
                             <input name="action" id="action" value="" type="hidden">
                             <input name="id" id="id" value="" type="hidden">
                             <input name="user_id" id="user_id" value="" type="hidden">

@@ -1,16 +1,16 @@
 <?php
 
 $path_processing = array(
-    'pages',
+    // 'pages',
     // 'news',
-    'gallery',
+    //'clips',
     'webboard',
     // 'contact',
-    'search',
+    // 'search',
     'members',
     'register',
     'sitemap',
-    'policy',
+    // 'policy',
     'health',
     'technology',
     'photography',
@@ -19,7 +19,6 @@ $path_processing = array(
 );
 
 if (!function_exists('routeLoad')) {
-
     function routeLoad($uri = false, $req_path = false, $route_conf = false)
     {
         // preload, fixed when use API::xxx()
@@ -52,13 +51,12 @@ if (!function_exists('routeLoad')) {
 }
 
 if (!function_exists('pageNotFound')) {
-
     function pageNotFound($req_path = null)
     {
         $theme = Theme::uses('margo')->layout('margo');
-        $theme->setTitle('SiamiTs :: '.$req_path);
-        $theme->setDescription($req_path.' description');
-    
+        $theme->setTitle('SiamiTs :: ' . $req_path);
+        $theme->setDescription($req_path . ' description');
+
         $script = $theme->scopeWithLayout('errors.jscript_missing')->content();
         $theme->asset()->container('inline_script')->usePath()->writeContent('custom-inline-script', $script);
 

@@ -30,7 +30,7 @@ class ImageController extends Controller
         $rules = array(
             'user_id' => 'required|integer|min:1',
             'code' => 'required',
-            'extension' => 'required|in:jpg,png,gif',
+            'extension' => 'required|in:jpg,jpeg,png,gif',
             'width' => 'required|integer|min:1',
             'height' => 'required|integer|min:1',
         );

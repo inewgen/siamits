@@ -34,6 +34,11 @@ class Images extends Eloquent
         return $this->morphedByMany('News', 'imageable');
     }
 
+    public function pages()
+    {
+        return $this->morphedByMany('Pages', 'imageable');
+    }
+
     public function users()
     {
         return $this->morphedByMany('Users', 'imageable');
@@ -47,6 +52,11 @@ class Images extends Eloquent
     public function categories()
     {
         return $this->morphedByMany('Categories', 'imageable');
+    }
+
+    public function quotes()
+    {
+        return $this->morphedByMany('Quotes', 'imageable');
     }
 
     public function imageables()

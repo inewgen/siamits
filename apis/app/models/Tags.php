@@ -8,18 +8,44 @@ class Tags extends Eloquent
         return $this->morphedByMany('News', 'tagable');
     }
 
+    public function pages()
+    {
+        return $this->morphedByMany('Pages', 'tagable');
+    }
+
+    public function tagables()
+    {
+        return $this->hasMany('Tagables');
+    }
+
     public function scopeFilters($query, $filters = array())
     {
-        if ($val = array_get($filters, 'id')) {
-            $query->where('id', '=', $val);
+        // Filter
+        $fild_arr = array(
+            'id', 'title', 'status'
+        );
+        
+        foreach ($fild_arr as $val2) {
+            if ($val = array_get($filters, $val2)) {
+                $query->where($val2, '=', $val);
+            }
         }
 
-        if ($val = array_get($filters, 'title')) {
-            $query->where('title', '=', $val);
-        }
-
-        if ($val = array_get($filters, 'search')) {
-            $query->where('title', 'LIKE', '%' . $val . '%');
+        // Search
+        $fild_search = array(
+            'title'
+        );
+        
+        if ($val = array_get($filters, 's')) {
+            $i = 0;
+            foreach ($fild_search as $val2) {
+                if ($i == 0) {
+                    $query->where($val2, 'LIKE', '%'.$val.'%');
+                } else {
+                    $query->orWhere($val2, 'LIKE', '%'.$val.'%');
+                }
+                $i++;
+            }
         }
 
         return $query;

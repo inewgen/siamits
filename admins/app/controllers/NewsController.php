@@ -1,8 +1,9 @@
 <?php
 use Facebook\FacebookRequest;
-        use Facebook\GraphObject;
-        use Facebook\FacebookRequestException;
-        use Facebook\FacebookSession;
+use Facebook\GraphObject;
+use Facebook\FacebookRequestException;
+use Facebook\FacebookSession;
+
 class NewsController extends BaseController
 {
     /**

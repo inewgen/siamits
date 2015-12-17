@@ -16,7 +16,7 @@ Theme::asset()->container('footer')->add('bootbox', 'public/themes/adminlte2/plu
         var id   = $(this).data('id');
         var code = $(this).data('code');
         var user_id = $(this).data('uid');
-        var images_id = $(this).data('images_id');
+        var images_id = $(this).data('iid');
 
         bootbox.confirm("Are you sure to delete?", function(result) {
             if(result){

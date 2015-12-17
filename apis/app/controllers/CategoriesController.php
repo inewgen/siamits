@@ -108,12 +108,21 @@ class CategoriesController extends ApiController
 
             return API::createResponse($response, 1003);
         }
+		
+		// Filter
+		$fild_arr = array(
+			'id'
+		);
+        
+		$filters = array();
+		foreach ($fild_arr as $value) {
+        	isset($data[$value]) ? $filters[$value] = array_get($data, $value, ''):'';
+		}
 
-        // Query
-        $query   = Categories::find($id);
+        $query = Categories::filters($filters)
+                ->with('images')->get();
         $results = json_decode($query, true);
-		$results[] = $results;
-
+		
         if (!$results) {
             $response = array();
 
@@ -123,7 +132,7 @@ class CategoriesController extends ApiController
 		//Loop data
         $entries = array();
         if (isset($results) && is_array($results)) {
-            foreach ($results as $value) {	alert($value);die();
+            foreach ($results as $value) {
                 $entry = array();
                 if (isset($value) && is_array($value)) {
                     $user_id = 0;
@@ -159,7 +168,7 @@ class CategoriesController extends ApiController
             'parent_id'   => 'required|integer',
             'user_id'   => 'required|integer',
             'position'    => 'required|integer',
-            'images'      => 'integer',
+            'images'      => 'required',
             'type'        => 'required|integer',
             'status'      => 'integer|in:0,1',
         );
@@ -173,41 +182,56 @@ class CategoriesController extends ApiController
             return API::createResponse($response, 1003);
         }
 
-        // Add
-        $parameters = array(
-            'title'       => array_get($data, 'title', ''),
-            'description' => array_get($data, 'description', ''),
-            'parent_id'   => array_get($data, 'parent_id', '0'),
-            'user_id'   => array_get($data, 'user_id', '1'),
-            'position'    => array_get($data, 'position', '0'),
-            'images'      => array_get($data, 'images', '0'),
-            'type'        => array_get($data, 'type', '0'),
-            'status'      => array_get($data, 'status', '1'),
-            'updated_at'  => date("Y-m-d H:i:s"),
-            'created_at'  => date("Y-m-d H:i:s"),
-        );
+		// Parameter
+		$date_time = date("Y-m-d H:i:s");
+		$insert_allow = array(
+			'title' => '', 
+			'description' => '', 
+			'parent_id' => '0', 
+			'user_id' => '1', 
+			'position' => '0',
+			'type' => '0', 
+			'status' => '1',
+			'updated_at' => $date_time,
+			'created_at' => $date_time,
+		);
+		$parameters = array();
+		foreach ($insert_allow as $key => $val) {
+			$parameters[$key] = array_get($data, $key, $val);
+		}
 
-        // Insert
+        // Insert category
         $query = new Categories();
         foreach ($parameters as $key => $value) {
             $query->$key = $value;
         }
         $query->save();
 
-        if (!$query) {
+        if (!isset($query) || !is_object($query)) {
             $response = array();
 
             return API::createResponse($response, 1001);
         }
 
-        $id = (isset($query->id)?$query->id:null);
+        $id = (isset($query->id) ? $query->id : null);
+
+  		// Insert images
+        if ($images = array_get($data, 'images', false)) {
+            foreach ($images as $key => $value) {
+                $image = insertImageable($value, $id, 'categories');
+
+                if (!$image) {
+                    return API::createResponse('Error, Insert image', 1001);
+                }
+            }
+        }
 
         $response = array(
             'id' => $id,
             'record' => $data,
         );
 
-        return API::createResponse($data, 0);
+        return API::createResponse($response, 0);
     }
 
     public function update($id = null)
@@ -233,6 +257,44 @@ class CategoriesController extends ApiController
         $id        = array_get($data, 'id', null);
         $user_id = array_get($data, 'user_id', null);
         $response  = array();
+	
+		// Images
+		if ($images = array_get($data, 'images', false)) {
+            if ($images_old = array_get($data, 'images_old', false)) {
+                if ($img_id = array_get($images_old, 'id', false)) {
+                    // Delete imageables
+                    $filters = array(
+                        'images_id' => $img_id,
+                        'imageable_id' => $id,
+                        'imageable_type' => 'categories',
+                    );
+
+                    $query_ia = Imageables::filters($filters);
+                    if ($query_ia) {
+                        $query_ia->delete();
+                    }
+
+                    // Delete image
+                    $filters = array(
+                        'id' => $img_id,
+                    );
+
+                    $query_i = Images::filters($filters);
+                    if ($query_i) {
+                        $query_i->delete();
+                    }
+                }
+            }
+
+            // Insert images
+            foreach ($images as $key => $value) {
+                $image = self::insertImageable($value, $id, 'categories');
+
+                if (!$image) {
+                    return API::createResponse('Error, Insert image', 1001);
+                }
+            }
+        }
 
         // Update
         $update_allow = array(
@@ -241,7 +303,6 @@ class CategoriesController extends ApiController
             'parent_id',
             'user_id',
             'position',
-            'images',
             'type',
             'status',
         );
@@ -304,11 +365,62 @@ class CategoriesController extends ApiController
 
             return API::createResponse($response, 1004);
         }
+		
+		// Delete images
+        if ($images_id = array_get($data, 'images_id', false)) {
+            // Delete imageables
+            $filters = array(
+                'images_id' => $images_id,
+                'imageable_id' => $id,
+                'imageable_type' => 'categories',
+            );
+
+            $query_ia = Imageables::filters($filters);
+            if ($query_ia) {
+                $query_ia->delete();
+            }
+
+            // Delete image
+            $filters = array(
+                'id' => $images_id,
+            );
+
+            $query_i = Images::filters($filters);
+            if ($query_i) {
+                $query_i->delete();
+            }
+        }
 
         $response = array(
             'record' => $data,
         );
 
         return API::createResponse($response, 0);
+    }
+	
+	private function insertImageable($image_id = null, $imageable_id = null, $imageable_type = null)
+    {
+        if (!isset($image_id) || !isset($imageable_id) || !isset($imageable_type)) {
+            return false;
+        }
+
+        // Insert imageables
+        $parameters = array(
+            'images_id' => $image_id,
+            'imageable_id' => $imageable_id,
+            'imageable_type' => $imageable_type,
+        );
+
+        $query = new Imageables();
+        foreach ($parameters as $key => $value) {
+            $query->$key = $value;
+        }
+        $query->save();
+
+        if (!$query) {
+            return false;
+        }
+
+        return true;
     }
 }

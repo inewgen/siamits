@@ -10,9 +10,10 @@
                     <h4>Get news from us<span class="head-line"></span></h4>
                     <p>Join our mailing list to stay up to date and get notices about our new releases!</p>
                     <form class="subscribe" action="<?php echo URL::to('register');?>" method="get">
-                        <input type="text" placeholder="mail@example.com">
-                        <input type="submit" class="main-button" value="Send">
+                        <!-- <input type="text" placeholder="mail@example.com"> -->
+                        <input type="submit" class="main-button" value="Register">
                     </form>
+                    <!-- <a class="main-button" href="<?php echo URL::to('register');?>">Register</a> -->
                 </div>
                 <div class="footer-widget social-widget">
                     <h4>Follow Us<span class="head-line"></span></h4>
@@ -58,7 +59,7 @@
             <div class="col-md-3 col-xs-12">
                 <div class="footer-widget twitter-widget">
                     <h4>Members Feed<span class="head-line"></span></h4>
-                    <ul>
+                    <ul id="members_feed">
                         <li>
                             <p><a href="<?php echo URL::to('members');?>">@siamitslab </a> สมัครสมาชิกยังไง เข้าเมนูไหน</p>
                             <span>9 April 2015</span>
@@ -142,8 +143,8 @@
                     <p>เว็บไซต์รวบรวมความรู้ ข่าวสาร ความบันเทิง ทางด้านไอที และอื่น ๆ</p>
                     <ul>
                         <li><span>Phone Number:</span> +662 644 2390</li>
-                        <li><span>Email:</span> suport@siamits.com</li>
-                        <li><span>Website:</span> www.siamits.com</li>
+                        <li><span>Email:</span> <a href="mailto:support@siamits.com">support@siamits.com</a></li>
+                        <li><span>Website:</span> <a href="http://www.siamits.com">www.siamits.com</a></li>
                     </ul>
                 </div>
             </div>

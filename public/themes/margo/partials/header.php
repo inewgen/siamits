@@ -92,7 +92,7 @@
                 <!-- Start Navigation List -->
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a <?php echo (preg_match( "/pages|news|gallery|webboard|contact/",Request::segment(1))) ? '' : 'class="active" ';?>href="<?php echo URL::to('');?>">Home</a>
+                        <a <?php echo (preg_match( "/pages|news|clips|webboard|contact/",Request::segment(1))) ? '' : 'class="active" ';?>href="<?php echo URL::to('');?>">Home</a>
                         <!-- <ul class="dropdown">
                             <li><a class="active" href="<?php echo URL::to('public/themes/margo');?>/index.html">Home Main Version</a>
                             </li>
@@ -151,7 +151,7 @@
                         </ul> -->
                     </li>
                     <li>
-                        <a <?php echo Request::is('gallery*') ? 'class="active" ' : '';?>href="<?php echo URL::to('gallery');?>">Gallery</a>
+                        <a <?php echo Request::is('clips*') ? 'class="active" ' : '';?>href="<?php echo URL::to('clips');?>">Clips VDO</a>
                         <!-- <ul class="dropdown">
                             <li><a href="<?php echo URL::to('public/themes/margo');?>/portfolio-2.html">2 Columns</a>
                             </li>
@@ -164,7 +164,7 @@
                         </ul> -->
                     </li>
                     <li>
-                        <a <?php echo Request::is('webboard*') ? 'class="active" ' : '';?>href="<?php echo URL::to('webboard');?>">Webboard</a>
+                        <a <?php echo Request::is('webboard*') ? 'class="active" ' : '';?>href="<?php echo Config::get('url.siamits-webboard');?>" target="_blank">Webboard</a>
                         <!-- <ul class="dropdown">
                             <li><a href="<?php echo URL::to('public/themes/margo');?>/blog.html">Blog - right Sidebar</a>
                             </li>

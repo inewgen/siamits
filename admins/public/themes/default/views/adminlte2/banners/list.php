@@ -20,32 +20,7 @@
     <!-- Main content -->
     <section class="content">
 
-        <!-- Message Success -->
-        <?php if($success = Session::has('success')): ?>
-        <div class="alert alert-success alert-dismissable">
-            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-            <i class="icon fa fa-check"></i>
-            <?php echo (null !== Session::get('success')) ? Session::get('success') : '';?>       
-        </div>
-        <?php endif; ?>
-
-        <!-- Message Error -->
-        <?php if($error = Session::has('error')): ?>
-        <div class="alert alert-danger alert-dismissable">
-            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-            <i class="icon fa fa-ban"></i>
-            <?php echo (null !== Session::get('error')) ? Session::get('error') : '';?>
-        </div>
-        <?php endif; ?>
-
-        <!-- Message Warning -->
-        <?php if($error = Session::has('warning')): ?>
-        <div class="alert alert-warning alert-dismissable">
-            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
-            <i class="icon fa fa-warning"></i>
-            <?php echo (null !== Session::get('warning')) ? Session::get('warning') : '';?>
-        </div>
-        <?php endif; ?>
+        <?php checkAlertMessage(); ?>
 
         <div class="row">
             <div class="col-xs-12">

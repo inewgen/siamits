@@ -14,7 +14,7 @@ class DashboardController extends BaseController
         $data = Input::all();
 
         // Get cache value
-        $key_cache = 'web.0.dashboard.index.0.'.md5(serialize($data));
+        $key_cache = 'web.0.dashboard.index.0.' . md5(serialize($data));
         if ($render = getCache($key_cache)) {
             return $render;
         }
@@ -22,53 +22,120 @@ class DashboardController extends BaseController
         $theme = Theme::uses('margo')->layout('margo');
         $theme->setTitle('SiamiTs :: Home');
         $theme->setDescription('Home description');
-        
-        // Get banners
+
+        $view = array();
+
+        // Get layouts
         $parameters = array(
-            // 'user_id' => '1',
-            'perpage'   => '100',
+            'pages' => 'dashboard',
+            'status' => '1'
         );
 
         $client = new Client(Config::get('url.siamits-api'));
-        $results = $client->get('banners', $parameters);
+        $results = $client->get('layouts', $parameters);
         $results = json_decode($results, true);
 
-        $banners = array_get($results, 'data.record', array());
+        $layout = array();
+        if ($layouts = array_get($results, 'data.record', false)) {
+            foreach ($layouts as $key => $value) {
+                $layout[] = $value['title'];
+            }
+        }
+        $view['layout'] = $layout;
+
+        // Get banners
+        if (in_array('banners', $layout)) {
+            $parameters = array(
+                // 'user_id' => '1',
+                'perpage' => '100',
+            );
+
+            $client = new Client(Config::get('url.siamits-api'));
+            $results = $client->get('banners', $parameters);
+            $results = json_decode($results, true);
+            $view['banners'] = array_get($results, 'data.record', array());
+        }
 
         // Get hightlight news
-        $parameters = array(
-            'type' => '2',
-            'perpage' => '10',
-            'order' => 'updated_at',
-            'sort' => 'desc',
-        );
-        $results2 = $client->get('news', $parameters);
-        $results2 = json_decode($results2, true);
+        if (in_array('hnews', $layout)) {
+            $parameters = array(
+                'type' => '2',
+                'perpage' => '10',
+                'order' => 'updated_at',
+                'sort' => 'desc',
+            );
+            $results2 = $client->get('news', $parameters);
+            $results2 = json_decode($results2, true);
 
-        $news_h = array_get($results2, 'data.record', array());
-        $news_entry['highlight'] = $news_h;
+            $news_h = array_get($results2, 'data.record', array());
+            $view['news']['highlight'] = $news_h;
+        }
 
         // Get news
-        $parameters = array(
-            'type' => '1',
-            'perpage' => '16',
-            'order' => 'updated_at',
-            'sort' => 'desc',
-        );
-        $results2 = $client->get('news', $parameters);
-        $results2 = json_decode($results2, true);
+        if (in_array('news', $layout)) {
+            $parameters = array(
+                'type' => '1',
+                'perpage' => '12',
+                'order' => 'updated_at',
+                'sort' => 'desc',
+            );
+            $results2 = $client->get('news', $parameters);
+            $results2 = json_decode($results2, true);
 
-        $news_h = array_get($results2, 'data.record', array());
-        $news_entry['general'] = $news_h;
+            $news_h = array_get($results2, 'data.record', array());
+            $view['news']['general'] = $news_h;
+        }
+
+        // Get hightlight pages
+        if (in_array('hpages', $layout)) {
+            $parameters = array(
+                'type' => '2',
+                'perpage' => '10',
+                'order' => 'updated_at',
+                'sort' => 'desc',
+            );
+            $results_p = $client->get('pages', $parameters);
+            $results_p = json_decode($results_p, true);
+
+            $pages_h = array_get($results_p, 'data.record', array());
+            $view['pages']['highlight'] = $pages_h;
+        }
+
+        // Get pages
+        if (in_array('pages', $layout)) {
+            $parameters = array(
+                'type' => '1',
+                'perpage' => '12',
+                'order' => 'updated_at',
+                'sort' => 'desc',
+            );
+            $results_p = $client->get('pages', $parameters);
+            $results_p = json_decode($results_p, true);
+
+            $pages_h = array_get($results_p, 'data.record', array());
+            $view['pages']['general'] = $pages_h;
+        }
 
         // Youtube feed
-        $youtube = self::getYoutubeSearch();
-        
-        $view = array(
-            'banners' => $banners,
-            'news'    => $news_entry,
-            'youtube'    => $youtube,
-        );
+        if (in_array('video', $layout)) {
+            $search_youtube = 'เทคโนโลยี อนาคต';
+            $view['youtube'] = self::getYoutubeSearch($search_youtube, 20);
+        }
+
+        // Get Quotes
+        if (in_array('pages', $layout)) {
+            $parameters = array(
+                'type' => '1',
+                'perpage' => '20',
+                'order' => 'position',
+                'sort' => 'asc',
+            );
+
+            $client = new Client(Config::get('url.siamits-api'));
+            $results = $client->get('quotes', $parameters);
+            $results = json_decode($results, true);
+            $view['quotes'] = array_get($results, 'data.record', array());
+        }
 
         $script = $theme->scopeWithLayout('dashboard.jscript_index', $view)->content();
         $theme->asset()->container('inline_script')->usePath()->writeContent('custom-inline-script', $script);
@@ -84,12 +151,22 @@ class DashboardController extends BaseController
         return $render;
     }
 
-    private function getYoutubeSearch()
+    private function getYoutubeSearch($key, $max)
     {
         // Youtube feed
         $youtube = new Youtube(array('key' => Config::get('youtube.key')));
 
-        $params = Config::get('youtube');
+        $params = array(
+            'key' => 'AIzaSyCZTwvt_utoDFW7U6KKwXKHNMS4ZrZyfyk',
+            'q' => $key,
+            'type' => 'video',
+            'part' => 'id, snippet',
+            // 'order'        => 'date',
+            // 'order' => 'viewCount',
+            'order' => 'rating',
+            'videoDefinition' => 'high',
+            'maxResults' => $max,
+        );
 
         // Make Intial Call. With second argument to reveal page info such as page tokens.
         $search = $youtube->searchAdvanced($params, true);
@@ -106,15 +183,42 @@ class DashboardController extends BaseController
         $entries = array();
         if (isset($search['results']) && is_array($search['results'])) {
             foreach ($search['results'] as $key => $value) {
-                $entries[$key]['id']                = array_get($value, 'id.videoId', '');
-                $entries[$key]['title']             = array_get($value, 'snippet.title', '');
-                $entries[$key]['channelTitle']      = array_get($value, 'snippet.channelTitle', '');
+                $entries[$key]['id'] = array_get($value, 'id.videoId', '');
+                $entries[$key]['title'] = array_get($value, 'snippet.title', '');
+                $entries[$key]['channelTitle'] = array_get($value, 'snippet.channelTitle', '');
                 $entries[$key]['images']['default'] = array_get($value, 'snippet.thumbnails.default.url', '');
-                $entries[$key]['images']['medium']  = array_get($value, 'snippet.thumbnails.medium.url', '');
-                $entries[$key]['images']['high']    = array_get($value, 'snippet.thumbnails.high.url', '');
+                $entries[$key]['images']['medium'] = array_get($value, 'snippet.thumbnails.medium.url', '');
+                $entries[$key]['images']['high'] = array_get($value, 'snippet.thumbnails.high.url', '');
             }
         }
 
         return $entries;
+    }
+
+    public function ajaxWeather()
+    {
+        $data = Input::all();
+        $response = array();
+
+        // Get weather
+        $entries = array();
+        for ($i = 1; $i <= 7; $i++) {
+            $parameters = array(
+                'RegionID' => $i,
+            );
+
+            $client = new Client('http://www.tmd.go.th');
+            $results = $client->get('xml/region_daily_forecast.php', $parameters);
+            $results = json_encode(xmlstr_to_array($results));
+            $results = json_decode($results, true);
+
+            if (!$channel = array_get($results, 'channel', false)) {
+                return $client->createResponse($response, 1001);
+            }
+
+            $entries[$i] = $results;
+        }
+
+        return $client->createResponse($entries, 0);
     }
 }

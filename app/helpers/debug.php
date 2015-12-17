@@ -25,7 +25,7 @@ if (!function_exists('sdebug')) {
             echo "<pre>";
             print_r($value);
             echo "</pre>";
-            if ($die) die;
+            if ($_GET['sdebug']) die;
         }
     }
 }

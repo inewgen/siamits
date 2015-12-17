@@ -77,6 +77,11 @@ a:hover {
     color: #444;
 }
 
+.loadmore:hover, .loadmore:focus {
+	color: #fff;
+	text-decoration: none;
+}
+
 a, a:hover {
     text-decoration: none;
 }
@@ -313,6 +318,28 @@ input[type="submit"] {
 	height: 100%;
 	background: #fff;
 	z-index: 9999999999;
+}
+
+#loader2 {
+	position: fixed;
+	/*top: 0;
+	left: 0;*/
+	width: 100%;
+	height: 100%;
+	/*background: #fff;*/
+	z-index: 9999999999;
+}
+
+.spinner2 {
+	position: absolute;
+	width: 40px;
+	height: 40px;
+	top: 50%;
+	left: 50%;
+	margin-left: -40px;
+	margin-top: -40px;
+	-webkit-animation: rotatee 2.0s infinite linear;
+	animation: rotatee 2.0s infinite linear;
 }
 
 .spinner {
@@ -1310,7 +1337,6 @@ input[type="submit"] {
 	color: #bbb;
 }
 
-
 /*************** Custom Carousel ***************/
 
 .custom-carousel .item {
@@ -1327,6 +1353,10 @@ input[type="submit"] {
 
 .latest-posts-classic .post-row {
 	margin-bottom: 20px;
+}
+
+.youtube-row {
+	margin-bottom: 0px;
 }
 
 .latest-posts-classic .left-meta-post {
@@ -1752,6 +1782,10 @@ input[type="submit"] {
 	width: auto;
 }
 
+.btn-block {
+	width: 100%;
+}
+
 .btn-system.border-btn {
 	background-color: transparent;
 	border: 1px solid;
@@ -2013,8 +2047,8 @@ ul.icons-list li i {
 
 
 .section {
-    padding-top: 80px;
-    padding-bottom: 80px;
+    padding-top: 70px;
+    padding-bottom: 20px;
 }
 
 .last-news {
@@ -2982,6 +3016,10 @@ ul.icons-list li i {
 	padding: 9px 12px 6px 12px;
 }
 
+.youtube-details {
+	height: 100px;
+}
+
 .portfolio-item .portfolio-details .like-link {
 	position: absolute;
 	right: 8px;
@@ -3697,6 +3735,12 @@ ul.post-meta li, ul.post-meta li a {
 	padding: 20px 0;
 	margin-bottom: 20px;
 	border-bottom: 1px solid #f6f6f6;
+}
+
+.post-bottom-tags {
+	padding: 20px 0;
+	/*margin-bottom: 20px;*/
+	/*border-bottom: 1px solid #f6f6f6;*/
 }
 
 .post-tags-list {
@@ -5643,4 +5687,24 @@ ul.footer-nav li a:hover {
 
 .navbar-collapse {
 	max-height: 340px;
+}
+
+.text-red {
+  color: #dd4b39 !important;
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 0px; height: 0; overflow: hidden;
+}
+ 
+.video-container iframe,
+.video-container object,
+.video-container embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
