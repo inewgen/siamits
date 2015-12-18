@@ -4,7 +4,7 @@ class Pages extends Eloquent
 {
     public function images()
     {
-        return $this->morphToMany('Images', 'imageable');
+        return $this->morphToMany('Images', 'imageable')->orderBy('position', 'asc');;
     }
 
     public function tags()

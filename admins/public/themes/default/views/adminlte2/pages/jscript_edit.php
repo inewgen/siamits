@@ -28,7 +28,7 @@ Theme::asset()->container('footer')->add('fastclick', 'public/themes/adminlte2/p
           radioClass: 'iradio_minimal-blue'
         });
 
-        var url_to_autocomplete_api = '<?php echo URL::to("news/tags");?>';
+        var url_to_autocomplete_api = '<?php echo URL::to("pages/tags");?>';
     
         $('#tags').tagsInput({
             'autocomplete_url': url_to_autocomplete_api,
@@ -185,30 +185,30 @@ Theme::asset()->container('footer')->add('fastclick', 'public/themes/adminlte2/p
             } 
         });
         
-    //     $('.copy-link-wrap').click(function() {
-    //         var url_real = $(this).attr('data');
+        // $('.copy-link-wrap').click(function() {
+        //     var url_real = $(this).attr('data');
             
-    //         bootbox.dialog({
-    //           message: "<input id='image_link' type='text' size='85' value='"+$(this).attr('data')+"'/>",
-    //           buttons: {
-    //             success: {
-    //               label: "ตกลง",
-    //               className: "btn-small btn-primary"
-    //             }
-    //           }
-    //         });
+        //     bootbox.dialog({
+        //       message: "<input id='image_link' type='text' size='85' value='"+$(this).attr('data')+"'/>",
+        //       buttons: {
+        //         success: {
+        //           label: "ตกลง",
+        //           className: "btn-small btn-primary"
+        //         }
+        //       }
+        //     });
 
-    //         $("#image_link").click(function() {
-    //             $(this).select();
-    //         });
-    //     });
+        //     $("#image_link").click(function() {
+        //         $(this).select();
+        //     });
+        // });
     });
 
-    var ids_img = [];
     var num_img = 0;
-<?php if(isset($news['images']) && is_array($news['images'])):?>
+    var ids_img = [];
+<?php if(isset($pages['images']) && is_array($pages['images'])):?>
 <?php $i = 0; $j = 0; ?>
-<?php foreach ($news['images'] as $key => $image): ?>
+<?php foreach ($pages['images'] as $key => $image): ?>
     ids_img[<?php echo $i; ?>] = '<?php echo $image['id'];?>';
     num_img = '<?php echo $j;?>';
 <?php $i++; $j++; ?>

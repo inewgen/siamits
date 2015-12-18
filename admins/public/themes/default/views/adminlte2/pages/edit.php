@@ -2,7 +2,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Edit News
+            Edit Pages
             <!-- <small>advanced tables</small> -->
         </h1>
         <ol class="breadcrumb">
@@ -12,7 +12,7 @@
                 </a>
             </li>
             <li>
-                Edit News
+                Edit Pages
             </li>
         </ol>
     </section>
@@ -53,46 +53,46 @@
                 <!-- general form elements -->
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">News Information</h3>
+                        <h3 class="box-title">Pages Information</h3>
                     </div>
                     <!-- /.box-header -->
                     <!-- form start -->
-                    <form id="frm_main" role="form" method="post" action="<?php echo URL::to('news');?>" enctype="multipart/form-data">
+                    <form id="frm_main" role="form" method="post" action="<?php echo URL::to('pages');?>" enctype="multipart/form-data">
                         <div class="box-body">
                             <div class="form-group">
                                 <label for="">Title</label>
-                                <input type="text" placeholder="" name="title" class="form-control" value="<?php echo htmlspecialchars($news['title']);?>">
+                                <input type="text" placeholder="" name="title" class="form-control" value="<?php echo htmlspecialchars($pages['title']);?>">
                             </div>
                             <div class="form-group">
                                 <label for="">Sub Description</label>
-                                <input type="text" placeholder="" name="sub_description" class="form-control" value="<?php echo htmlspecialchars($news['sub_description']);?>" maxlength="250">
+                                <input type="text" placeholder="" name="sub_description" class="form-control" value="<?php echo htmlspecialchars($pages['sub_description']);?>" maxlength="250">
                             </div>
                             <div class="form-group">
                                 <label for="">Tags</label>
-                                <input type="text" placeholder="" name="tags" id="tags" class="form-control" value="<?php echo $news['tags'];?>">
+                                <input type="text" placeholder="" name="tags" id="tags" class="form-control" value="<?php echo $pages['tags'];?>">
                             </div>
                             <div class="form-group">
                                 <label for="">Position</label>
-                                <input type="text" placeholder="" name="position" class="form-control" value="<?php echo $news['position'];?>">
+                                <input type="text" placeholder="" name="position" class="form-control" value="<?php echo $pages['position'];?>">
                             </div>
                             <div class="form-group">
                                 <label for="">Status</label>
-                                <input type="text" placeholder="" name="status" class="form-control" value="<?php echo $news['status'];?>">
+                                <input type="text" placeholder="" name="status" class="form-control" value="<?php echo $pages['status'];?>">
                             </div>
                             <div class="form-group">
                                 <label for="">Reference</label>
-                                <input type="text" placeholder="" name="reference" class="form-control" value="<?php echo htmlspecialchars($news['reference']);?>">
+                                <input type="text" placeholder="" name="reference" class="form-control" value="<?php echo htmlspecialchars($pages['reference']);?>">
                             </div>
                             <div class="form-group">
                                 <label for="">Reference URLs</label>
-                                <input type="text" placeholder="" name="reference_url" class="form-control" value="<?php echo $news['reference_url'];?>">
+                                <input type="text" placeholder="" name="reference_url" class="form-control" value="<?php echo $pages['reference_url'];?>">
                             </div>
                             <div class="form-group">
                                 <label for="">Category</label>
                                 <select name="category_id" class="form-control">
                             <?php if(isset($categories) && is_array($categories)):?>
                             <?php foreach ($categories as $key => $value): ?>
-                                    <option value="<?php echo $value['id'];?>"<?php if($news['categories']['id'] == $value['id']):?> selected="selected"<?php endif;?>><?php echo $value['title'];?></option>
+                                    <option value="<?php echo $value['id'];?>"<?php if($pages['categories']['id'] == $value['id']):?> selected="selected"<?php endif;?>><?php echo $value['title'];?></option>
                             <?php endforeach;?>
                             <?php endif;?>
                                 </select>
@@ -100,8 +100,8 @@
                              <div class="form-group">
                                 <label for="">Type</label>
                                 <select name="type" class="form-control">
-                                    <option value="1"<?php if($news['type'] == '1'):?> selected="selected"<?php endif;?>>ทั่วไป</option>
-                                    <option value="2"<?php if($news['type'] == '2'):?> selected="selected"<?php endif;?>>Hightlight</option>
+                                    <option value="1"<?php if($pages['type'] == '1'):?> selected="selected"<?php endif;?>>ทั่วไป</option>
+                                    <option value="2"<?php if($pages['type'] == '2'):?> selected="selected"<?php endif;?>>Hightlight</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -118,18 +118,18 @@
                             <div class="form-group">
                                 <label for="">Description</label>
                                 <textarea name="description" class="textarea" placeholder="Place some text here" style="width: 100%; height: 400px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
-                                     <?php echo htmlspecialchars($news['description']);?>
+                                     <?php echo htmlspecialchars($pages['description']);?>
                                 </textarea>
                             </div>
                             <div class="form-group">
                                 <label for="">Images</label>
                                 <input placeholder="" class="form-control" id="file_upload" name="file_upload" type="file" multiple="true">
-                                <!-- <input type="hidden" name="images" id="images" value="<?php echo array_get($news, 'images.0.ids', '');?>"> -->
+                                <!-- <input type="hidden" name="images" id="images" value="<?php echo array_get($pages, 'images.0.ids', '');?>"> -->
                                 <input type="hidden" name="images_code" id="images_code" value="1">
                                 <div id="show_image_upload" style="hight:150">
-<?php if(isset($news['images']) && is_array($news['images'])):?>
+<?php if(isset($pages['images']) && is_array($pages['images'])):?>
 <?php $i = 0; ?>
-<?php foreach ($news['images'] as $key => $image): ?>
+<?php foreach ($pages['images'] as $key => $image): ?>
 <?php $j = $i + 1; ?>
                                     <div id="<?php echo $image['id'];?>" class="">
                                         <ul class="ace-thumbnails">
@@ -141,7 +141,7 @@
                                                     <a id="img-pos-left-<?php echo $image['id'];?>" onclick="positionLeft('<?php echo $i;?>', '<?php echo $image['id'];?>')" href="javascript:void(0)" title="Position Left">
                                                         <i class="fa fa-fw fa-arrow-left"></i>
                                                     </a>
-                                                    <a href="javascript:void(0)" onclick="return image_delete('<?php echo $image['id'];?>', '<?php echo $image['code'];?>', '<?php echo $news['user_id'];?>', '<?php echo $image['extension'];?>', '<?php echo $i;?>');" title="Delete">
+                                                    <a href="javascript:void(0)" onclick="return image_delete('<?php echo $image['id'];?>', '<?php echo $image['code'];?>', '<?php echo $pages['user_id'];?>', '<?php echo $image['extension'];?>', '<?php echo $i;?>');" title="Delete">
                                                         <i class="fa fa-fw fa-trash-o"></i>
                                                     </a>
                                                     <a class="copy-link-wrap" id="copy_link_<?php echo $i;?>" href="javascript:void(0)" title="Copy Link" onclick="copyLinkWrap('<?php echo $image['url_real'];?>')">

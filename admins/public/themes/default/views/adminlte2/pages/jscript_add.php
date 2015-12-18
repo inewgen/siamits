@@ -2,33 +2,24 @@
 Theme::asset()->add('dataTables-bootstrap', 'public/themes/adminlte2/plugins/iCheck/all.css');
 Theme::asset()->add('uploadify-css', 'public/themes/adminlte2/plugins/uploadify/uploadify.css');
 Theme::asset()->add('ace-css', 'public/themes/adminlte2/plugins/css/ace.thumbnails.css');
-Theme::asset()->add('icheck-css', 'public/themes/adminlte2/plugins/iCheck/all.css');
 Theme::asset()->add('tagsinput-css', 'public/themes/adminlte2/plugins/jQuery-Tags-Input-master/src/jquery.tagsinput.css');
-Theme::asset()->add('tagsinput-css2', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css');
+Theme::asset()->add('tagsinput-css2', 'public/themes/adminlte2/dist/css/jquery-ui.css');
 
-Theme::asset()->container('footer')->add('jquery-ui.min', 'http://code.jquery.com/ui/1.11.2/jquery-ui.min.js');
+Theme::asset()->container('footer')->add('jquery-ui.min', 'public/themes/adminlte2/dist/js/jquery-ui.min.js');
 Theme::asset()->container('footer')->add('bootbox', 'public/themes/adminlte2/plugins/bootbox/bootbox.min.js');
 Theme::asset()->container('footer')->add('validate', 'public/themes/adminlte2/plugins/jQuery/jquery.validate.min.js');
 Theme::asset()->container('footer')->add('uploadify', 'public/themes/adminlte2/plugins/uploadify/jquery.uploadify.min.js');
 Theme::asset()->container('footer')->add('ckeditor', 'public/themes/adminlte2/plugins/ckeditor2/ckeditor.js');
-/*Theme::asset()->container('footer')->add('zclip', 'public/themes/adminlte2/plugins/zclip/jquery.zclip.js');*/
+/* Theme::asset()->container('footer')->add('zclip', 'public/themes/adminlte2/plugins/zclip/jquery.zclip.js');*/
 Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/plugins/jQuery-Tags-Input-master/src/jquery.tagsinput.js');
-Theme::asset()->container('footer')->add('icheck', 'public/themes/adminlte2/plugins/iCheck/icheck.min.js');
-Theme::asset()->container('footer')->add('fastclick', 'public/themes/adminlte2/plugins/fastclick/fastclick.min.js');
 ?>
 
 <script type="text/javascript">
-    var num_images = <?php echo $num_image;?>;
+    var num_images = 0;
 
     $(function () {
 
-        /*iCheck for checkbox and radio inputs*/
-        $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
-          checkboxClass: 'icheckbox_minimal-blue',
-          radioClass: 'iradio_minimal-blue'
-        });
-
-        var url_to_autocomplete_api = '<?php echo URL::to("news/tags");?>';
+        var url_to_autocomplete_api = '<?php echo URL::to("tags/check");?>';
     
         $('#tags').tagsInput({
             'autocomplete_url': url_to_autocomplete_api,
@@ -43,6 +34,7 @@ Theme::asset()->container('footer')->add('fastclick', 'public/themes/adminlte2/p
             'placeholderColor' : '#666666'
         });
 
+        /*bootstrap WYSIHTML5 - text editor*/
         CKEDITOR.config.extraPlugins = 'toolbar';
         CKEDITOR.replace( 'description', {
             /* Reset toolbar settings, so full toolbar will be generated automatically.*/
@@ -185,30 +177,30 @@ Theme::asset()->container('footer')->add('fastclick', 'public/themes/adminlte2/p
             } 
         });
         
-    //     $('.copy-link-wrap').click(function() {
-    //         var url_real = $(this).attr('data');
+        // $('.copy-link-wrap').click(function() {
+        //     var url_real = $(this).attr('data');
             
-    //         bootbox.dialog({
-    //           message: "<input id='image_link' type='text' size='85' value='"+$(this).attr('data')+"'/>",
-    //           buttons: {
-    //             success: {
-    //               label: "ตกลง",
-    //               className: "btn-small btn-primary"
-    //             }
-    //           }
-    //         });
+        //     bootbox.dialog({
+        //       message: "<input id='image_link' type='text' size='85' value='"+$(this).attr('data')+"'/>",
+        //       buttons: {
+        //         success: {
+        //           label: "ตกลง",
+        //           className: "btn-small btn-primary"
+        //         }
+        //       }
+        //     });
 
-    //         $("#image_link").click(function() {
-    //             $(this).select();
-    //         });
-    //     });
+        //     $("#image_link").click(function() {
+        //         $(this).select();
+        //     });
+        // });
     });
 
-    var ids_img = [];
     var num_img = 0;
-<?php if(isset($news['images']) && is_array($news['images'])):?>
+    var ids_img = [];
+<?php if(isset($pages['images']) && is_array($pages['images'])):?>
 <?php $i = 0; $j = 0; ?>
-<?php foreach ($news['images'] as $key => $image): ?>
+<?php foreach ($pages['images'] as $key => $image): ?>
     ids_img[<?php echo $i; ?>] = '<?php echo $image['id'];?>';
     num_img = '<?php echo $j;?>';
 <?php $i++; $j++; ?>

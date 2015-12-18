@@ -613,7 +613,20 @@ class NewsController extends ApiController
 
         // Insert images
         if ($images = array_get($data, 'images', false)) {
+            $position = 0;
             foreach ($images as $key => $value) {
+                // Update image
+                $parameters = array(
+                    'position' => $position,
+                );
+                $query = Images::where('id', '=', $value);
+
+                if ($query) {
+                    $query->update($parameters);
+                } else {
+                    return false;
+                }
+
                 // Insert imageables
                 $parameters = array(
                     'images_id' => $value,
@@ -630,6 +643,8 @@ class NewsController extends ApiController
                 if (!$query) {
                     return false;
                 }
+
+                $position++;
             }
         }
 

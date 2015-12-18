@@ -112,6 +112,8 @@ Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/p
                     var code      = data.data.code;
                     var user_id   = data.data.user_id;
                     var extension = data.data.extension;
+                    num_img++;
+                    ids_img[num_img] = id;
 
                     var w = 200;
                     var h = 143;
@@ -120,7 +122,7 @@ Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/p
                     $('#images_code').val(code);
 
                     var img_upload_tag = ''+
-                    '<div id="'+id+'" align="center"><ul class="ace-thumbnails">'+
+                    '<div id="'+id+'" align="center" class=""><ul class="ace-thumbnails">'+
                         '<li>'+
                             '<a href="javascript:void(0)">'+
                                 '<img alt="'+w+'x'+h+'" src="'+ url +'" width="'+w+'" height="'+h+'">'+
@@ -128,38 +130,44 @@ Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/p
                     if(show_hover_button){
                         img_upload_tag = img_upload_tag +
                             '<div class="tools tools-bottom">'+
-                                '<a href="javascript:void(0)" onclick="return image_delete(\''+id+'\',\''+code+'\', \''+user_id+'\', \''+extension+'\');" title="Delete">'+
+                                '<a id="img-pos-left-'+id+'" onclick="positionLeft(\''+num_img+'\', \''+id+'\')" href="javascript:void(0)" title="Position Left">'+
+                                    '<i class="fa fa-fw fa-arrow-left"></i>'+
+                                '</a>'+
+                                '<a href="javascript:void(0)" onclick="return image_delete(\''+id+'\',\''+code+'\', \''+user_id+'\', \''+extension+'\', \''+num_img+'\');" title="Delete">'+
                                     '<i class="fa fa-fw fa-trash-o"></i>'+
                                 '</a>'+
-                                '<a class="copy-link-wrap" id="copy_link_'+num_images+'" href="javascript:void(0)" title="Copy Link" data="'+url_real+'">'+
+                                '<a class="copy-link-wrap" id="copy_link_'+num_images+'" href="javascript:void(0)" title="Copy Link" onclick="copyLinkWrap(\''+url_real+'\')">'+
                                     '<i class="fa fa-fw fa-link"></i>'+
+                                '</a>'+
+                                '<a id="img-pos-right-'+id+'" onclick="positionRight(\''+num_img+'\', \''+id+'\')" href="javascript:void(0)" title="Position Right">'+
+                                    '<i class="fa fa-fw fa-arrow-right"></i>'+
                                 '</a>'+
                             '</div>';
                     }   
                         img_upload_tag = img_upload_tag +
                         '</li>'+
-                    '</ul><input type="hidden" name="images[]" value="'+id+'">'+
+                    '</ul><input type="hidden" name="images['+num_images+']" value="'+id+'">'+
                     '</div>';
 
                     $("#show_image_upload").append(img_upload_tag);
 
-                    $('#copy_link_'+num_images).click(function() {
-                        var url_real = $(this).attr('data');
+                    // $('#copy_link_'+num_images).click(function() {
+                    //     var url_real = $(this).attr('data');
                         
-                        bootbox.dialog({
-                          message: "<input id='image_link' type='text' size='85' value='"+$(this).attr('data')+"'/>",
-                          buttons: {
-                            success: {
-                              label: "ตกลง",
-                              className: "btn-small btn-primary"
-                            }
-                          }
-                        });
+                    //     bootbox.dialog({
+                    //       message: "<input id='image_link' type='text' size='85' value='"+$(this).attr('data')+"'/>",
+                    //       buttons: {
+                    //         success: {
+                    //           label: "ตกลง",
+                    //           className: "btn-small btn-primary"
+                    //         }
+                    //       }
+                    //     });
 
-                        $("#image_link").click(function() {
-                            $(this).select();
-                        });
-                    });
+                    //     $("#image_link").click(function() {
+                    //         $(this).select();
+                    //     });
+                    // });
 
                     num_images++;
                 }
@@ -169,11 +177,61 @@ Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/p
             } 
         });
         
-        $('.copy-link-wrap').click(function() {
-            var url_real = $(this).attr('data');
+        // $('.copy-link-wrap').click(function() {
+        //     var url_real = $(this).attr('data');
             
+        //     bootbox.dialog({
+        //       message: "<input id='image_link' type='text' size='85' value='"+$(this).attr('data')+"'/>",
+        //       buttons: {
+        //         success: {
+        //           label: "ตกลง",
+        //           className: "btn-small btn-primary"
+        //         }
+        //       }
+        //     });
+
+        //     $("#image_link").click(function() {
+        //         $(this).select();
+        //     });
+        // });
+    });
+
+    var ids_img = [];
+    var num_img = 0;
+<?php if(isset($news['images']) && is_array($news['images'])):?>
+<?php $i = 0; $j = 0; ?>
+<?php foreach ($news['images'] as $key => $image): ?>
+    ids_img[<?php echo $i; ?>] = '<?php echo $image['id'];?>';
+    num_img = '<?php echo $j;?>';
+<?php $i++; $j++; ?>
+<?php endforeach;?>
+<?php endif;?>
+
+    function positionLeft(position, id)
+    {
+        if (position > 0) {
+            var position_left = parseInt(position) - 1;
+            var id_left = ids_img[position_left];
+            ids_img[position] = id_left;
+            ids_img[position_left] = id;
+
+            // Left box
+            $('#' + id).attr('class', 'image-remove');
+            var images_box = $('#' + id).html();
+            images_box = '<div id="'+id+'" class="">' + images_box + '</div>';
+            $(images_box).insertBefore('#' + id_left);
+            $('.image-remove').remove();
+
+            // Left box
+            $('#img-pos-left-'+id).attr('onclick', 'positionLeft('+position_left+', '+id+')');
+            $('#img-pos-right-'+id).attr('onclick', 'positionRight('+position_left+', '+id+')');
+
+            // Right box
+            $('#img-pos-left-'+id_left).attr('onclick', 'positionLeft('+position+', '+id_left+')');
+            $('#img-pos-right-'+id_left).attr('onclick', 'positionRight('+position+', '+id_left+')');
+        } else {
             bootbox.dialog({
-              message: "<input id='image_link' type='text' size='85' value='"+$(this).attr('data')+"'/>",
+              message: "ตำแหน่งนี้ไม่สามารถย้ายได้",
               buttons: {
                 success: {
                   label: "ตกลง",
@@ -181,71 +239,131 @@ Theme::asset()->container('footer')->add('tagsinput', 'public/themes/adminlte2/p
                 }
               }
             });
+        }
+    }
 
-            $("#image_link").click(function() {
-                $(this).select();
-            });
-        });
-    });
-
-    function image_delete(id, code, user_id, extension){
-        bootbox.confirm("คุณต้องการลบหรือไม่", function(result) {
-            if(result){
-                $.ajax({
-                    type: "GET",
-                    url: "<?php echo URL::to('images/delete');?>",
-                    data: 'id='+id+'&code='+code+'&user_id='+user_id+'&extension='+extension,
-                    dataType: "json",
-                    success: function(data) {
-                        
-                        if(data.status_code == '0')
-                        {   
-                            if(num_images == 1){
-                                $('#images_code').val('');
-                            }
-                            num_images--;
-                            console.log("Success");
-                            $('#'+id).remove();
-                        }else{
-                            bootbox.dialog({
-                              message: "Can't delete this item!",
-                              buttons: {
-                                success: {
-                                  label: "ตกลง",
-                                  className: "btn-small btn-primary"
-                                }
-                              }
-                            });
-                            console.log(data);
-                        }
-                        $('.order_up_down').attr("disabled", false);
-                        processing = false;
-                    },
-                    error: function(){
-                        bootbox.dialog({
-                          message: "Can't delete this item!",
-                          buttons: {
-                            success: {
-                              label: "ตกลง",
-                              className: "btn-small btn-primary"
-                            }
-                          }
-                        });
-                        console.log("Unsuccess");
-                    }
-                });
+    function copyLinkWrap(url_real)
+    {  
+        bootbox.dialog({
+          message: "<input id='image_link' type='text' size='85' value='"+url_real+"'/>",
+          buttons: {
+            success: {
+              label: "ตกลง",
+              className: "btn-small btn-primary"
             }
+          }
+        });
+
+        $("#image_link").click(function() {
+            $(this).select();
         });
     }
 
-    /* function onAddTag(tag) {
-    //     alert("Added a tag: " + tag);
-    // }
-    // function onRemoveTag(tag) {
-    //     alert("Removed a tag: " + tag);
-    // }
+    function positionRight(position, id)
+    {
+        if (position < num_img) {
+            var position_right = parseInt(position) + 1;
+            var id_right = ids_img[position_right];
+            ids_img[position] = id_right;
+            ids_img[position_right] = id;
 
-    // function onChangeTag(input,tag) {
-    //     alert("Changed a tag: " + tag);
-    // }*/
+            // Left box
+            $('#' + id).attr('class', 'image-remove');
+            var images_box = $('#' + id).html();
+            images_box = '<div id="'+id+'" class="">' + images_box + '</div>';
+            $(images_box).insertAfter('#' + id_right);
+            $('.image-remove').remove();
+
+            // Left box
+            $('#img-pos-right-'+id).attr('onclick', 'positionRight('+position_right+', '+id+')');
+            $('#img-pos-left-'+id).attr('onclick', 'positionLeft('+position_right+', '+id+')');
+
+            // Right box
+            $('#img-pos-right-'+id_right).attr('onclick', 'positionRight('+position+', '+id_right+')');
+            $('#img-pos-left-'+id_right).attr('onclick', 'positionLeft('+position+', '+id_right+')');
+        } else {
+            bootbox.dialog({
+              message: "ตำแหน่งนี้ไม่สามารถย้ายได้",
+              buttons: {
+                success: {
+                  label: "ตกลง",
+                  className: "btn-small btn-primary"
+                }
+              }
+            });
+        }
+    }
+
+    function image_delete(id, code, user_id, extension, position){
+        bootbox.confirm("คุณต้องการลบหรือไม่", function(result) {
+            if(result){
+                console.log("Success");
+                if(num_images == 1){
+                    $('#images_code').val('');
+                }
+                num_images--;
+                console.log("Success");
+                $('#'+id).remove();
+
+                var ids_img2 = [];
+                var j = 0;
+                for (var i = 0; i < ids_img.length; i++) {
+                    if (ids_img[i] != id) {
+                        ids_img2[j] = ids_img[i];
+
+                        $('#img-pos-right-'+ids_img2[j]).attr('onclick', 'positionRight('+j+', '+ids_img2[j]+')');
+                        $('#img-pos-left-'+ids_img2[j]).attr('onclick', 'positionLeft('+j+', '+ids_img2[j]+')');
+                        j++;
+                    }
+                };
+
+                ids_img = ids_img2;
+                console.log(ids_img);
+                /* $.ajax({
+                //     type: "GET",
+                //     url: "<?php echo URL::to('images/delete');?>",
+                //     data: 'id='+id+'&code='+code+'&user_id='+user_id+'&extension='+extension,
+                //     dataType: "json",
+                //     success: function(data) {
+                        
+                //         if(data.status_code == '0')
+                //         {   
+                //             if(num_images == 1){
+                //                 $('#images_code').val('');
+                //             }
+                //             num_images--;
+                //             console.log("Success");
+                //             $('#'+id).remove();
+                //         }else{
+                //             var message_i = data.status_txt;
+                //             bootbox.dialog({
+                //               message: message_i,
+                //               buttons: {
+                //                 success: {
+                //                   label: "ตกลง",
+                //                   className: "btn-small btn-primary"
+                //                 }
+                //               }
+                //             });
+                //             console.log(data);
+                //         }
+                //         $('.order_up_down').attr("disabled", false);
+                //         processing = false;
+                //     },
+                //     error: function(){
+                //         bootbox.dialog({
+                //           message: "Can't delete this item!",
+                //           buttons: {
+                //             success: {
+                //               label: "ตกลง",
+                //               className: "btn-small btn-primary"
+                //             }
+                //           }
+                //         });
+                //         console.log("Unsuccess");
+                //     }
+                // });*/
+            }
+        });
+    }
 </script>
