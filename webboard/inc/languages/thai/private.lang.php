@@ -1,0 +1,193 @@
+<?php //MyBB ภาษาไทย โดย http://www.chaime.net/forum/forumdisplay.php?fid=12
+/**
+ * MyBB 1.6 English Language Pack
+ * Copyright 2010 MyBB Group, All Rights Reserved
+ *
+ * $Id: private.lang.php 5380 2011-02-21 12:04:43Z Tomm $
+ */
+
+$l['nav_pms'] = "ข้อความส่วนตัว";
+$l['nav_send'] = "เขียนข้อความ";
+$l['nav_tracking'] = "การติดตามข้อความส่วนตัว";
+$l['nav_folders'] = "จัดการกล่องข้อความ";
+$l['nav_empty'] = "ลบข้อความในกล่องข้อความ";
+$l['nav_export'] = "ส่งออกข้อความส่วนตัว";
+$l['nav_search'] = "ค้นหา";
+$l['nav_results'] = "Results";
+
+$l['new_pm'] = "New Message";
+$l['old_pm'] = "Old Message";
+$l['reply_pm'] = "Replied To";
+$l['fwd_pm'] = "Forwarded Message";
+
+$l['pms_disabled'] = "You cannot use the private messaging functionality as it has been disabled by the Administrator.";
+
+$l['private_messaging'] = "ข้อความส่วนตัว";
+$l['inbox'] = "กล่องขาเข้า";
+
+$l['compose_message2'] = "เขียนข้อความ";
+$l['manage_folders'] = "จัดการกล่องข้อความ";
+$l['pms_in_folder'] = "ข้อความส่วนตัวใน <em>{1}</em>";
+$l['pm_search_results'] = "ผลการค้นหาข้อความส่วนตัว";
+$l['message_title'] = "หัวข้อ";
+$l['sender'] = "ผู้ส่ง";
+$l['sentto'] = "ส่งถึง";
+$l['date_sent'] = "วันที่/เวลา ที่ส่ง";
+$l['delete_pm'] = "ลบ";
+$l['move_to'] = "ย้ายไปยัง";
+$l['or'] = "หรือ";
+$l['selected_messages'] = "ข้อความที่เลือก";
+$l['go'] = "ไป!";
+$l['pmspaceused'] = "of PM space used.";
+$l['jump_folder'] = "ไปยัง:";
+$l['archive_messages'] = "ส่งออกข้อความส่วนตัว";
+$l['archive_note'] = "The following tool will let you mass download your private messages out of a selected folder, messages sent after a particular date, your read messages, and drafted messages for later viewing.";
+$l['folders'] = "Folders:";
+$l['all_folders'] = "All Folders";
+$l['date_limit'] = "Date Limitation:";
+$l['date_limit_older'] = "Export messages older than";
+$l['date_limit_newer'] = "Export messages newer than";
+$l['date_limit_disregard'] = "Disregard date";
+$l['date_limit_days'] = "days";
+$l['export_unread'] = "Export Unread Messages?";
+$l['delete_archived'] = "Delete Exported Messages?";
+$l['delete_archived_note'] = "Do you want to delete the messages from your folders once they have been exported?";
+$l['export_format'] = "Export File Format";
+$l['export_format_note'] = "Please choose the file type of which to download attachments.";
+$l['export_html'] = "HTML File (.html)";
+$l['export_txt'] = "Text File (.txt)";
+$l['export_csv'] = "Importable MS Excel File (.csv)";
+$l['private_messages_for'] = "Private Messages for {1}";
+$l['exported_date']  = "Exported: {1}, {2}";
+$l['subject'] = "Subject:";
+$l['to'] = "To:";
+$l['from'] = "From:";
+$l['sent'] = "Sent:";
+$l['export_messages2'] = "ดาวน์โหลดข้อความส่วนตัว";
+$l['empty_folders'] = "ลบข้อความส่วนตัวในกล่องข้อความ";
+$l['empty_folders2'] = "ลบข้อความในกล่องข้อความ";
+$l['empty_note'] = "คุณสามารถลบข้อความส่วนตัวในกล่องข้อความใดๆ ได้ภายในคลิกเดียว กรุณาตรวจสอบเลือกกล่องข้อความที่ต้องการลบข้อความภายในเท่านั้น แล้วคลิก 'ลบ' หากลบแล้วจะไม่สามารถเรียกข้อความกลับมาได้<br /><strong>คำเตือน: เมื่อคุณลบข้อความส่วนตัวแล้วจะไม่สามารถเรียกข้อความส่วนตัวนั้นกลับคืนมาได้</strong>";
+$l['num_messages'] = "จำนวนข้อความ:";
+$l['nobody'] = "Nobody";
+$l['empty_q'] = "ต้องการลบข้อความ?";
+$l['keep_unread'] = "เก็บข้อความที่ยังไม่ได้อ่านไว้";
+$l['pm_folders'] = "กล่องข้อความส่วนตัว";
+$l['existing_folders'] = "กล่องข้อความที่มีอยู่";
+$l['edit_folder_note'] = "คุณสามารถเปลี่ยนชื่อกล่องข้อความ ลบกล่องข้อความได้ที่นี่ การลบกล่องข้อความทำได้โดยลบชื่อกล่องข้อความนั้นออก แล้วคลิก \"ปรับปรุงกล่องข้อความ\" อย่างไรก็ตามกล่องข้อความที่มากับระบบจะไม่สามารถลบได้<br /><strong>คำเตือน: การลบกล่องข้อความจะทำให้ข้อความที่อยู่ภายในกล่องข้อความนั้นถูกลบไปด้วย</strong>";
+$l['new_folders'] = "เพิ่มกล่องข้อความ";
+$l['add_folders_note'] = "คุณสามารถเพิ่มกล่องข้อความที่ต้องการได้ที่นี่ และไม่จำเป็นต้องกรอกชื่อกล่องข้อความในทุกช่องด้านล่าง";
+$l['update_folders'] = "ปรับปรุงกล่องข้อความ";
+$l['cannot_be_removed'] = "ไม่สามารถลบได้";
+$l['reached_warning'] = "คำเตือน: ข้อความของคุณเต็มความจุที่ได้รับแล้ว";
+$l['reached_warning2'] = "เพื่อให้สามารถรับข้อความได้ คุณจำเป็นที่จะต้องลบข้อความเก่าของคุณออกก่อน";
+$l['deny_receipt'] = "[deny receipt]";
+$l['viewing_pm'] = "ดูข้อความส่วนตัว:";
+$l['reply'] = "Reply";
+$l['reply_to_all'] = "Reply to All";
+$l['forward'] = "Forward";
+$l['compose_pm'] = "ส่งข้อความส่วนตัว";
+$l['compose_to'] = "ผู้รับ:";
+$l['compose_bcc'] = "สำเนาซ่อน:";
+$l['compose_bcc_show'] = "สำเนาซ่อน";
+$l['compose_bcc_show_title'] = "แสดงกล่องสำเนาซ่อนเพื่อใช้ส่งสำเนาซ่อนไปยังสมาชิกท่านอื่นด้วย";
+$l['separate_names'] = "สามารถเพิ่มผู้รับหลายคนได้โดยใช้เครื่องคอมม่า \",\" แยกรายชื่อของผู้รับและพิมพ์รายชื่อของผู้รับที่ต้องการได้ที่ช่องนี้";
+$l['max_recipients'] = "<br />คุณสามารถส่งข้อความนี้ไปยังสมาชิกได้สูงสุด <strong>{1}</strong> ท่าน";
+$l['compose_subject'] = "หัวข้อ:";
+
+$l['compose_message'] = "ข้อความ:";
+$l['compose_options'] = "ตัวเลือกเพิ่มเติม:";
+$l['options_sig'] = "<strong>ลายเซ็น:</strong> ใส่ลายเซ็นของคุณลงในข้อความนี้";
+$l['options_disable_smilies'] = "<strong>ไม่ใช้ภาพแสดงอารมณ์:</strong> ไม่แสดงภาพแสดงอารมณ์ในข้อความนี้";
+$l['options_save_copy'] = "<strong>สำเนาการส่งข้อความ:</strong> บันทึกข้อความนี้ไว้ในกล่องรายการที่ถูกส่ง";
+$l['options_read_receipt'] = "<strong>แจ้งเตือนการอ่าน:</strong> รับข้อความแจ้งเตือนเมื่อข้อความนี้ถูกเปิดอ่าน";
+$l['send_message'] = "ส่งข้อความ";
+$l['save_draft'] = "บันทึกเป็นแบบร่าง";
+$l['preview'] = "ดูตัวอย่าง";
+$l['select_buddy'] = "Or Select a Buddy:";
+$l['pm_tracking'] = "Private Message Tracking";
+$l['read_messages'] = "ข้อความที่อ่านแล้ว";
+$l['unread_messages'] = "ข้อความที่ยังไม่ได้อ่าน";
+$l['q'] = "?";
+$l['dateread'] = "วันที่อ่าน";
+$l['stop_tracking'] = "ยกเลิกการติดตาม";
+$l['datesent'] = "วันที่ส่ง";
+$l['cancel'] = "Cancel";
+$l['export_date_sent'] = "Date";
+$l['export_folder'] = "กล่องข้อความ";
+$l['export_subject'] = "Subject";
+$l['export_to'] = "To";
+$l['export_from'] ="From";
+$l['export_message'] = "Message";
+$l['not_sent'] = "N/A (not sent)";
+$l['at'] = "at";
+$l['nomessages'] = "ไม่มีข้อความส่วนตัวในกล่องข้อความนี้";
+$l['details'] = "Details";
+$l['message'] = "Message";
+$l['buddy_list'] = "Buddy List";
+$l['multiple_recipients'] = "<em>Multiple recipients</em>";
+$l['bcc'] = "BCC:";
+$l['reply_title'] = "ตอบกลับข้อความส่วนตัวนี้";
+$l['forward_title'] = "ส่งต่อข้อความส่วนตัวนี้";
+$l['delete_title'] = "ลบข้อความส่วนตัวนี้";
+$l['you_replied_on'] = "You replied to this message on {1}";
+$l['you_forwarded_on'] = "You forwarded this message on {1}";
+$l['you_replied'] = "You replied to this message {1}";
+$l['you_forwarded'] = "You forwarded this message {1}";
+$l['select_from_buddies'] = "Select from Buddies";
+$l['no_readmessages'] = "ไม่มีข้อความที่อ่านแล้วที่อยู่ระหว่างการติดตาม";
+$l['no_unreadmessages'] = "ไม่มีข้อความที่ยังไม่ได้อ่านที่อยู่ระหว่างการติดตาม";
+
+$l['enter_keywords'] = "ระบุคำค้นหา";
+$l['advanced_search'] = "ค้นหาละเอียด";
+$l['search_pms'] = "ค้นหาข้อความส่วนตัว";
+$l['advanced_private_message_search'] = "ค้นหาข้อความส่วนตัวอย่างละเอียด";
+$l['search_criteria'] = "ระบุการค้นหา";
+$l['keywords'] = "คำค้นหา";
+$l['search_in_subject'] = "ค้นหาในหัวข้อ";
+$l['search_in_message'] = "ค้นหาในข้อความ";
+$l['message_status'] = "สถานะข้อความ";
+$l['message_status_new'] = "ใหม่";
+$l['message_status_replied_to'] = "ตอบกลับ";
+$l['message_status_forwarded'] = "ส่งต่อ";
+$l['message_status_read'] = "อ่านแล้ว";
+$l['folder'] = "กล่องข้อความ";
+$l['search_options'] = "ตัวเลือกการค้นหา";
+$l['sort_by'] = "การเรียงลำดับ";
+$l['sort_by_subject'] = "เรียงลำดับโดย: หัวข้อ";
+$l['sort_by_sender'] = "เรียงลำดับโดย: ผู้ส่ง";
+$l['sort_by_date'] = "เรียงลำดับโดย: วันที่";
+$l['ascending_order'] = "จากน้อยไปมาก";
+$l['descending_order'] = "จากมากไปน้อย";
+$l['search_private_messages'] = "ค้นหาข้อความส่วนตัว";
+$l['check_all'] = "Check All";
+
+$l['error_nopmsarchive'] = "Sorry, but there are no private messages matching the criteria you specified.";
+$l['error_invalidpmfoldername'] = "Sorry, but a folder name you have entered contains characters which are not allowed.";
+$l['error_emptypmfoldername'] = "Sorry, but a folder name you have entered does not contain any text.  Please enter a name for the folder, or completely blank the name to delete the folder.";
+$l['error_invalidpmrecipient'] = "The recipient you entered is either invalid or doesn't exist. Please go back and enter a correct one.";
+$l['error_invalidpm'] = "Invalid PM";
+$l['error_pmrecipientreachedquota'] = "You cannot send a private message to {1} because he/she has reached their private messaging quota. They cannot be sent any message until their messages have been cleared out. An email has been sent to the user about this. Please try sending your message at a later stage.";
+$l['error_recipientpmturnedoff'] = "{1} has chosen not to receive private messages or may not be allowed to do so. Therefore you may not send your private message to this user.";
+$l['error_pmsturnedoff'] = "You currently have private messages disabled in your profile.<br />To be able to use the private messaging system this setting must be enabled.";
+$l['error_recipientignoring'] = "We are sorry but we cannot process your private message to {1}. You do not have permission to perform this action.";
+$l['error_pm_already_submitted'] = "You have already submitted the same private message to the same recipient within the last 5 minutes.";
+
+$l['error_minsearchlength'] = "คำค้นหาของคุณมีความยาวสั้นกว่าที่กำหนด คำค้นหาจะต้องมีความยาวอย่างน้อย {1} ตัวอักษร<br /><br />หากคุณต้องการค้นหาข้อความแบบประโยค กรุณาใช้เครื่องหมาย \" \" ปิดคร่อมข้อความที่ต้องการค้นหา เช่น \"The quick brown fox jumps over the lazy dog\"";
+$l['error_nosearchresults'] = "Sorry, but no results were returned using the query information you provided. Please redefine your search terms and try again.";
+$l['error_no_search_support'] = "This database engine does not support searching.";
+$l['error_nosearchterms'] = "You did not enter any search terms. At a minimum, you must enter either some search terms or a username to search by.";
+$l['error_searchflooding_1'] = "Sorry, but you can only perform one search every {1} seconds. Please wait another 1 second before attempting to search again.";
+$l['error_searchflooding'] = "Sorry, but you can only perform one search every {1} seconds. Please wait another {2} seconds before attempting to search again.";
+$l['error_invalidsearch'] = "An invalid search was specified.  Please go back and try again.";
+
+$l['redirect_pmsaved'] = "ข้อความส่วนตัวถูกบันทึกในกล่องแบบร่างเรียบร้อยแล้ว";
+$l['redirect_pmstrackingstopped'] = "การติดตามข้อความส่วนตัวที่เลือกถูกยกเลิกเรียบร้อยแล้ว";
+$l['redirect_pmstrackingcanceled'] = "ข้อความส่วนตัวที่ยังไม่ได้อ่านที่เลือก ถูกลบออกจากกล่องขาเข้าเรียบร้อยแล้ว";
+$l['redirect_pmsmoved'] = "ข้อความส่วนตัวที่เลือกถูกย้ายเรียบร้อยแล้ว";
+$l['redirect_pmsdeleted'] = "ข้อความส่วนตัวที่เลือกถูกลบเรียบร้อยแล้ว";
+$l['redirect_pmsent'] = "ขอบคุณครับ ข้อความส่วนตัวถูกส่งเรียบร้อยแล้ว<br />คุณกำลังจะกลับไปยังกล่องข้อความขาเข้า";
+$l['redirect_pmfoldersupdated'] = "ขอบคุณครับ กล่องข้อความส่วนตัวของคุณถูกปรับปรุงเรียบร้อยแล้ว<br />คุณกำลังจะกลับไปยังกล่องข้อความขาเข้า";
+$l['redirect_pmfoldersemptied'] = "ข้อความส่วนตัวภายในกล่องข้อความที่เลือกถูกลบเรียบร้อยแล้ว<br />คุณกำลังจะกลับไปยังกล่องข้อความขาเข้า";
+$l['redirect_searchresults'] = "ขอบคุณครับ ได้รับคำค้นหาของคุณแล้วและคุณกำลังจะไปยังหน้าแสดงผลการค้นหา";
+
+?>
