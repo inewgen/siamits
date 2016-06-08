@@ -547,7 +547,7 @@ class PagesController extends BaseController
             clearCache('admin.0.pages.getedit.'.$id);
 
             $message = 'You successfully updated';
-            return Redirect::to('pages')->with('success', $message);
+            return Redirect::to('pages/' . $id)->with('success', $message);
         }
 
         // Clear cache value

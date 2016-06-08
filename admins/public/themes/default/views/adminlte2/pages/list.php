@@ -119,6 +119,12 @@
                                             <img src="<?php echo getImageLink('img', 'pages', 'siamts', 'png', 200, 143, 'pages.jpg');?>" width="200" height="143">
                                         </td>
                     <?php           endif;?>
+                    <?php       elseif ($key2 == 'title'): ?>
+                                        <td>
+                                            <a title="Edit" href="<?php echo URL::to('pages');?>/<?php echo array_get($value, 'id', '');?>">
+                                            <?php echo array_get($value ,$key2, '');?>
+                                            </a>
+                                        </td>
                     <?php       elseif ($key2 == 'manage'): ?>
                                         <td>
                                             <a title="Edit" href="<?php echo URL::to('pages');?>/<?php echo array_get($value, 'id', '');?>"><span class="glyphicon glyphicon-pencil"></span></a>
