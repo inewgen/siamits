@@ -11,10 +11,7 @@ $envMapping = array(
     'www.siamits.dev' => 'dev',
 );
 
-$env = isset($_SERVER['HTTP_HOST']) && isset($envMapping[$_SERVER['HTTP_HOST']])
-? $envMapping[$_SERVER['HTTP_HOST']]
-: '';
-
+$env = isset($_SERVER['HTTP_HOST']) && isset($envMapping[$_SERVER['HTTP_HOST']]) ? $envMapping[$_SERVER['HTTP_HOST']] : '';
 define('ENV_MODE', $env);
 
 function containsIP($str, $arr)
@@ -41,8 +38,8 @@ $server_allow = array(
 if ($env == 'com') {
     // if (!containsIP($_SERVER['REMOTE_ADDR'], $server_allow)) {
     if (!isset($_GET['mode'])) {
-        require __DIR__ . '/comingsoon.php';
-        die();
+        // require __DIR__ . '/comingsoon.php';
+        // die();
     }
 }
 
