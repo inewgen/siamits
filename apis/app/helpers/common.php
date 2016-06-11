@@ -192,7 +192,7 @@ if (!function_exists('saveCache')) {
 
 if (!function_exists('getCache')) {
     function getCache($key_cache)
-    {return false;
+    {
         if (Input::get('nocache')) {
             return false;
         }
