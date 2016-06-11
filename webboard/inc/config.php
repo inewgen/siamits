@@ -25,7 +25,7 @@ $env = isset($_SERVER['HTTP_HOST']) && isset($envMapping[$_SERVER['HTTP_HOST']])
 
 if ($env == 'dev') {
     $config['database']['type'] = 'mysqli';
-    $config['database']['database'] = 'u693496674_siami';
+    $config['database']['database'] = 'u244573991_siami';
     $config['database']['table_prefix'] = 'w_';
 
     $config['database']['hostname'] = '127.0.0.1';
@@ -33,11 +33,11 @@ if ($env == 'dev') {
     $config['database']['password'] = '1234';
 } else {
     $config['database']['type'] = 'mysqli';
-    $config['database']['database'] = 'u693496674_siami';
+    $config['database']['database'] = 'u244573991_siami';
     $config['database']['table_prefix'] = 'w_';
 
     $config['database']['hostname'] = '127.0.0.1';
-    $config['database']['username'] = 'u693496674_siami';
+    $config['database']['username'] = 'u244573991_siami';
     $config['database']['password'] = 'Scs@072272571';
 }
 
