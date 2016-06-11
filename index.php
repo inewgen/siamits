@@ -26,20 +26,19 @@ function containsIP($str, $arr)
 }
 
 $server_allow = array(
-    '110.168.*',
-    '110.170.*',
-    '171.96.*',
-    '27.55.*',
-    '58.11.*',
-    '58.8.*',
-    '61.90.*',
+    // '110.168.*',
+    // '110.170.*',
+    // '171.96.*',
+    // '27.55.*',
+    // '58.11.*',
+    // '58.8.*',
+    // '61.90.*',
 );
 
 if ($env == 'com') {
-    // if (!containsIP($_SERVER['REMOTE_ADDR'], $server_allow)) {
-    if (!isset($_GET['mode'])) {
-        // require __DIR__ . '/comingsoon.php';
-        // die();
+    if (!containsIP($_SERVER['REMOTE_ADDR'], $server_allow)) {
+        require __DIR__ . '/comingsoon.php';
+        die();
     }
 }
 

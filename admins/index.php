@@ -17,10 +17,10 @@ $env = isset($_SERVER['HTTP_HOST']) && isset($envMapping[$_SERVER['HTTP_HOST']])
         : '';
 
 if ($env == 'com') {
-    if (!isset($_GET['mode'])) {
-        // require __DIR__ . '/comingsoon.php';
-        // die();
-    }
+    // if (!isset($_GET['mode'])) {
+        require __DIR__ . '/comingsoon.php';
+        die();
+    // }
 }
 /**
  * Laravel - A PHP Framework For Web Artisans
