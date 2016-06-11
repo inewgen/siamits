@@ -25,16 +25,16 @@ $env = isset($_SERVER['HTTP_HOST']) && isset($envMapping[$_SERVER['HTTP_HOST']])
 
 if ($env == 'dev') {
     $config['database']['type'] = 'mysqli';
-    $config['database']['database'] = 'u244573991_siami';
-    $config['database']['table_prefix'] = 'w_';
+    $config['database']['database'] = 'siamits';
+    $config['database']['table_prefix'] = 'wb_';
 
     $config['database']['hostname'] = '127.0.0.1';
-    $config['database']['username'] = 'root';
-    $config['database']['password'] = '1234';
+    $config['database']['username'] = 'homestead';
+    $config['database']['password'] = 'secret';
 } else {
     $config['database']['type'] = 'mysqli';
     $config['database']['database'] = 'u244573991_siami';
-    $config['database']['table_prefix'] = 'w_';
+    $config['database']['table_prefix'] = 'wb_';
 
     $config['database']['hostname'] = '127.0.0.1';
     $config['database']['username'] = 'u244573991_siami';
