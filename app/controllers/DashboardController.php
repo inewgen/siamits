@@ -34,7 +34,7 @@ class DashboardController extends BaseController
         $client = new Client(Config::get('url.siamits-api'));
         $results = $client->get('layouts', $parameters);
         $results = json_decode($results, true);
-
+alert($results);die('<hr>');
         $layout = array();
         if ($layouts = array_get($results, 'data.record', false)) {
             foreach ($layouts as $key => $value) {
