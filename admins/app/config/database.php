@@ -53,8 +53,8 @@ return array(
             'write' => array(
                 'host' => '127.0.0.1', // 61.91.1.146
             ),
-            'database'  => 'u693496674_siami', //authen
-            'username'  => 'u693496674_siami', // dev
+            'database'  => 'u244573991_siami', //authen
+            'username'  => 'u244573991_siami', // dev
             'password'  => 'Scs@072272571', // dev!          'password'  => 'secret',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
