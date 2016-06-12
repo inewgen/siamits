@@ -2,6 +2,12 @@
 
 class TagsController extends ApiController
 {
+
+    public function __construct()
+    {
+        $this->pathcache = 'api.0.tags';
+    }
+
     public function index()
     {
         $data = Input::all();
@@ -22,6 +28,13 @@ class TagsController extends ApiController
             );
 
             return API::createResponse($response, 1003);
+        }
+
+        // Get cache value
+        $keycache = getKeyCache($this->pathcache . '.index', $data);
+
+        if ($response = getCache($keycache)) {
+            return API::createResponse($response, 0);
         }
 
         $order   = array_get($data, 'order', 'updated_at');
@@ -58,9 +71,13 @@ class TagsController extends ApiController
         );
 
         $response = array(
+            'cached'     => false,
             'pagination' => $pagings,
-            'record' => $results
+            'record'     => $results,
         );
+
+        // Save cache value
+        saveCache($keycache, $response);
 
         return API::createResponse($response, 0);
     }
@@ -84,6 +101,13 @@ class TagsController extends ApiController
             return API::createResponse($response, 1003);
         }
 
+        // Get cache value
+        $keycache = getKeyCache($this->pathcache . '.show.' . $id, $data);
+        
+        if ($response = getCache($keycache)) {
+            return API::createResponse($response, 0);
+        }
+
         $user_id = array_get($data, 'user_id', 0);
 
         $filters = array(
@@ -103,8 +127,12 @@ class TagsController extends ApiController
         }
 
         $response = array(
+            'cached' => false,
             'record' => $results
         );
+
+        // Save cache value
+        saveCache($keycache, $response);
 
         return API::createResponse($response, 0);
     }
@@ -219,6 +247,9 @@ class TagsController extends ApiController
             'record' => $data,
         );
 
+        // Clear cache value
+        clearCacheStore($this->pathcache);
+
         return API::createResponse($data, 0);
     }
 
@@ -273,6 +304,9 @@ class TagsController extends ApiController
             'record' => $data,
         );
 
+        // Clear cache value
+        clearCacheUpdate($this->pathcache);
+
         return API::createResponse($data, 0);
     }
 
@@ -322,6 +356,9 @@ class TagsController extends ApiController
         $response = array(
             'record' => $data,
         );
+
+        // Clear cache value
+        clearCacheDestroy($this->$pathcache);
 
         return API::createResponse($response, 0);
     }

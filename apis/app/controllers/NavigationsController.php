@@ -7,6 +7,7 @@ class NavigationsController extends ApiController
     {
         parent::__construct();
         $this->navigationsRepository = $navigationsRepository;
+        $this->pathcache             = 'api.0.navigations';
     }
 
     public function index()
@@ -27,6 +28,13 @@ class NavigationsController extends ApiController
             return API::createResponse($response, 1003);
         }
 
+        // Get cache value
+        $keycache = getKeyCache($this->pathcache . '.index', $data);
+
+        if ($response = getCache($keycache)) {
+            return API::createResponse($response, 0);
+        }
+
         $parameters = array(
             'user_id' => $data['user_id'],
         );
@@ -40,10 +48,19 @@ class NavigationsController extends ApiController
         }
 
         $response = array(
+            'cached' => false,
             'record' => $results,
         );
 
+        // Save cache value
+        saveCache($keycache, $response);
+
         return API::createResponse($response, 0);
+    }
+
+    public function show($id)
+    {
+        return API::createResponse('Show', 0);
     }
 
     public function store()
@@ -88,12 +105,10 @@ class NavigationsController extends ApiController
             'record' => $results,
         );
 
-        return API::createResponse($response, 0);
-    }
+        // Clear cache value
+        clearCacheStore($this->pathcache);
 
-    public function show($id)
-    {
-        return API::createResponse('Show', 0);
+        return API::createResponse($response, 0);
     }
 
     public function update($id = null)
@@ -141,6 +156,9 @@ class NavigationsController extends ApiController
             'record' => $results,
         );
 
+        // Clear cache value
+        clearCacheUpdate($this->pathcache);
+
         return API::createResponse($response, 0);
     }
 
@@ -178,6 +196,9 @@ class NavigationsController extends ApiController
         $response = array(
             'record' => $results,
         );
+
+        // Clear cache value
+        clearCacheDestroy($this->$pathcache);
 
         return API::createResponse($response, 0);
     }

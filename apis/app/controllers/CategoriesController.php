@@ -2,6 +2,11 @@
 
 class CategoriesController extends ApiController
 {
+    public function __construct()
+    {
+        $this->pathcache = 'api.0.categories';
+    }
+
     public function index()
     {
         $data = Input::all();
@@ -23,6 +28,13 @@ class CategoriesController extends ApiController
             );
 
             return API::createResponse($response, 1003);
+        }
+
+        // Get cache value
+        $keycache = getKeyCache($this->pathcache . '.index', $data);
+
+        if ($response = getCache($keycache)) {
+            return API::createResponse($response, 0);
         }
 
         $order   = array_get($data, 'order', 'position');
@@ -83,13 +95,17 @@ class CategoriesController extends ApiController
         );
 
         $response = array(
+            'cached'     => false,
             'pagination' => $pagings,
-            'record' => $entries
+            'record'     => $entries,
         );
+
+        // Save cache value
+        saveCache($keycache, $response);
 
         return API::createResponse($response, 0);
     }
-	
+
 	public function show($id = null)
     {
         $data = Input::all();
@@ -107,6 +123,13 @@ class CategoriesController extends ApiController
             );
 
             return API::createResponse($response, 1003);
+        }
+
+        // Get cache value
+        $keycache = getKeyCache($this->pathcache . '.show.' . $id, $data);
+        
+        if ($response = getCache($keycache)) {
+            return API::createResponse($response, 0);
         }
 		
 		// Filter
@@ -151,8 +174,12 @@ class CategoriesController extends ApiController
         }
 
         $response = array(
+            'cached' => false,
             'record' => $entries
         );
+
+        // Save cache value
+        saveCache($keycache, $response);
 
         return API::createResponse($response, 0);
     }
@@ -230,6 +257,9 @@ class CategoriesController extends ApiController
             'id' => $id,
             'record' => $data,
         );
+
+        // Clear cache value
+        clearCacheStore($this->pathcache);
 
         return API::createResponse($response, 0);
     }
@@ -332,6 +362,9 @@ class CategoriesController extends ApiController
             'record' => $data,
         );
 
+        // Clear cache value
+        clearCacheUpdate($this->pathcache);
+
         return API::createResponse($data, 0);
     }
 
@@ -394,6 +427,9 @@ class CategoriesController extends ApiController
         $response = array(
             'record' => $data,
         );
+
+        // Clear cache value
+        clearCacheDestroy($this->$pathcache);
 
         return API::createResponse($response, 0);
     }

@@ -183,23 +183,37 @@ if (!function_exists('getLogo')) {
     }
 }
 
-if (!function_exists('saveCache')) {
-    function saveCache($key_cache, $value_cache)
+if (!function_exists('getKeyCache')) {
+    function getKeyCache($pathcache, $data)
     {
-        return CachedSettings::set($key_cache, serialize($value_cache));
+        $data     = array_except($data, 'nocache');
+        $keycache = $pathcache . '.' . md5(serialize($data));
+
+        return $keycache;
+    }
+}
+
+if (!function_exists('saveCache')) {
+    function saveCache($keycache, $value_cache)
+    {
+        return CachedSettings::set($keycache, serialize($value_cache));
     }
 }
 
 if (!function_exists('getCache')) {
-    function getCache($key_cache)
+    function getCache($keycache)
     {
         if (Input::get('nocache')) {
             return false;
         }
         
         $value = false;
-        if ($value = CachedSettings::get($key_cache, false)) {
+        if ($value = CachedSettings::get($keycache, false)) {
             $value = unserialize($value);
+
+            if ($value) {
+                $value['cached'] = true;
+            }
         }
 
         return $value;
@@ -207,14 +221,14 @@ if (!function_exists('getCache')) {
 }
 
 if (!function_exists('clearCache')) {
-    function clearCache($key_cache)
+    function clearCache($keycache)
     {
-        if (!empty($key_cache)) {
+        if (!empty($keycache)) {
             $get_keys_all = CachedSettings::getKeys();
             $i = 0;
 
             foreach ($get_keys_all as $key => $value) {
-                if (strpos($value, $key_cache) === 0) {
+                if (strpos($value, $keycache) === 0) {
                     $keys[] = $value;
                     if (!CachedSettings::has($value)) {
                         //return false;
@@ -234,5 +248,35 @@ if (!function_exists('clearCache')) {
         }
 
         return false;
+    }
+}
+
+if (!function_exists('clearCacheStore')) {
+    function clearCacheStore($pathcache)
+    {
+        $keycache = $pathcache . '.index';
+        clearCache($keycache);
+    }
+}
+
+if (!function_exists('clearCacheUpdate')) {
+    function clearCacheUpdate($pathcache)
+    {
+        $keycache = $pathcache . '.index';
+        clearCache($keycache);
+
+        $keycache = $pathcache . '.show.' . $id;
+        clearCache($keycache);
+    }
+}
+
+if (!function_exists('clearCacheDestroy')) {
+    function clearCacheDestroy($pathcache)
+    {
+        $keycache = $pathcache . '.index';
+        clearCache($keycache);
+
+        $keycache = $pathcache . '.show.' . $id;
+        clearCache($keycache);
     }
 }

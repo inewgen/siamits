@@ -137,7 +137,7 @@
             <li class="treeview">
                 <a href="<?php echo URL::to('public/themes/adminlte2');?>/#">
                     <i class="fa fa-files-o"></i>
-                    <span>Layout Options</span>
+                    <span>----------------------------------</span>
                     <span class="label label-primary pull-right">4</span>
                 </a>
                 <ul class="treeview-menu">

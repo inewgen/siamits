@@ -2,6 +2,12 @@
 
 class ImagesController extends ApiController
 {
+
+    public function __construct()
+    {
+        $this->pathcache = 'api.0.images';
+    }
+
     public function index()
     {
         $data = Input::all();
@@ -21,10 +27,9 @@ class ImagesController extends ApiController
         }
 
         // Get cache value
-        $key_cache = 'api.0.images.index.' . md5(serialize($data));
+        $keycache = getKeyCache($this->pathcache . '.index', $data);
 
-        if ($response = getCache($key_cache)) {
-            $response['cached'] = true;
+        if ($response = getCache($keycache)) {
             return API::createResponse($response, 0);
         }
 
@@ -68,13 +73,13 @@ class ImagesController extends ApiController
         );
 
         $response = array(
-            'cached' => false,
+            'cached'     => false,
             'pagination' => $pagings,
-            'record' => $entries,
+            'record'     => $entries,
         );
 
         // Save cache value
-        saveCache($key_cache, $response);
+        saveCache($keycache, $response);
 
         return API::createResponse($response, 0);
     }
@@ -150,6 +155,9 @@ class ImagesController extends ApiController
             'data' => $data,
         );
 
+        // Clear cache value
+        clearCacheStore($this->pathcache);
+
         return API::createResponse($response, 0);
     }
 
@@ -201,6 +209,9 @@ class ImagesController extends ApiController
         $response = array(
             'record' => $query,
         );
+
+        // Clear cache value
+        clearCacheUpdate($this->pathcache);
 
         return API::createResponse($data, 0);
     }
@@ -259,6 +270,9 @@ class ImagesController extends ApiController
         $response = array(
             'record' => $query,
         );
+
+        // Clear cache value
+        clearCacheDestroy($this->$pathcache);
 
         return API::createResponse($response, 0);
     }
@@ -325,6 +339,9 @@ class ImagesController extends ApiController
             'pagination' => $pagings,
             'record' => $entries,
         );
+
+        // Clear cache value
+        clearCache($this->$pathcache);
 
         return API::createResponse($response, 0);
     }

@@ -2,9 +2,22 @@
 
 class UsersController extends ApiController
 {
+
+    public function __construct()
+    {
+        $this->pathcache = 'api.0.users';
+    }
+
     public function index()
     {
         $data = Input::all();
+
+        // Get cache value
+        $keycache = getKeyCache($this->pathcache . '.index', $data);
+
+        if ($response = getCache($keycache)) {
+            return API::createResponse($response, 0);
+        }
 
         // Set Pagination
         $take = (int) (isset($data['perpage'])) ? $data['perpage'] : 20;
@@ -68,9 +81,13 @@ class UsersController extends ApiController
         );
 
         $response = array(
+            'cached'     => false,
             'pagination' => $pagings,
-            'record' => $entries,
+            'record'     => $entries,
         );
+
+        // Save cache value
+        saveCache($keycache, $response);
 
         return API::createResponse($response, 0);
     }
@@ -92,6 +109,13 @@ class UsersController extends ApiController
             );
 
             return API::createResponse($response, 1003);
+        }
+
+        // Get cache value
+        $keycache = getKeyCache($this->pathcache . '.show.' . $id, $data);
+        
+        if ($response = getCache($keycache)) {
+            return API::createResponse($response, 0);
         }
 
         // Query
@@ -135,8 +159,12 @@ class UsersController extends ApiController
         }
 
         $response = array(
-            'record' => $entries[0],
+            'cached' => false,
+            'record' => $entries[0]
         );
+
+        // Save cache value
+        saveCache($keycache, $response);
 
         return API::createResponse($response, 0);
     }
@@ -257,6 +285,9 @@ class UsersController extends ApiController
             'mode' => $mode,
             'images_old' => $images_old,
         );
+
+        // Clear cache value
+        clearCacheStore($this->pathcache);
 
         return API::createResponse($response, 0);
     }
@@ -424,6 +455,9 @@ class UsersController extends ApiController
             'record' => $data,
         );
 
+        // Clear cache value
+        clearCacheUpdate($this->pathcache);
+
         return API::createResponse($data, 0);
     }
 
@@ -482,6 +516,9 @@ class UsersController extends ApiController
         $response = array(
             'record' => $data,
         );
+
+        // Clear cache value
+        clearCacheDestroy($this->$pathcache);
 
         return API::createResponse($response, 0);
     }

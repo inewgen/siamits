@@ -2,6 +2,12 @@
 
 class NewsController extends ApiController
 {
+    
+    public function __construct()
+    {
+        $this->pathcache = 'api.0.news';
+    }
+
     public function index()
     {
         $data = Input::all();
@@ -21,10 +27,9 @@ class NewsController extends ApiController
         }
 
         // Get cache value
-        $key_cache = 'api.0.news.index.'.md5(serialize($data));
-        
-        if ($response = getCache($key_cache)) {
-            $response['cached'] = true;
+        $keycache = getKeyCache($this->pathcache . '.index', $data);
+
+        if ($response = getCache($keycache)) {
             return API::createResponse($response, 0);
         }
 
@@ -91,13 +96,13 @@ class NewsController extends ApiController
         );
 
         $response = array(
-            'cached' => false,
+            'cached'     => false,
             'pagination' => $pagings,
-            'record' => $entries
+            'record'     => $entries,
         );
 
         // Save cache value
-        saveCache($key_cache, $response);
+        saveCache($keycache, $response);
 
         return API::createResponse($response, 0);
     }
@@ -123,10 +128,9 @@ class NewsController extends ApiController
         }
 
         // Get cache value
-        $key_cache = 'api.0.news.show.'.md5(serialize($data));
+        $keycache = getKeyCache($this->pathcache . '.show.' . $id, $data);
         
-        if ($response = getCache($key_cache)) {
-            $response['cached'] = true;
+        if ($response = getCache($keycache)) {
             return API::createResponse($response, 0);
         }
 
@@ -184,7 +188,7 @@ class NewsController extends ApiController
         );
 
         // Save cache value
-        saveCache($key_cache, $response);
+        saveCache($keycache, $response);
 
         return API::createResponse($response, 0);
     }
@@ -287,8 +291,7 @@ class NewsController extends ApiController
         );
 
         // Clear cache value
-        $key_cache = 'api.0.news.index';
-        clearCache($key_cache);
+        clearCacheStore($this->pathcache);
 
         return API::createResponse($data, 0);
     }
@@ -392,8 +395,7 @@ class NewsController extends ApiController
         );
 
         // Clear cache value
-        $key_cache = 'api.0.news';
-        clearCache($key_cache);
+        clearCacheUpdate($this->pathcache);
 
         return API::createResponse($data, 0);
     }
@@ -463,8 +465,7 @@ class NewsController extends ApiController
         );
 
         // Clear cache value
-        $key_cache = 'api.0.news';
-        clearCache($key_cache);
+        clearCacheDestroy($this->$pathcache);
 
         return API::createResponse($response, 0);
     }

@@ -2,6 +2,11 @@
 
 class BannersController extends ApiController
 {
+    public function __construct()
+    {
+        $this->pathcache = 'api.0.banners';
+    }
+
     public function index()
     {
         $data = Input::all();
@@ -18,6 +23,13 @@ class BannersController extends ApiController
             );
 
             return API::createResponse($response, 1003);
+        }
+
+        // Get cache value
+        $keycache = getKeyCache($this->pathcache . '.index', $data);
+
+        if ($response = getCache($keycache)) {
+            return API::createResponse($response, 0);
         }
 
         $user_id = array_get($data, 'user_id', 0);
@@ -91,9 +103,13 @@ class BannersController extends ApiController
         );
 
         $response = array(
+            'cached'     => false,
             'pagination' => $pagings,
-            'record' => $entries,
+            'record'     => $entries,
         );
+
+        // Save cache value
+        saveCache($keycache, $response);
 
         return API::createResponse($response, 0);
     }
@@ -115,6 +131,13 @@ class BannersController extends ApiController
             );
 
             return API::createResponse($response, 1003);
+        }
+
+        // Get cache value
+        $keycache = getKeyCache($this->pathcache . '.show.' . $id, $data);
+        
+        if ($response = getCache($keycache)) {
+            return API::createResponse($response, 0);
         }
 
         $filters = array(
@@ -155,9 +178,14 @@ class BannersController extends ApiController
             }
         }
 
+        $entries  = $entries[0];
         $response = array(
-            'record' => $entry,
+            'cached' => false,
+            'record' => $entries
         );
+
+        // Save cache value
+        saveCache($keycache, $response);
 
         return API::createResponse($response, 0);
     }
@@ -235,6 +263,9 @@ class BannersController extends ApiController
         $response = array(
             'data' => $data,
         );
+
+        // Clear cache value
+        clearCacheStore($this->pathcache);
 
         return API::createResponse($response, 0);
     }
@@ -329,6 +360,9 @@ class BannersController extends ApiController
             'record' => $data,
         );
 
+        // Clear cache value
+        clearCacheUpdate($this->pathcache);
+
         return API::createResponse($response, 0);
     }
 
@@ -360,7 +394,7 @@ class BannersController extends ApiController
             return API::createResponse($response, 1004);
         }
 
-		// Delete images
+        // Delete images
         if ($images_id = array_get($data, 'images_id', false)) {
             // Delete imageables
             $filters = array(
@@ -388,6 +422,9 @@ class BannersController extends ApiController
         $response = array(
             'data' => $data,
         );
+
+        // Clear cache value
+        clearCacheDestroy($this->$pathcache);
 
         return API::createResponse($response, 0);
     }

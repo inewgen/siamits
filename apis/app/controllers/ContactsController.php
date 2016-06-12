@@ -3,6 +3,11 @@
 class ContactsController extends ApiController
 {
 
+    public function __construct()
+    {
+        $this->pathcache = 'api.0.contacts';
+    }
+
     public function index()
     {
         $data = Input::all();
@@ -22,10 +27,9 @@ class ContactsController extends ApiController
         }
 
         // Get cache value
-        $key_cache = 'api.0.contacts.index.' . md5(serialize($data));
+        $keycache = getKeyCache($this->pathcache . '.index', $data);
 
-        if ($response = getCache($key_cache)) {
-            $response['cached'] = true;
+        if ($response = getCache($keycache)) {
             return API::createResponse($response, 0);
         }
 
@@ -74,13 +78,13 @@ class ContactsController extends ApiController
         );
 
         $response = array(
-            'cached' => false,
+            'cached'     => false,
             'pagination' => $pagings,
-            'record' => $entries,
+            'record'     => $entries,
         );
 
         // Save cache value
-        saveCache($key_cache, $response);
+        saveCache($keycache, $response);
 
         return API::createResponse($response, 0);
     }
@@ -102,6 +106,13 @@ class ContactsController extends ApiController
             );
 
             return API::createResponse($response, 1003);
+        }
+
+        // Get cache value
+        $keycache = getKeyCache($this->pathcache . '.show.' . $id, $data);
+        
+        if ($response = getCache($keycache)) {
+            return API::createResponse($response, 0);
         }
 
         // Filter
@@ -126,8 +137,12 @@ class ContactsController extends ApiController
         $entries = $results;
 
         $response = array(
-            'record' => $entries,
+            'cached' => false,
+            'record' => $entries
         );
+
+        // Save cache value
+        saveCache($keycache, $response);
 
         return API::createResponse($response, 0);
     }
@@ -194,6 +209,9 @@ class ContactsController extends ApiController
             'record' => $data,
         );
 
+        // Clear cache value
+        clearCacheStore($this->pathcache);
+
         return API::createResponse($response, 0);
     }
 
@@ -256,6 +274,9 @@ class ContactsController extends ApiController
             'record' => $data,
         );
 
+        // Clear cache value
+        clearCacheUpdate($this->pathcache);
+
         return API::createResponse($data, 0);
     }
 
@@ -293,6 +314,9 @@ class ContactsController extends ApiController
         $response = array(
             'record' => $data,
         );
+
+        // Clear cache value
+        clearCacheDestroy($this->$pathcache);
 
         return API::createResponse($response, 0);
     }
