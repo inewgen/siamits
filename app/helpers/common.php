@@ -128,6 +128,16 @@ if (!function_exists('getLogo')) {
     }
 }
 
+if (!function_exists('getKeyCache')) {
+    function getKeyCache($pathcache, $data)
+    {
+        $data     = array_except($data, 'nocache');
+        $keycache = $pathcache . '.' . md5(serialize($data));
+
+        return $keycache;
+    }
+}
+
 if (!function_exists('saveCache')) {
     function saveCache($key_cache, $value_cache)
     {

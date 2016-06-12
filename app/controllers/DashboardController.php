@@ -3,6 +3,20 @@ use Madcoda\Youtube;
 
 class DashboardController extends BaseController
 {
+
+    public function __construct(
+        BannersRepositoryInterface $bannersRepository,
+        NewsRepositoryInterface $newsRepository,
+        PagesRepositoryInterface $pagesRepository,
+        QuotesRepositoryInterface $quotesRepository,
+        LayoutsRepositoryInterface $layoutsRepository)
+    {
+        $this->layoutsRepository = $layoutsRepository;
+        $this->bannersRepository = $bannersRepository;
+        $this->newsRepository    = $newsRepository;
+        $this->pagesRepository   = $pagesRepository;
+        $this->quotesRepository  = $quotesRepository;
+    }
     /**
      * Show the profile for the given user.
      *
@@ -11,14 +25,7 @@ class DashboardController extends BaseController
      */
     public function index()
     {
-        $data = Input::all();
-
-        // Get cache value
-        $key_cache = 'web.0.dashboard.index.0.' . md5(serialize($data));
-        if ($render = getCache($key_cache)) {
-            return $render;
-        }
-
+        $data  = Input::all();
         $theme = Theme::uses('margo')->layout('margo');
         $theme->setTitle('SiamiTs :: Home');
         $theme->setDescription('Home description');
@@ -27,13 +34,11 @@ class DashboardController extends BaseController
 
         // Get layouts
         $parameters = array(
-            'pages' => 'dashboard',
+            'pages'  => 'dashboard',
             'status' => '1'
         );
 
-        $client = new Client(Config::get('url.siamits-api'));
-        $results = $client->get('layouts', $parameters);
-        $results = json_decode($results, true);
+        $results = $this->layoutsRepository->get($parameters);
 
         $layout = array();
         if ($layouts = array_get($results, 'data.record', false)) {
@@ -50,22 +55,22 @@ class DashboardController extends BaseController
                 'perpage' => '100',
             );
 
-            $client = new Client(Config::get('url.siamits-api'));
-            $results = $client->get('banners', $parameters);
-            $results = json_decode($results, true);
+            $results = $this->bannersRepository->get($parameters);
+
             $view['banners'] = array_get($results, 'data.record', array());
         }
 
         // Get hightlight news
         if (in_array('hnews', $layout)) {
             $parameters = array(
-                'type' => '2',
+                'type'    => '2',
                 'perpage' => '10',
-                'order' => 'updated_at',
-                'sort' => 'desc',
+                'order'   => 'updated_at',
+                'sort'    => 'desc',
             );
-            $results2 = $client->get('news', $parameters);
-            $results2 = json_decode($results2, true);
+            // $results2 = $client->get('news', $parameters);
+            // $results2 = json_decode($results2, true);
+            $results2 = $this->newsRepository->get($parameters);
 
             $news_h = array_get($results2, 'data.record', array());
             $view['news']['highlight'] = $news_h;
@@ -74,13 +79,14 @@ class DashboardController extends BaseController
         // Get news
         if (in_array('news', $layout)) {
             $parameters = array(
-                'type' => '1',
+                'type'    => '1',
                 'perpage' => '12',
-                'order' => 'updated_at',
-                'sort' => 'desc',
+                'order'   => 'updated_at',
+                'sort'    => 'desc',
             );
-            $results2 = $client->get('news', $parameters);
-            $results2 = json_decode($results2, true);
+            // $results2 = $client->get('news', $parameters);
+            // $results2 = json_decode($results2, true);
+            $results2 = $this->newsRepository->get($parameters);
 
             $news_h = array_get($results2, 'data.record', array());
             $view['news']['general'] = $news_h;
@@ -89,13 +95,14 @@ class DashboardController extends BaseController
         // Get hightlight pages
         if (in_array('hpages', $layout)) {
             $parameters = array(
-                'type' => '2',
+                'type'    => '2',
                 'perpage' => '10',
-                'order' => 'updated_at',
-                'sort' => 'desc',
+                'order'   => 'updated_at',
+                'sort'    => 'desc',
             );
-            $results_p = $client->get('pages', $parameters);
-            $results_p = json_decode($results_p, true);
+            // $results_p = $client->get('pages', $parameters);
+            // $results_p = json_decode($results_p, true);
+            $results_p = $this->pagesRepository->get($parameters);
 
             $pages_h = array_get($results_p, 'data.record', array());
             $view['pages']['highlight'] = $pages_h;
@@ -104,13 +111,14 @@ class DashboardController extends BaseController
         // Get pages
         if (in_array('pages', $layout)) {
             $parameters = array(
-                'type' => '1',
+                'type'    => '1',
                 'perpage' => '12',
-                'order' => 'updated_at',
-                'sort' => 'desc',
+                'order'   => 'updated_at',
+                'sort'    => 'desc',
             );
-            $results_p = $client->get('pages', $parameters);
-            $results_p = json_decode($results_p, true);
+            // $results_p = $client->get('pages', $parameters);
+            // $results_p = json_decode($results_p, true);
+            $results_p = $this->pagesRepository->get($parameters);
 
             $pages_h = array_get($results_p, 'data.record', array());
             $view['pages']['general'] = $pages_h;
@@ -125,15 +133,17 @@ class DashboardController extends BaseController
         // Get Quotes
         if (in_array('pages', $layout)) {
             $parameters = array(
-                'type' => '1',
+                'type'    => '1',
                 'perpage' => '20',
-                'order' => 'position',
-                'sort' => 'asc',
+                'order'   => 'position',
+                'sort'    => 'asc',
             );
 
-            $client = new Client(Config::get('url.siamits-api'));
-            $results = $client->get('quotes', $parameters);
-            $results = json_decode($results, true);
+            // $client         = new Client(Config::get('url.siamits-api'));
+            // $results        = $client->get('quotes', $parameters);
+            // $results        = json_decode($results, true);
+            $results = $this->quotesRepository->get($parameters);
+
             $view['quotes'] = array_get($results, 'data.record', array());
         }
 
@@ -141,12 +151,6 @@ class DashboardController extends BaseController
         $theme->asset()->container('inline_script')->usePath()->writeContent('custom-inline-script', $script);
 
         $render = $theme->scopeWithLayout('dashboard.index', $view)->render();
-
-        // Save cache value
-        if (!Session::has('success') && !Session::has('error') && !Session::has('warning')) {
-            $contents = sanitize_output($render->original);
-            saveCache($key_cache, $contents);
-        }
 
         return $render;
     }
