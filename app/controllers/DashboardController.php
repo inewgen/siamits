@@ -68,8 +68,7 @@ class DashboardController extends BaseController
                 'order'   => 'updated_at',
                 'sort'    => 'desc',
             );
-            // $results2 = $client->get('news', $parameters);
-            // $results2 = json_decode($results2, true);
+
             $results2 = $this->newsRepository->get($parameters);
 
             $news_h = array_get($results2, 'data.record', array());
@@ -84,8 +83,7 @@ class DashboardController extends BaseController
                 'order'   => 'updated_at',
                 'sort'    => 'desc',
             );
-            // $results2 = $client->get('news', $parameters);
-            // $results2 = json_decode($results2, true);
+
             $results2 = $this->newsRepository->get($parameters);
 
             $news_h = array_get($results2, 'data.record', array());
@@ -100,8 +98,7 @@ class DashboardController extends BaseController
                 'order'   => 'updated_at',
                 'sort'    => 'desc',
             );
-            // $results_p = $client->get('pages', $parameters);
-            // $results_p = json_decode($results_p, true);
+
             $results_p = $this->pagesRepository->get($parameters);
 
             $pages_h = array_get($results_p, 'data.record', array());
@@ -116,8 +113,7 @@ class DashboardController extends BaseController
                 'order'   => 'updated_at',
                 'sort'    => 'desc',
             );
-            // $results_p = $client->get('pages', $parameters);
-            // $results_p = json_decode($results_p, true);
+ 
             $results_p = $this->pagesRepository->get($parameters);
 
             $pages_h = array_get($results_p, 'data.record', array());
@@ -139,9 +135,6 @@ class DashboardController extends BaseController
                 'sort'    => 'asc',
             );
 
-            // $client         = new Client(Config::get('url.siamits-api'));
-            // $results        = $client->get('quotes', $parameters);
-            // $results        = json_decode($results, true);
             $results = $this->quotesRepository->get($parameters);
 
             $view['quotes'] = array_get($results, 'data.record', array());

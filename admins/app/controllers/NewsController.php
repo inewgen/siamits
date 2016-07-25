@@ -6,6 +6,13 @@ use Facebook\FacebookSession;
 
 class NewsController extends BaseController
 {
+
+    public function __construct(
+        NewsRepositoryInterface $newsRepository)
+    {
+        $this->newsRepository = $newsRepository;
+    }
+
     /**
      * Show the profile for the given user.
      *
@@ -16,11 +23,11 @@ class NewsController extends BaseController
     {
         $data = Input::all();
 
-        // Get cache value
-        $key_cache = 'admin.0.news.getindex.0.' . md5(serialize($data));
-        if ($render = getCache($key_cache)) {
-            return $render;
-        }
+        // // Get cache value
+        // $key_cache = 'admin.0.news.getindex.0.' . md5(serialize($data));
+        // if ($render = getCache($key_cache)) {
+        //     return $render;
+        // }
 
         $theme = Theme::uses('default')->layout('adminlte2');
         $theme->setTitle('Admin SiamiTs :: News');
@@ -43,9 +50,10 @@ class NewsController extends BaseController
             $parameters['s'] = $s;
         }
 
-        $client = new Client(Config::get('url.siamits-api'));
-        $results = $client->get('news', $parameters);
-        $results = json_decode($results, true);
+        // $client = new Client(Config::get('url.siamits-api'));
+        // $results = $client->get('news', $parameters);
+        // $results = json_decode($results, true);
+        $results = $this->newsRepository->get($parameters);
 
         if ($status_code = array_get($results, 'status_code', false) != '0') {
             $message = array_get($results, 'status_txt', 'Data not found');
@@ -134,11 +142,11 @@ class NewsController extends BaseController
 
         $render = $theme->scopeWithLayout('news.list', $view)->render();
 
-        // Save cache value
-        if (!Session::has('success') && !Session::has('error') && !Session::has('warning')) {
-            $contents = sanitize_output($render->original);
-            saveCache($key_cache, $contents);
-        }
+        // // Save cache value
+        // if (!Session::has('success') && !Session::has('error') && !Session::has('warning')) {
+        //     $contents = sanitize_output($render->original);
+        //     saveCache($key_cache, $contents);
+        // }
 
         return $render;
     }
