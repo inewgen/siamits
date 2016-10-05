@@ -37,8 +37,8 @@ $server_allow = array(
 
 if ($env == 'com') {
     if (!containsIP($_SERVER['REMOTE_ADDR'], $server_allow)) {
-        require __DIR__ . '/comingsoon.php';
-        die();
+        // require __DIR__ . '/comingsoon.php';
+        // die();
     }
 }
 
