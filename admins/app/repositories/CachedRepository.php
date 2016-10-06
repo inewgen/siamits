@@ -6,7 +6,7 @@ use CachedSettings;
 class CachedRepository implements CachedRepositoryInterface
 {
     public function get($keycache)
-    {return false;
+    {
         if (isset($_GET['nocache'])) {
             return false;
         }
