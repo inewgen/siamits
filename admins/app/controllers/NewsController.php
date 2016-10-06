@@ -7,11 +7,11 @@ use Facebook\FacebookSession;
 class NewsController extends BaseController
 {
 
-    public function __construct(
-        NewsRepositoryInterface $newsRepository)
-    {
-        $this->newsRepository = $newsRepository;
-    }
+    // public function __construct(
+    //     NewsRepositoryInterface $newsRepository)
+    // {
+    //     $this->newsRepository = $newsRepository;
+    // }
 
     /**
      * Show the profile for the given user.
@@ -50,10 +50,10 @@ class NewsController extends BaseController
             $parameters['s'] = $s;
         }
 
-        // $client = new Client(Config::get('url.siamits-api'));
-        // $results = $client->get('news', $parameters);
-        // $results = json_decode($results, true);
-        $results = $this->newsRepository->get($parameters);
+        $client = new Client(Config::get('url.siamits-api'));
+        $results = $client->get('news', $parameters);
+        $results = json_decode($results, true);
+        // $results = $this->newsRepository->get($parameters);
 
         if ($status_code = array_get($results, 'status_code', false) != '0') {
             $message = array_get($results, 'status_txt', 'Data not found');
