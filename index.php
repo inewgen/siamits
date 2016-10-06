@@ -35,12 +35,12 @@ $server_allow = array(
     // '61.90.*',
 );
 
-if ($env == 'com') {
-    if (!containsIP($_SERVER['REMOTE_ADDR'], $server_allow)) {
-        // require __DIR__ . '/comingsoon.php';
-        // die();
-    }
-}
+// if ($env == 'com') {
+//     if (!containsIP($_SERVER['REMOTE_ADDR'], $server_allow)) {
+        require __DIR__ . '/comingsoon.php';
+        die();
+//     }
+// }
 
 /**
  * Laravel - A PHP Framework For Web Artisans
