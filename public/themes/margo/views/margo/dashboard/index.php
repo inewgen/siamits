@@ -12,37 +12,37 @@ if (isset($layout) && is_array($layout)) {
             getServices();
         }
 
-        // Services
+        // Subbanners
         if ($value == 'subbanners') {
             getSubbanners();
         }
 
-        // Services
+        // Video
         if ($value == 'video') {
             getYoutube($youtube);
         }
 
-        // Services
+        // Hnews
         if ($value == 'hnews') {
             getHighlightNews($news['highlight']);
         }
 
-        // Services
+        // News
         if ($value == 'news') {
             getNews($news['general']);
         }
 
-        // Services
+        // Hpages
         if ($value == 'hpages') {
             getHighlightPages($pages['highlight'], $quotes);
         }
 
-        // Services
+        // Pages
         if ($value == 'pages') {
             getPages($pages['general']);
         }
 
-        // Services
+        // Urls
         if ($value == 'urls') {
             getClient();
         }
