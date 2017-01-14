@@ -124,6 +124,15 @@
                                             <a title="Edit" href="<?php echo URL::to('categories');?>/<?php echo array_get($value, 'id', '');?>"><span class="glyphicon glyphicon-pencil"></span></a>
                                             <a class="del_rows" data-id="<?php echo array_get($value, 'id', '');?>" data-iid="<?php echo array_get($value, 'images.0.id', '');?>" data-code="<?php echo array_get($value, 'images.0.code', '');?>" data-uid="<?php echo array_get($value, 'images.0.user_id', '');?>" title="Delete" href="javascript:void(0)"><span class="glyphicon glyphicon-remove-sign danger"></span></a>
                                         </td>
+                    <?php       elseif ($key2 == 'type'): ?>
+                    <?php           $type = array_get($value ,$key2, ''); ?>
+                    <?php           if ($type == '1'): ?>
+                                        <td>banners</td>
+                    <?php           elseif ($type == '2'): ?>
+                                        <td>pages</td>
+                    <?php           elseif ($type == '3'): ?>
+                                        <td>news</td>
+                    <?php           endif; ?>
                     <?php       else: ?>
                                         <td><?php echo array_get($value ,$key2, '');?></td>
                     <?php       endif;?>
